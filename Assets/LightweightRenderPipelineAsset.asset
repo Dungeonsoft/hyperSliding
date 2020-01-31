@@ -17,7 +17,11 @@ MonoBehaviour:
   m_RendererType: 1
   m_RendererData: {fileID: 0}
   m_RendererDataList:
+<<<<<<< Updated upstream
   - {fileID: 11400000, guid: 74d5f08591ed68c418d428c48d70e029, type: 2}
+=======
+  - {fileID: 11400000, guid: cf1e7aa338483f649b67ca997f35cdbb, type: 2}
+>>>>>>> Stashed changes
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 0
   m_RequireOpaqueTexture: 0
