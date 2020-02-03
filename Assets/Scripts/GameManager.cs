@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public float manualNodeSpeed = 5.0f;
     public float delaySpeed = 20.0f;
 
+    public AnimationCurve ac;
+
     int hideX, hideY;
     int ori1X, ori1Y;
     int ori2X, ori2Y;
@@ -236,7 +238,8 @@ public class GameManager : MonoBehaviour
         lVal += Time.deltaTime * nodeSpeed;
         for (int i = 0; i < cnt; i++)
         {
-            mNodes[i].position = Vector3.Lerp(mNodes[i].position, mNodesPos[i + 1], lVal-(delaySpeed*(cnt-i)*Time.deltaTime));
+            float v = ac.Evaluate(lVal - (delaySpeed * (cnt - i) * Time.deltaTime));
+            mNodes[i].position = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
         }
         if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
         {
