@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     public List<NodeY> blocks = new List<NodeY>();
     public NodeScript[] nScript = new NodeScript[25];
 
-    float nodeSpeed = 20.0f;
+    float nodeSpeed = 100.0f;
+    public float manualNodeSpeed = 5.0f;
 
     int hideX, hideY;
     int ori1X, ori1Y;
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
         else
         {
             isMixed = true;
-            nodeSpeed = 5.0f;
+            nodeSpeed = manualNodeSpeed;
             Debug.Log("=====Now You can click nodes!=====");
             uAction = CheckClick;
         }
