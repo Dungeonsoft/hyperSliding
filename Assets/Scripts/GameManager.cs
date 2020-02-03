@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
     public NodeScript[] nScript = new NodeScript[25];
 
     float nodeSpeed = 100.0f;
+    public float baseNodeSpeed = 100.0f;
     public float manualNodeSpeed = 5.0f;
+    public float delaySpeed = 20.0f;
 
     int hideX, hideY;
     int ori1X, ori1Y;
@@ -52,12 +54,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        nodeSpeed = 100.0f;
+        nodeSpeed = baseNodeSpeed;
         puzzle = transform.parent.Find("Puzzle");
 
         nScript = puzzle.GetComponentsInChildren<NodeScript>();
 
-        hideNode = puzzle.GetChild(Random.Range(0, 25));
+        //hideNode = puzzle.GetChild(Random.Range(0, 25));
+        hideNode = puzzle.GetChild(24);
         hideX = hideNode.GetComponent<NodeScript>().poxNowX;
         hideY = hideNode.GetComponent<NodeScript>().poxNowY;
 
@@ -233,14 +236,16 @@ public class GameManager : MonoBehaviour
         lVal += Time.deltaTime * nodeSpeed;
         for (int i = 0; i < cnt; i++)
         {
-            mNodes[i].position = Vector3.Lerp(mNodes[i].position, mNodesPos[i + 1], lVal);
+            mNodes[i].position = Vector3.Lerp(mNodes[i].position, mNodesPos[i + 1], lVal-(delaySpeed*(cnt-i)*Time.deltaTime));
         }
-        if (lVal >= 1.0f)
+        if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
         {
             for (int i = 0; i < cnt; i++)
             {
                 mNodes[i].GetComponent<NodeScript>().poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
                 mNodes[i].GetComponent<NodeScript>().poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
+
+                mNodes[i].position = mNodesPos[i + 1];
             }
 
             lVal = 0.0f;
@@ -265,6 +270,9 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("NOT YET!!!");
                 }
+
+                nodeSpeed = manualNodeSpeed;
+
                 uAction = CheckClick;
             }
         }

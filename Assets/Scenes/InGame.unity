@@ -3061,7 +3061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0cde81f1529819429777a1de91dff74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rMixV: {x: 500, y: 800}
+  rMixV: {x: 50, y: 80}
   puzzle: {fileID: 0}
   blocks: []
   nScript:
@@ -3090,6 +3090,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  baseNodeSpeed: 100
+  manualNodeSpeed: 1
+  delaySpeed: 20
 --- !u!1 &1650409043
 GameObject:
   m_ObjectHideFlags: 0
