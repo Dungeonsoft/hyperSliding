@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
@@ -25,6 +26,9 @@ public class GameManager : MonoBehaviour
     public float delaySpeed = 20.0f;
 
     public AnimationCurve ac;
+
+    public Text timeDigit;
+    float timer;
 
     int hideX, hideY;
     int ori1X, ori1Y;
@@ -51,6 +55,7 @@ public class GameManager : MonoBehaviour
     Vector2 clickedNode;
 
     Action uAction = null;
+    Action uActionTimer = null;
     #endregion
 
 
@@ -75,7 +80,8 @@ public class GameManager : MonoBehaviour
         mixRnd = Random.Range( rMixV.x, rMixV.y);
         Debug.Log("Random Mix Counter : " + mixRnd);
 
-
+        timeDigit.text = "00:00:00";
+        timer = 0;
         uAction = MixCount;
     }
 
@@ -93,6 +99,7 @@ public class GameManager : MonoBehaviour
             nodeSpeed = manualNodeSpeed;
             Debug.Log("=====Now You can click nodes!=====");
             uAction = CheckClick;
+            uActionTimer = CheckTime;
         }
     }
 
@@ -268,6 +275,8 @@ public class GameManager : MonoBehaviour
                 if(isCorrect == true)
                 {
                     Debug.Log("YOU WIN!!!");
+                    uActionTimer = null;
+                    timeDigit.color = Color.yellow;
                 }
                 else
                 {
@@ -325,11 +334,34 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    int h = 0;
+    int m = 0;
+    void CheckTime()
+    {
+        timer += Time.deltaTime;
+        if (timer >= 60.0f)
+        {
+            m++; 
+            timer -= 60.0f; ;
+        }
+        if(m>= 60)
+        {
+            h++;
+            m -= 60;
+        }
+        timeDigit.text =h.ToString("00")+" : "+ m.ToString("00") + " : "+timer.ToString();
+    }
+
     private void Update()
     {
         if (uAction != null)
         {
             uAction();
+        }
+
+        if(uActionTimer != null)
+        {
+            uActionTimer();
         }
     }
 
