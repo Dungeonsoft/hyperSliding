@@ -3062,75 +3062,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rMixV: {x: 50, y: 80}
-  puzzle: {fileID: 0}
+  puzzle: {fileID: 895886685}
   blocks: []
   nScript:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 156513595}
+  - {fileID: 598452124}
+  - {fileID: 580640186}
+  - {fileID: 449668242}
+  - {fileID: 1198842309}
+  - {fileID: 222178656}
+  - {fileID: 10219135}
+  - {fileID: 393091586}
+  - {fileID: 1966419717}
+  - {fileID: 1303076401}
+  - {fileID: 1224104727}
+  - {fileID: 1818163841}
+  - {fileID: 1141210977}
+  - {fileID: 860463584}
+  - {fileID: 832945029}
+  - {fileID: 1682703459}
+  - {fileID: 958455674}
+  - {fileID: 510599783}
+  - {fileID: 1887758610}
+  - {fileID: 1743732417}
+  - {fileID: 737492114}
+  - {fileID: 662711886}
+  - {fileID: 1987087326}
+  - {fileID: 201422792}
+  - {fileID: 1650409046}
   baseNodeSpeed: 100
-  manualNodeSpeed: 1
-  delaySpeed: 2
+  manualNodeSpeed: 5
+  delaySpeed: 10
   ac:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.0027988295
-      outSlope: 0.0027988295
+      inSlope: -0
+      outSlope: -0
       tangentMode: 0
       weightedMode: 2
       inWeight: 0
-      outWeight: 0.9730064
+      outWeight: 0.49358976
     - serializedVersion: 3
-      time: 0.51790845
-      value: 0.99375784
-      inSlope: 467.21722
-      outSlope: -7.8462543
+      time: 0.70882595
+      value: 1.0004374
+      inSlope: 17.132586
+      outSlope: -8.654084
       tangentMode: 1
       weightedMode: 3
-      inWeight: 0.0034183206
-      outWeight: 0.3281265
+      inWeight: 0.035066888
+      outWeight: 0.14040747
     - serializedVersion: 3
-      time: 0.7761406
-      value: 0.32234058
-      inSlope: -0.037379265
-      outSlope: -0.037379265
+      time: 0.79295087
+      value: 0.8592104
+      inSlope: 0.01140904
+      outSlope: 0.01140904
       tangentMode: 0
       weightedMode: 3
-      inWeight: 0.2412475
-      outWeight: 0.5839726
+      inWeight: 0.38457796
+      outWeight: 0.5558551
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 14.415448
-      outSlope: 14.415448
+      value: 1.0000849
+      inSlope: 17.51309
+      outSlope: 17.51309
       tangentMode: 0
       weightedMode: 1
-      inWeight: 0.111602925
+      inWeight: 0.034040745
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
