@@ -349,7 +349,7 @@ public class GameManager : MonoBehaviour
             h++;
             m -= 60;
         }
-        timeDigit.text =h.ToString("00")+" : "+ m.ToString("00") + " : "+timer.ToString();
+        timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
     }
 
     private void Update()
