@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
@@ -19,7 +20,15 @@ public class GameManager : MonoBehaviour
     public List<NodeY> blocks = new List<NodeY>();
     public NodeScript[] nScript = new NodeScript[25];
 
-    float nodeSpeed = 20.0f;
+    float nodeSpeed = 100.0f;
+    public float baseNodeSpeed = 100.0f;
+    public float manualNodeSpeed = 5.0f;
+    public float delaySpeed = 20.0f;
+
+    public AnimationCurve ac;
+
+    public Text timeDigit;
+    float timer;
 
     int hideX, hideY;
     int ori1X, ori1Y;
@@ -46,17 +55,19 @@ public class GameManager : MonoBehaviour
     Vector2 clickedNode;
 
     Action uAction = null;
+    Action uActionTimer = null;
     #endregion
 
 
     private void Awake()
     {
-        nodeSpeed = 100.0f;
+        nodeSpeed = baseNodeSpeed;
         puzzle = transform.parent.Find("Puzzle");
 
         nScript = puzzle.GetComponentsInChildren<NodeScript>();
 
-        hideNode = puzzle.GetChild(Random.Range(0, 25));
+        //hideNode = puzzle.GetChild(Random.Range(0, 25));
+        hideNode = puzzle.GetChild(24);
         hideX = hideNode.GetComponent<NodeScript>().poxNowX;
         hideY = hideNode.GetComponent<NodeScript>().poxNowY;
 
@@ -69,7 +80,8 @@ public class GameManager : MonoBehaviour
         mixRnd = Random.Range( rMixV.x, rMixV.y);
         Debug.Log("Random Mix Counter : " + mixRnd);
 
-
+        timeDigit.text = "00:00:00";
+        timer = 0;
         uAction = MixCount;
     }
 
@@ -84,9 +96,10 @@ public class GameManager : MonoBehaviour
         else
         {
             isMixed = true;
-            nodeSpeed = 5.0f;
+            nodeSpeed = manualNodeSpeed;
             Debug.Log("=====Now You can click nodes!=====");
             uAction = CheckClick;
+            uActionTimer = CheckTime;
         }
     }
 
@@ -232,14 +245,17 @@ public class GameManager : MonoBehaviour
         lVal += Time.deltaTime * nodeSpeed;
         for (int i = 0; i < cnt; i++)
         {
-            mNodes[i].position = Vector3.Lerp(mNodes[i].position, mNodesPos[i + 1], lVal);
+            float v = ac.Evaluate(lVal - (delaySpeed * (cnt - i) * Time.deltaTime));
+            mNodes[i].position = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
         }
-        if (lVal >= 1.0f)
+        if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
         {
             for (int i = 0; i < cnt; i++)
             {
                 mNodes[i].GetComponent<NodeScript>().poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
                 mNodes[i].GetComponent<NodeScript>().poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
+
+                mNodes[i].position = mNodesPos[i + 1];
             }
 
             lVal = 0.0f;
@@ -259,11 +275,16 @@ public class GameManager : MonoBehaviour
                 if(isCorrect == true)
                 {
                     Debug.Log("YOU WIN!!!");
+                    uActionTimer = null;
+                    timeDigit.color = Color.yellow;
                 }
                 else
                 {
                     Debug.Log("NOT YET!!!");
                 }
+
+                nodeSpeed = manualNodeSpeed;
+
                 uAction = CheckClick;
             }
         }
@@ -313,11 +334,34 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    int h = 0;
+    int m = 0;
+    void CheckTime()
+    {
+        timer += Time.deltaTime;
+        if (timer >= 60.0f)
+        {
+            m++; 
+            timer -= 60.0f; ;
+        }
+        if(m>= 60)
+        {
+            h++;
+            m -= 60;
+        }
+        timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
+    }
+
     private void Update()
     {
         if (uAction != null)
         {
             uAction();
+        }
+
+        if(uActionTimer != null)
+        {
+            uActionTimer();
         }
     }
 
