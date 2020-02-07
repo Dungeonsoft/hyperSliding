@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     List<Transform> mNodes;
     List<Vector3> mNodesPos;
+    List<bool> isFX;
 
     Vector3 selNodePosition;
     Vector3 hideNodePosition;
@@ -56,6 +57,9 @@ public class GameManager : MonoBehaviour
 
     Action uAction = null;
     Action uActionTimer = null;
+
+    // 이펙트 발동 여부 체크//
+    //bool isFX = false;
     #endregion
 
 
@@ -209,10 +213,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        mNodesPos = new List<Vector3>();
+        isFX = new List<bool>();
+
+    mNodesPos = new List<Vector3>();
         foreach(var node in mNodes)
         {
             mNodesPos.Add(node.position);
+            isFX.Add(node.GetComponent<NodeFX>().isFX);
         }
 
 
@@ -239,6 +246,8 @@ public class GameManager : MonoBehaviour
         return sNode;
     }
 
+
+
     void MovingNodes()
     {
         int cnt = mNodes.Count - 1;
@@ -247,7 +256,19 @@ public class GameManager : MonoBehaviour
         {
             float v = ac.Evaluate(lVal - (delaySpeed * (cnt - i) * Time.deltaTime));
             mNodes[i].position = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
+
+            //벽 또는 다른 노드와 부딪힐때 이펙트를 발동시키는 부분. 
+            if (isMixed)
+            {
+                if (isFX[i] == false && (lVal - (delaySpeed * (cnt-i) * Time.deltaTime)) >= 0.7088259f)
+                {
+                    isFX[i] = true;
+                    mNodes[i].GetComponent<NodeFX>().ActionCrashFX(i);
+                    Debug.Log("Crash FX :: " + mNodes[i].name);
+                }
+            }
         }
+        
         if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
         {
             for (int i = 0; i < cnt; i++)
@@ -264,12 +285,21 @@ public class GameManager : MonoBehaviour
             hideNode.GetComponent<NodeScript>().poxNowX = hideX;
             hideNode.GetComponent<NodeScript>().poxNowY = hideY;
 
+            // 최초 인게임 작동시 셔플이 다 되지 않았을때 오는 곳.
             if (isMixed != true)
             {
                 uAction = MixCount;
             }
+            // 셔플이 다 되면 모든 블럭이 이동후 이곳으로 온다.
             else
             {
+                // 크래쉬 이펙트가 끝났으니 다시 크래쉬 이펙트를 사용할 수 있게 초기화한다.
+                // 초기화 하는 방법은 NodeFX에 있는 isFX를 false로 바꾸는 것이다.
+                for (int i = 0; i < cnt; i++)
+                {
+                    mNodes[i].GetComponent<NodeFX>().isFX = false;
+                    //isFX[i] = false;
+                }
                 bool isCorrect = CheckCorrect();
 
                 if(isCorrect == true)
@@ -280,7 +310,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("NOT YET!!!");
+                    //Debug.Log("NOT YET!!!");
                 }
 
                 nodeSpeed = manualNodeSpeed;
@@ -320,14 +350,14 @@ public class GameManager : MonoBehaviour
 
     bool CheckCorrect()
     {
-        Debug.Log(nScript.Length);
+        //Debug.Log(nScript.Length);
         for (var i=0; i< nScript.Length; i++)
         {
             NodeScript s = nScript[i];
             if (s.oriPosX != s.poxNowX || s.oriPosY != s.poxNowY)
             {
-                Debug.Log(s.name);
-                Debug.Log("Corrected Node :: "+ i);
+                //Debug.Log(s.name);
+                //Debug.Log("Corrected Node :: "+ i);
                 return false;
             }
         }
