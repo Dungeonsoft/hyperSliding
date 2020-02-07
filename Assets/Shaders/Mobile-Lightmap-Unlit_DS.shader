@@ -25,7 +25,5 @@ Shader "Mobile/DS/Unlit (Supports Lightmap)" {
 				combine texture, constant // UNITY_OPAQUE_ALPHA_FFP
 			}
 		}
-
-		// Lightmapped
 	}
 }
