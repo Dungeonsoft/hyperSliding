@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public float manualNodeSpeed = 5.0f;
     public float delaySpeed = 20.0f;
 
+    public GameObject tFX;
+
     public AnimationCurve ac;
 
     public Text timeDigit;
@@ -76,6 +78,7 @@ public class GameManager : MonoBehaviour
         hideY = hideNode.GetComponent<NodeScript>().poxNowY;
 
         hideNode.gameObject.SetActive(false);
+        tFX.SetActive(false);
     }
 
     private void Start()
@@ -247,7 +250,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
     void MovingNodes()
     {
         int cnt = mNodes.Count - 1;
@@ -320,6 +322,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    // 터치를 하면 노드를 터치했는지 감지한다.
     void CheckClick()
     {
         if (Input.GetMouseButtonDown(0))
@@ -330,6 +334,7 @@ public class GameManager : MonoBehaviour
             Transform hitTransform = hit.transform;
             if(hitTransform.CompareTag("Node"))
             {
+                TouchFX(hitTransform.position);
                 string tn = hitTransform.name;
                 //Debug.Log("Transform Name: "+tn);
 
@@ -382,6 +387,12 @@ public class GameManager : MonoBehaviour
         timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
     }
 
+    void TouchFX(Vector3 pos)
+    {
+        tFX.transform.position = new Vector3(pos.x, 0.1f, pos.z);
+        tFX.SetActive(true);
+
+    }
     private void Update()
     {
         if (uAction != null)
