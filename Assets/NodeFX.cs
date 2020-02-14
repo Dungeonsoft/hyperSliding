@@ -65,7 +65,7 @@ public class NodeFX : MonoBehaviour
 
         if (lerpTime >= 1)
         {
-            Debug.Log("Crash Clear!!");
+            //Debug.Log("Crash Clear!!");
             lerpTime = 0.0f;
             uAction -= CrashFX;
         }

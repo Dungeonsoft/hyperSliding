@@ -16,6 +16,7 @@ public class TouchFxCon : MonoBehaviour
     float timeStart;
     float timeNow;
 
+    bool isMovale;
 
     Action uAction;
 
@@ -26,13 +27,9 @@ public class TouchFxCon : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    private void OnEnable()
+    public void FxCon(bool isMove)
     {
-        FxCon();
-    }
-
-    void FxCon()
-    {
+        isMovale = isMove;
         timeStart = Time.time;
         uAction = StartFX;
     }
@@ -47,7 +44,7 @@ public class TouchFxCon : MonoBehaviour
 
         if(eVal>=1)
         {
-            Debug.Log("End FX: "+acOpaque.Evaluate(eVal));
+            //Debug.Log("End FX: "+acOpaque.Evaluate(eVal));
             uAction = EndFX;
         }
     }

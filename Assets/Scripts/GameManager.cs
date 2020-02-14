@@ -25,7 +25,21 @@ public class GameManager : MonoBehaviour
     public float manualNodeSpeed = 5.0f;
     public float delaySpeed = 20.0f;
 
-    public GameObject tFX;
+
+    /// <summary>
+    /// 터치 이펙트의 부모 폴더 지정.
+    /// </summary>
+    public Transform tFX;
+
+    /// <summary>
+    /// 터치 이펙트들을 미리 모아놓는 폴더 역할 리스트 배열.
+    /// </summary>
+    List<Transform> tFxKids = new List<Transform>();
+
+    /// <summary>
+    /// 터치가 발생하면 터치 이펙트를 모아놓는 폴더역할 리스트 배열.
+    /// </summary>
+    List<Transform> savedTfxs = new List<Transform>();
 
     public AnimationCurve ac;
 
@@ -36,6 +50,9 @@ public class GameManager : MonoBehaviour
     int ori1X, ori1Y;
     int ori2X, ori2Y;
 
+    /// <summary>
+    /// 숨겨진 노드는 일반적으로 마지막 번호인 25번이다.
+    /// </summary>
     Transform hideNode;
 
     Transform selNode;
@@ -55,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     bool isMixed;
 
-    Vector2 clickedNode;
+    List<Vector2> clickedNode = new List<Vector2>();
 
     Action uAction = null;
     Action uActionTimer = null;
@@ -78,7 +95,18 @@ public class GameManager : MonoBehaviour
         hideY = hideNode.GetComponent<NodeScript>().poxNowY;
 
         hideNode.gameObject.SetActive(false);
-        tFX.SetActive(false);
+
+
+        //tFX.SetActive(false);
+
+        //여기서 미리 터치 에펙트를 소환하기(찾기) 좋게 리스트 배열로 묶어둠
+        for(int i =0; i< tFX.childCount;i++)
+        {
+            //터치 이펙트는 처음에 보이면 안되니 처음 시작시 무조건 감추어 놓는다.
+            tFxKids.Add(tFX.GetChild(i));
+            tFX.GetChild(i).gameObject.SetActive(false);
+        }
+
     }
 
     private void Start()
@@ -105,6 +133,8 @@ public class GameManager : MonoBehaviour
             isMixed = true;
             nodeSpeed = manualNodeSpeed;
             Debug.Log("=====Now You can click nodes!=====");
+            
+            // CheckClick이 최초로 들어가는 부분 //  그러니 다른 함수가 델리게이트에 있으면 안되는 그냥 단독으로 넣어준다.
             uAction = CheckClick;
             uActionTimer = CheckTime;
         }
@@ -112,6 +142,7 @@ public class GameManager : MonoBehaviour
 
     void CalcurateMovableNode()
     {
+        //Debug.Log("움직일 노드를 찾는 계산을 함");
         ori2X = ori1X;
         ori2Y = ori1Y;
         ori1X = hideX;
@@ -133,6 +164,9 @@ public class GameManager : MonoBehaviour
 
         int r = 0; //랜덤 선택용 변수.
 
+
+        // 처음에 섞을때.
+        #region
         if (isMixed != true)
         {
             bool wBool = true;
@@ -157,14 +191,18 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        #endregion
+
+        //이미 섞고 인게임중에.
+        #region
         else
         {
-            //Debug.Log("Clicked Node!!! __ 01");
-            for(int i =0; i< 10; i++)
+            Debug.Log("Clicked Node!!! __ 01");
+            for (int i = 0; i < 10; i++)
             {
-                if(posN[i] == clickedNode)
+                if (clickedNode.Count>0 && posN[i] == clickedNode[0])
                 {
-                    //Debug.Log("Clicked Node!!! __ 02");
+                    Debug.Log("Clicked Node!!! __ 02");
                     r = i;
 
                     int xx = (int)(posN[r].x);
@@ -177,11 +215,12 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        #endregion
 
         mNodes = new List<Transform>();
-        if(r<5)
+        if (r < 5)
         {
-            int interVal =Mathf.Abs( hideX - ori1X);
+            int interVal = Mathf.Abs(hideX - ori1X);
             if (hideX > ori1X)
             {
                 for (var i = 0; i <= interVal; i++)
@@ -218,8 +257,8 @@ public class GameManager : MonoBehaviour
 
         isFX = new List<bool>();
 
-    mNodesPos = new List<Vector3>();
-        foreach(var node in mNodes)
+        mNodesPos = new List<Vector3>();
+        foreach (var node in mNodes)
         {
             mNodesPos.Add(node.position);
             isFX.Add(node.GetComponent<NodeFX>().isFX);
@@ -229,7 +268,8 @@ public class GameManager : MonoBehaviour
         #region 노드를 옮기고 노드의 현재 위치값을 교정하고 비어있는 노드의(hideNode) 현재 위치 값을 교정한다.
         selNodePosition = mNodes[0].position;
         hideNodePosition = hideNode.position;
-        uAction = MovingNodes;
+        uAction += MovingNodes;
+        uAction -= CalcurateMovableNode;
         #endregion
     }
 
@@ -266,7 +306,7 @@ public class GameManager : MonoBehaviour
                 {
                     isFX[i] = true;
                     mNodes[i].GetComponent<NodeFX>().ActionCrashFX(i);
-                    Debug.Log("Crash FX :: " + mNodes[i].name);
+                    //Debug.Log("Crash FX :: " + mNodes[i].name);
                 }
             }
         }
@@ -300,11 +340,10 @@ public class GameManager : MonoBehaviour
                 for (int i = 0; i < cnt; i++)
                 {
                     mNodes[i].GetComponent<NodeFX>().isFX = false;
-                    //isFX[i] = false;
                 }
                 bool isCorrect = CheckCorrect();
 
-                if(isCorrect == true)
+                if (isCorrect == true)
                 {
                     Debug.Log("YOU WIN!!!");
                     uActionTimer = null;
@@ -317,7 +356,17 @@ public class GameManager : MonoBehaviour
 
                 nodeSpeed = manualNodeSpeed;
 
-                uAction = CheckClick;
+                //위치가 다 옮겨진 노드 정보는 삭제한다.
+                if (clickedNode.Count > 0)
+                    clickedNode.RemoveAt(0);
+                
+                if (clickedNode.Count == 0)
+                {
+                    uAction -= CalcurateMovableNode;
+                    uAction -= MovingNodes;
+                }
+                else
+                    uAction += CalcurateMovableNode;
             }
         }
     }
@@ -328,30 +377,58 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            //Debug.Log("터치 함");
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out RaycastHit hit);
 
             Transform hitTransform = hit.transform;
             if(hitTransform.CompareTag("Node"))
             {
-                TouchFX(hitTransform.position);
                 string tn = hitTransform.name;
                 //Debug.Log("Transform Name: "+tn);
 
                 NodeScript hideN = hideNode.GetComponent<NodeScript>();
                 NodeScript hitN = hitTransform.GetComponent<NodeScript>();
 
-                clickedNode = new Vector2(hitN.poxNowX, hitN.poxNowY);
+                // 이곳에 클릭한 노드들의 값을 저장.
+                clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
 
+                bool isMovable = false;
                 if ((hideN.poxNowX == hitN.poxNowX) || (hideN.poxNowY == hitN.poxNowY))
                 {
                     //Debug.Log("Movable!!");
 
-                    uAction = CalcurateMovableNode;
+                    //RunDelayed(2f, () =>
+                    //{
+                    //    Debug.Log("Delayed!!");
+                    //});
+
+                    // 아직 아무 동작도 하지 않을 경우(움직이는 노드가 없는 상태일경우)
+                    //uAction += CalcurateMovableNode;
+
+                    if(clickedNode.Count == 1) uAction += CalcurateMovableNode;
+                    // 터치 이펙트 발동과 노드 이동 이펙트도 발동 할수 있도록 true로 변경한다.
+                    isMovable = true;
                 }
+
+                TouchFX(hitTransform.position, isMovable);
             }
         }
     }
+
+
+    Coroutine RunDelayed(float v, Action a)
+    {
+        return StartCoroutine(DelayedCoroutine(v, a));
+    }
+
+    IEnumerator DelayedCoroutine(float v, Action a)
+    {
+        yield return new WaitForSeconds(v);
+        a();
+    }
+
 
     bool CheckCorrect()
     {
@@ -387,12 +464,22 @@ public class GameManager : MonoBehaviour
         timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
     }
 
-    void TouchFX(Vector3 pos)
+    void TouchFX(Vector3 pos, bool isMovable = false)
     {
-        tFX.transform.position = new Vector3(pos.x, 0.1f, pos.z);
-        tFX.SetActive(true);
+       foreach (var v in tFxKids)
+        {
+            if (v.gameObject.activeSelf == false)
+            {
+                v.gameObject.SetActive(true);
+                v.GetComponent<TouchFxCon>().FxCon(isMovable);
+                v.position = new Vector3(pos.x, 0.1f, pos.z);
 
-    }
+                //savedTfxs.Add(v.transform);
+                break;
+            }
+        }
+   }
+
     private void Update()
     {
         if (uAction != null)

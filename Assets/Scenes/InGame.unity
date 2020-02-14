@@ -1372,7 +1372,6 @@ GameObject:
   - component: {fileID: 489476992}
   - component: {fileID: 489476996}
   - component: {fileID: 489476995}
-  - component: {fileID: 489476994}
   - component: {fileID: 489476993}
   m_Layer: 0
   m_Name: fx07
@@ -1474,21 +1473,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &489476994
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 489476991}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &489476995
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1668,7 +1653,6 @@ GameObject:
   - component: {fileID: 555588250}
   - component: {fileID: 555588254}
   - component: {fileID: 555588253}
-  - component: {fileID: 555588252}
   - component: {fileID: 555588251}
   m_Layer: 0
   m_Name: fx11
@@ -1770,21 +1754,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &555588252
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 555588249}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &555588253
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2043,7 +2013,6 @@ GameObject:
   - component: {fileID: 588322737}
   - component: {fileID: 588322741}
   - component: {fileID: 588322740}
-  - component: {fileID: 588322739}
   - component: {fileID: 588322738}
   m_Layer: 0
   m_Name: fx05
@@ -2145,21 +2114,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &588322739
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588322736}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &588322740
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3841,7 +3796,6 @@ GameObject:
   - component: {fileID: 1016886365}
   - component: {fileID: 1016886369}
   - component: {fileID: 1016886368}
-  - component: {fileID: 1016886367}
   - component: {fileID: 1016886366}
   m_Layer: 0
   m_Name: fx10
@@ -3943,21 +3897,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1016886367
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016886364}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1016886368
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4016,7 +3956,6 @@ GameObject:
   - component: {fileID: 1018543978}
   - component: {fileID: 1018543982}
   - component: {fileID: 1018543981}
-  - component: {fileID: 1018543980}
   - component: {fileID: 1018543979}
   m_Layer: 0
   m_Name: fx09
@@ -4118,21 +4057,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1018543980
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1018543977}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1018543981
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4191,7 +4116,6 @@ GameObject:
   - component: {fileID: 1032097730}
   - component: {fileID: 1032097734}
   - component: {fileID: 1032097733}
-  - component: {fileID: 1032097732}
   - component: {fileID: 1032097731}
   m_Layer: 0
   m_Name: fx01
@@ -4293,21 +4217,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1032097732
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1032097729}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1032097733
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5054,7 +4964,6 @@ GameObject:
   - component: {fileID: 1331864304}
   - component: {fileID: 1331864308}
   - component: {fileID: 1331864307}
-  - component: {fileID: 1331864306}
   - component: {fileID: 1331864305}
   m_Layer: 0
   m_Name: fx06
@@ -5156,21 +5065,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1331864306
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1331864303}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1331864307
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5229,7 +5124,6 @@ GameObject:
   - component: {fileID: 1436460680}
   - component: {fileID: 1436460684}
   - component: {fileID: 1436460683}
-  - component: {fileID: 1436460682}
   - component: {fileID: 1436460681}
   m_Layer: 0
   m_Name: fx02
@@ -5331,21 +5225,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1436460682
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1436460679}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1436460683
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5891,7 +5771,6 @@ GameObject:
   - component: {fileID: 1615107646}
   - component: {fileID: 1615107650}
   - component: {fileID: 1615107649}
-  - component: {fileID: 1615107648}
   - component: {fileID: 1615107647}
   m_Layer: 0
   m_Name: fx12
@@ -5993,21 +5872,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1615107648
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615107645}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1615107649
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6130,7 +5995,7 @@ MonoBehaviour:
   baseNodeSpeed: 100
   manualNodeSpeed: 4
   delaySpeed: 6
-  tFX: {fileID: 1032097729}
+  tFX: {fileID: 1191961859}
   ac:
     serializedVersion: 2
     m_Curve:
@@ -7143,7 +7008,6 @@ GameObject:
   - component: {fileID: 1831979503}
   - component: {fileID: 1831979507}
   - component: {fileID: 1831979506}
-  - component: {fileID: 1831979505}
   - component: {fileID: 1831979504}
   m_Layer: 0
   m_Name: fx04
@@ -7245,21 +7109,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1831979505
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831979502}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1831979506
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7439,7 +7289,6 @@ GameObject:
   - component: {fileID: 1918387780}
   - component: {fileID: 1918387784}
   - component: {fileID: 1918387783}
-  - component: {fileID: 1918387782}
   - component: {fileID: 1918387781}
   m_Layer: 0
   m_Name: fx03
@@ -7541,21 +7390,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1918387782
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918387779}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1918387783
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7614,7 +7449,6 @@ GameObject:
   - component: {fileID: 1961794285}
   - component: {fileID: 1961794289}
   - component: {fileID: 1961794288}
-  - component: {fileID: 1961794287}
   - component: {fileID: 1961794286}
   m_Layer: 0
   m_Name: fx08
@@ -7716,21 +7550,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
-  speedFX: 3
---- !u!64 &1961794287
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961794284}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  speedFX: 1
 --- !u!23 &1961794288
 MeshRenderer:
   m_ObjectHideFlags: 0
