@@ -197,12 +197,12 @@ public class GameManager : MonoBehaviour
         #region
         else
         {
-            Debug.Log("Clicked Node!!! __ 01");
+            //Debug.Log("Clicked Node!!! __ 01 :: clickedNode.Count: "+ clickedNode.Count);
             for (int i = 0; i < 10; i++)
             {
                 if (clickedNode.Count>0 && posN[i] == clickedNode[0])
                 {
-                    Debug.Log("Clicked Node!!! __ 02");
+                    //Debug.Log("Clicked Node!!! __ 02");
                     r = i;
 
                     int xx = (int)(posN[r].x);
@@ -211,6 +211,7 @@ public class GameManager : MonoBehaviour
                     hideX = xx;
                     hideY = yy;
 
+                    clickedNode.RemoveAt(0);
                     break;
                 }
             }
@@ -289,14 +290,26 @@ public class GameManager : MonoBehaviour
         return sNode;
     }
 
+    bool isMovingNode = false;
 
     void MovingNodes()
     {
+        if (isMovingNode == false)
+        {
+            //Debug.Log("MovingNodes");
+            isMovingNode = true;
+        }
+
         int cnt = mNodes.Count - 1;
+        //Debug.Log("mNodes.Count: "+ mNodes.Count);
         lVal += Time.deltaTime * nodeSpeed;
         for (int i = 0; i < cnt; i++)
         {
             float v = ac.Evaluate(lVal - (delaySpeed * (cnt - i) * Time.deltaTime));
+            //if(i == 0)
+            //{
+            //    Debug.Log("V Value: " + v);
+            //}
             mNodes[i].position = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
 
             //벽 또는 다른 노드와 부딪힐때 이펙트를 발동시키는 부분. 
@@ -313,6 +326,7 @@ public class GameManager : MonoBehaviour
         
         if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
         {
+            //if (isMixed) Debug.Log("Lerp 끝난후 노드 위치 정리 : mNodes.Count : " + mNodes.Count);
             for (int i = 0; i < cnt; i++)
             {
                 mNodes[i].GetComponent<NodeScript>().poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
@@ -355,29 +369,49 @@ public class GameManager : MonoBehaviour
                 }
 
                 nodeSpeed = manualNodeSpeed;
-
+                //Debug.Log("터치후 블럭이동 완료");
                 //위치가 다 옮겨진 노드 정보는 삭제한다.
-                if (clickedNode.Count > 0)
-                    clickedNode.RemoveAt(0);
-                
-                if (clickedNode.Count == 0)
+                //if (clickedNode.Count > 0)
+                //    clickedNode.RemoveAt(0);
+
+                //Debug.Log("dTouch.RemoveAt(0)");
+                if (dTouch.Count > 0)
+                    dTouch.RemoveAt(0);
+
+                isMovingNode = false;
+                if (dTouch.Count == 0)
                 {
                     uAction -= CalcurateMovableNode;
                     uAction -= MovingNodes;
                 }
                 else
-                    uAction += CalcurateMovableNode;
+                {
+
+                    uAction -= CalcurateMovableNode;
+
+                    TouchAction(dTouch[0].ht, dTouch[0].m);
+                    uAction -= MovingNodes;
+                }
             }
         }
     }
 
+    [System.Serializable]
+    public class DelayTouch
+    {
+        public Transform ht;
+        public bool m;
+    }
+
+   //Action DelayTouch;
+    public List<DelayTouch> dTouch = new List<DelayTouch>();
 
     // 터치를 하면 노드를 터치했는지 감지한다.
     void CheckClick()
     {
-        if (Input.GetMouseButtonDown(0))
+       if (Input.GetMouseButtonDown(0))
         {
-            //Debug.Log("터치 함");
+            Debug.Log("터치 함");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out RaycastHit hit);
@@ -385,35 +419,99 @@ public class GameManager : MonoBehaviour
             Transform hitTransform = hit.transform;
             if(hitTransform.CompareTag("Node"))
             {
-                string tn = hitTransform.name;
-                //Debug.Log("Transform Name: "+tn);
-
-                NodeScript hideN = hideNode.GetComponent<NodeScript>();
-                NodeScript hitN = hitTransform.GetComponent<NodeScript>();
-
-                // 이곳에 클릭한 노드들의 값을 저장.
-                clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
 
                 bool isMovable = false;
-                if ((hideN.poxNowX == hitN.poxNowX) || (hideN.poxNowY == hitN.poxNowY))
+                TouchFX(hitTransform.position);
+
+                if (dTouch.Count > 0)
                 {
-                    //Debug.Log("Movable!!");
-
-                    //RunDelayed(2f, () =>
-                    //{
-                    //    Debug.Log("Delayed!!");
-                    //});
-
-                    // 아직 아무 동작도 하지 않을 경우(움직이는 노드가 없는 상태일경우)
-                    //uAction += CalcurateMovableNode;
-
-                    if(clickedNode.Count == 1) uAction += CalcurateMovableNode;
-                    // 터치 이펙트 발동과 노드 이동 이펙트도 발동 할수 있도록 true로 변경한다.
-                    isMovable = true;
+                    dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
+                    Debug.Log("두개이상");
                 }
+                else
+                {
+                    dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
+                    TouchAction(hitTransform, isMovable);
+                    Debug.Log("하나");
+                }
+                //string tn = hitTransform.name;
+                //Debug.Log("Transform Name: "+tn);
 
-                TouchFX(hitTransform.position, isMovable);
+                //NodeScript hideN = hideNode.GetComponent<NodeScript>();
+                //NodeScript hitN = hitTransform.GetComponent<NodeScript>();
+
+                // 이곳에 클릭한 노드들의 값을 저장.
+                //clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
+
+                //Debug.Log("25번 노드 위치: " + hideN.poxNowX + " -- " + hideN.poxNowY);
+                //Debug.Log("터치 노드 위치: " + hitN.poxNowX + " -- " + hitN.poxNowY);
+                //if ((hideN.poxNowX == hitN.poxNowX) || (hideN.poxNowY == hitN.poxNowY))
+                //{
+                //    Debug.Log("Movable!!");
+
+                //     이곳에 클릭한 노드들의 값을 저장.
+                //    clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
+
+                //    RunDelayed(2f, () =>
+                //    {
+                //        Debug.Log("Delayed!!");
+                //    });
+
+                //     아직 아무 동작도 하지 않을 경우(움직이는 노드가 없는 상태일경우)
+                //    uAction += CalcurateMovableNode;
+
+                //    if (clickedNode.Count == 1) uAction += CalcurateMovableNode;
+                //     터치 이펙트 발동과 노드 이동 이펙트도 발동 할수 있도록 true로 변경한다.
+                //    isMovable = true;
+                //}
+
             }
+        }
+    }   
+
+    void TouchAction(Transform hitTransform, bool isMovable)
+    {
+
+
+        string tn = hitTransform.name;
+        //Debug.Log("Transform Name: "+tn);
+
+        NodeScript hideN = hideNode.GetComponent<NodeScript>();
+        NodeScript hitN = hitTransform.GetComponent<NodeScript>();
+
+        // 이곳에 클릭한 노드들의 값을 저장.
+        //clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
+
+        //Debug.Log("25번 노드 위치: " + hideN.poxNowX + " -- " + hideN.poxNowY);
+        //Debug.Log("터치 노드 위치: " + hitN.poxNowX + " -- " + hitN.poxNowY);
+        if ((hideN.poxNowX == hitN.poxNowX) || (hideN.poxNowY == hitN.poxNowY))
+        {
+            //Debug.Log("Movable!!");
+
+            // 이곳에 클릭한 노드들의 값을 저장.
+            clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
+
+            //RunDelayed(2f, () =>
+            //{
+            //    Debug.Log("Delayed!!");
+            //});
+
+            // 아직 아무 동작도 하지 않을 경우(움직이는 노드가 없는 상태일경우)
+            //uAction += CalcurateMovableNode;
+
+            //if (clickedNode.Count == 1) uAction += CalcurateMovableNode;
+
+            uAction += CalcurateMovableNode;
+            // 터치 이펙트 발동과 노드 이동 이펙트도 발동 할수 있도록 true로 변경한다.
+            isMovable = true;
+
+        }
+        else
+        {
+            dTouch.RemoveAt(0);
+            // 멀티 터치는 구성 완료.
+            // 멀티 터치 중 중간에 잘못 눌렀을 경우 어떻게 처리를 할 것인지
+            // 논의가 필요함. 멈추게 할 것인지 아니면 그 다음 누른 것을 처리하게 할 것인지.
         }
     }
 
@@ -464,14 +562,14 @@ public class GameManager : MonoBehaviour
         timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
     }
 
-    void TouchFX(Vector3 pos, bool isMovable = false)
+    void TouchFX(Vector3 pos)
     {
        foreach (var v in tFxKids)
         {
             if (v.gameObject.activeSelf == false)
             {
                 v.gameObject.SetActive(true);
-                v.GetComponent<TouchFxCon>().FxCon(isMovable);
+                v.GetComponent<TouchFxCon>().FxCon();
                 v.position = new Vector3(pos.x, 0.1f, pos.z);
 
                 //savedTfxs.Add(v.transform);

@@ -27,11 +27,15 @@ public class TouchFxCon : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    public void FxCon(bool isMove)
+    public void FxCon()
     {
-        isMovale = isMove;
         timeStart = Time.time;
         uAction = StartFX;
+    }
+
+    public void MoveNodeCheck(bool b)
+    {
+        isMovale = b;
     }
 
     void StartFX()
