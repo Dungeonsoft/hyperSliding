@@ -26,7 +26,7 @@ public class NodeFX : MonoBehaviour
     private void Awake()
     {
         nodeMat = nodeObj.GetComponent<Renderer>().material;
-        defaultClr = nodeMat.GetColor("_EmissionColor");
+        //defaultClr = nodeMat.GetColor("_EmissionColor");
     }
 
     private void Start()
@@ -37,7 +37,7 @@ public class NodeFX : MonoBehaviour
     public void ActionCrashFX(float v)
     {
         strengthFx = (v+1.0f)* strengthFxBase;
-        uAction += CrashFX;
+        //uAction += CrashFX;
 
         //RunDelayed(2f, () =>
         //{
@@ -61,7 +61,7 @@ public class NodeFX : MonoBehaviour
     void CrashFX()
     {
         changeClr = Color.Lerp(crashClr * strengthFx, defaultClr, ac.Evaluate(lerpTime));
-        nodeMat.SetColor("_EmissionColor", changeClr);
+        //nodeMat.SetColor("_EmissionColor", changeClr);
 
         if (lerpTime >= 1)
         {
