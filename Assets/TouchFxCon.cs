@@ -10,6 +10,7 @@ public class TouchFxCon : MonoBehaviour
     public AnimationCurve acOpaque;
     public Color baseColor;
     public float speedFX;
+    public float emissivePower =1;
     
     Transform thisTrans;
     Material thisMat;
@@ -29,6 +30,7 @@ public class TouchFxCon : MonoBehaviour
 
     public void FxCon()
     {
+        Debug.Log("터치 이펙트 함수 실행__4 :: 이름 :"+this.name+" 액티브 상태: "+gameObject.activeSelf);
         timeStart = Time.time;
         uAction = StartFX;
     }
@@ -42,21 +44,21 @@ public class TouchFxCon : MonoBehaviour
     {
         timeNow = Time.time - timeStart;
         var eVal = timeNow * speedFX;
-        thisMat.SetColor("_EmissionColor", baseColor * acOpaque.Evaluate(eVal));
+        thisMat.SetFloat("_EmisPower", acOpaque.Evaluate(eVal)* emissivePower);
         thisTrans.localScale = Vector3.one * acScale.Evaluate(eVal);
 
 
         if(eVal>=1)
         {
-            //Debug.Log("End FX: "+acOpaque.Evaluate(eVal));
+            Debug.Log("End FX");
             uAction = EndFX;
         }
     }
 
     void EndFX()
     {
-        gameObject.SetActive(false);
         uAction = null;
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame

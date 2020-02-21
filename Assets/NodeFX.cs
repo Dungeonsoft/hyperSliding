@@ -12,9 +12,12 @@ public class NodeFX : MonoBehaviour
     float strengthFx;
     public AnimationCurve ac;
     
-    Color defaultClr;
-    Color changeClr;
-    
+    Color emisColor;
+    public float emisPower;
+    float emisPowerBase;
+    public float emisPowerMax =10f;
+
+
     Action uAction;
 
     float manualNodeSpeed;
@@ -26,7 +29,9 @@ public class NodeFX : MonoBehaviour
     private void Awake()
     {
         nodeMat = nodeObj.GetComponent<Renderer>().material;
-        //defaultClr = nodeMat.GetColor("_EmissionColor");
+        emisColor = nodeMat.GetColor("_EmisColor");
+        nodeMat.SetFloat("_EmisPower", emisPower);
+        emisPowerBase = emisPower;
     }
 
     private void Start()
@@ -37,7 +42,7 @@ public class NodeFX : MonoBehaviour
     public void ActionCrashFX(float v)
     {
         strengthFx = (v+1.0f)* strengthFxBase;
-        //uAction += CrashFX;
+        uAction += CrashFX;
 
         //RunDelayed(2f, () =>
         //{
@@ -60,13 +65,14 @@ public class NodeFX : MonoBehaviour
 
     void CrashFX()
     {
-        changeClr = Color.Lerp(crashClr * strengthFx, defaultClr, ac.Evaluate(lerpTime));
-        //nodeMat.SetColor("_EmissionColor", changeClr);
+        emisPower = Mathf.Lerp(emisPowerBase, emisPowerBase * emisPowerMax* strengthFx, ac.Evaluate(lerpTime));
+        nodeMat.SetFloat("_EmisPower", emisPower);
 
         if (lerpTime >= 1)
         {
             //Debug.Log("Crash Clear!!");
             lerpTime = 0.0f;
+            nodeMat.SetFloat("_EmisPower", emisPowerBase);
             uAction -= CrashFX;
         }
         else

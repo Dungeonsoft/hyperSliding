@@ -241,6 +241,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &156513592
 GameObject:
@@ -362,6 +364,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &161761249
 GameObject:
@@ -549,6 +553,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &222178653
 GameObject:
@@ -670,6 +676,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &279790521
 GameObject:
@@ -1103,6 +1111,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &397435967
 GameObject:
@@ -1360,6 +1370,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &489476991
 GameObject:
@@ -1388,7 +1400,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489476991}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -1474,6 +1486,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &489476995
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1641,6 +1654,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &555588249
 GameObject:
@@ -1669,7 +1684,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555588249}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -1755,6 +1770,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &555588253
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2001,6 +2017,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &588322736
 GameObject:
@@ -2029,7 +2047,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 588322736}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -2115,6 +2133,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &588322740
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2282,6 +2301,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &604991729
 GameObject:
@@ -2389,7 +2410,7 @@ Transform:
   m_GameObject: {fileID: 624123111}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.050000012, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 156513593}
   m_RootOrder: 0
@@ -2719,6 +2740,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &690333994
 GameObject:
@@ -2998,6 +3021,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &806812793
 GameObject:
@@ -3155,6 +3180,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &850739354
 GameObject:
@@ -3355,6 +3382,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &882092246
 GameObject:
@@ -3705,6 +3734,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &973185079
 GameObject:
@@ -3812,7 +3843,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1016886364}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -3898,6 +3929,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1016886368
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3972,7 +4004,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1018543977}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -4058,6 +4090,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1018543981
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4132,7 +4165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1032097729}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -4218,6 +4251,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1032097733
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4317,7 +4351,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 30
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -4468,6 +4502,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1191961858
 GameObject:
@@ -4631,6 +4667,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1224104724
 GameObject:
@@ -4752,6 +4790,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1285804849
 GameObject:
@@ -4952,6 +4992,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1331864303
 GameObject:
@@ -4980,7 +5022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1331864303}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -5066,6 +5108,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1331864307
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5140,7 +5183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436460679}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -5226,6 +5269,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1436460683
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5787,7 +5831,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615107645}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -5873,6 +5917,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1615107649
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5993,8 +6038,8 @@ MonoBehaviour:
   - {fileID: 201422792}
   - {fileID: 1650409046}
   baseNodeSpeed: 100
-  manualNodeSpeed: 1
-  delaySpeed: 2
+  manualNodeSpeed: 4
+  delaySpeed: 6
   tFX: {fileID: 1191961859}
   ac:
     serializedVersion: 2
@@ -6160,6 +6205,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1652189147
 GameObject:
@@ -6360,6 +6407,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1695877991
 GameObject:
@@ -6639,6 +6688,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1749309530
 GameObject:
@@ -6918,6 +6969,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1821616626
 GameObject:
@@ -7025,7 +7078,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831979502}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -7111,6 +7164,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1831979506
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7278,6 +7332,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1918387779
 GameObject:
@@ -7306,7 +7362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1918387779}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -7392,6 +7448,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1918387783
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7466,7 +7523,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1961794284}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1191961859}
@@ -7552,6 +7609,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   baseColor: {r: 0.65, g: 0, b: 1, a: 1}
   speedFX: 1
+  emissivePower: 10
 --- !u!23 &1961794288
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7719,6 +7777,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1987087323
 GameObject:
@@ -7840,6 +7900,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  emisPower: 1
+  emisPowerMax: 5
   isFX: 0
 --- !u!1 &1995184703
 GameObject:
