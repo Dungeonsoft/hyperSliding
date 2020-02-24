@@ -17,7 +17,6 @@ public class NodeFX : MonoBehaviour
     float emisPowerBase;
     public float emisPowerMax =10f;
 
-
     Action uAction;
 
     float manualNodeSpeed;
@@ -25,6 +24,8 @@ public class NodeFX : MonoBehaviour
     float lerpTime;
 
     public bool isFX;
+
+    public List<TouchFxCon> tfc = new List<TouchFxCon>();
 
     private void Awake()
     {
@@ -41,6 +42,7 @@ public class NodeFX : MonoBehaviour
 
     public void ActionCrashFX(float v)
     {
+        //touchFxCon().NodeMoving();
         strengthFx = (v+1.0f)* strengthFxBase;
         uAction += CrashFX;
 

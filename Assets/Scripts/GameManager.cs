@@ -29,17 +29,18 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 터치 이펙트의 부모 폴더 지정.
     /// </summary>
-    public Transform tFX;
+    public Transform tFX01;
+    public Transform tFX02;
 
     /// <summary>
     /// 터치 이펙트들을 미리 모아놓는 폴더 역할 리스트 배열.
     /// </summary>
-    List<Transform> tFxKids = new List<Transform>();
+    List<Transform> tFxKids01 = new List<Transform>();
 
     /// <summary>
     /// 터치가 발생하면 터치 이펙트를 모아놓는 폴더역할 리스트 배열.
     /// </summary>
-    List<Transform> savedTfxs = new List<Transform>();
+    List<Transform> tFxKids02 = new List<Transform>();
 
     public AnimationCurve ac;
 
@@ -100,12 +101,21 @@ public class GameManager : MonoBehaviour
         //tFX.SetActive(false);
 
         //여기서 미리 터치 에펙트를 소환하기(찾기) 좋게 리스트 배열로 묶어둠
-        for(int i =0; i< tFX.childCount;i++)
+        for (int i = 0; i < tFX01.childCount; i++)
         {
             //터치 이펙트는 처음에 보이면 안되니 처음 시작시 무조건 감추어 놓는다.
-            tFxKids.Add(tFX.GetChild(i));
-            tFX.GetChild(i).gameObject.SetActive(false);
+            tFxKids01.Add(tFX01.GetChild(i));
+            tFX01.GetChild(i).gameObject.SetActive(false);
         }
+        //여기서 미리 터치 에펙트를 소환하기(찾기) 좋게 리스트 배열로 묶어둠
+        for (int i = 0; i < tFX02.childCount; i++)
+        {
+            //터치 이펙트는 처음에 보이면 안되니 처음 시작시 무조건 감추어 놓는다.
+            tFxKids02.Add(tFX02.GetChild(i));
+            tFX02.GetChild(i).gameObject.SetActive(false);
+        }
+
+
 
     }
 
@@ -202,6 +212,7 @@ public class GameManager : MonoBehaviour
             {
                 if (clickedNode.Count>0 && posN[i] == clickedNode[0])
                 {
+                    //Debug.Log("움직일 수 있는 노트 선택!");
                     //Debug.Log("Clicked Node!!! __ 02");
                     r = i;
 
@@ -267,6 +278,20 @@ public class GameManager : MonoBehaviour
 
 
         #region 노드를 옮기고 노드의 현재 위치값을 교정하고 비어있는 노드의(hideNode) 현재 위치 값을 교정한다.
+
+        if (isMixed)
+        {
+            List<TouchFxCon> htTfc = new List<TouchFxCon>();
+            Debug.Log("HT Name: " + mNodes[0].name +" :: "+ mNodes[0].GetComponent<NodeFX>().tfc.Count);
+            htTfc = mNodes[0].GetComponent<NodeFX>().tfc;
+
+            foreach (var v in htTfc)
+            {
+                v.NodeMoving();
+            }
+            mNodes[0].GetComponent<NodeFX>().tfc = new List<TouchFxCon>();
+        }
+
         selNodePosition = mNodes[0].position;
         hideNodePosition = hideNode.position;
         uAction += MovingNodes;
@@ -405,7 +430,7 @@ public class GameManager : MonoBehaviour
 
    //Action DelayTouch;
     public List<DelayTouch> dTouch = new List<DelayTouch>();
-
+    Transform hitTransform;
     // 터치를 하면 노드를 터치했는지 감지한다.
     void CheckClick()
     {
@@ -416,40 +441,44 @@ public class GameManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out RaycastHit hit);
 
-            Transform hitTransform = hit.transform;
+            hitTransform = hit.transform;
             if (hitTransform.CompareTag("Node"))
             {
 
                 //터치 이펙트 함수 실행.
-                Debug.Log("터치 이펙트 함수 실행__1");
-                TouchFX(hitTransform.position);
+                //Debug.Log("터치 이펙트 함수 실행__1");
+
 
                 bool isMovable = false;
 
                 if (dTouch.Count > 0)
                 {
-                    dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                     Debug.Log("두개이상");
+                    TouchFX();
+                    Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
+                    dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                 }
                 else
                 {
+                    Debug.Log("하나");
+                    TouchFX();
+                    Debug.Log("등록이 되었나 : "+ hitTransform.name+" :: "+hitTransform.GetComponent<NodeFX>().tfc.Count);
                     dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                     TouchAction(hitTransform, isMovable);
-                    Debug.Log("하나");
                 }
             }
         }
     }
 
-    void TouchAction(Transform hitTransform, bool isMovable)
+    void TouchAction(Transform ht, bool isMovable)
     {
 
 
-        string tn = hitTransform.name;
+        string tn = ht.name;
         //Debug.Log("Transform Name: "+tn);
 
         NodeScript hideN = hideNode.GetComponent<NodeScript>();
-        NodeScript hitN = hitTransform.GetComponent<NodeScript>();
+        NodeScript hitN = ht.GetComponent<NodeScript>();
 
         // 이곳에 클릭한 노드들의 값을 저장.
         //clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
@@ -476,10 +505,17 @@ public class GameManager : MonoBehaviour
             uAction += CalcurateMovableNode;
             // 터치 이펙트 발동과 노드 이동 이펙트도 발동 할수 있도록 true로 변경한다.
             isMovable = true;
-
         }
         else
         {
+            // 잘못된 터치로 이동이 불가한 부분에서는 밝게 해주는 이펙트를 중지시킨다.
+            List<TouchFxCon> cc = ht.GetComponent<NodeFX>().tfc;
+            foreach (var v in cc)
+            {
+                v.NodeMoving();
+            }
+
+
             // 잘못된 터치(이동불가) 일때는 터치 정보를 바로 삭제한다.
             dTouch.RemoveAt(0);
 
@@ -539,23 +575,45 @@ public class GameManager : MonoBehaviour
         timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
     }
 
-    void TouchFX(Vector3 pos)
+    void TouchFX()
     {
-        Debug.Log("터치 이펙트 함수 실행__2");
-        foreach (var v in tFxKids)
+        //Debug.Log("터치 이펙트 함수 실행__2");
+
+        Vector3 pos = hitTransform.position;
+
+        // 파동형 이펙트.
+        foreach (var v in tFxKids01)
         {
             if (v.gameObject.activeSelf == false)
             {
-                Debug.Log("터치 이펙트 함수 실행__3 :: 이름: "+v.name);
+                //Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
                 v.gameObject.SetActive(true);
                 v.GetComponent<TouchFxCon>().FxCon();
                 v.position = new Vector3(pos.x, 0.3f, pos.z);
 
-                //savedTfxs.Add(v.transform);
+                //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
+                hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
+
                 break;
             }
         }
-   }
+
+        // 점멸형 이펙트.
+        foreach (var v in tFxKids02)
+        {
+            if (v.gameObject.activeSelf == false)
+            {
+                //Debug.Log("터치 이펙트02 함수 실행__3 :: 이름: " + v.name);
+                v.gameObject.SetActive(true);
+                v.GetComponent<TouchFxCon>().FxCon();
+                v.position = new Vector3(pos.x, 0.3f, pos.z);
+
+                //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
+                hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
+                break;
+            }
+        }
+    }
 
     private void Update()
     {
