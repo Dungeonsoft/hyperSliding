@@ -14,8 +14,8 @@ Shader "DGS/VertexLit Blended" {
 
 	SubShader{
 		Tags { "Queue" = "Transparent" "RenderType" = "Transparent"}
-		blend SrcAlpha OneMinusSrcAlpha
-		LOD 200
+		//blend SrcAlpha OneMinusSrcAlpha
+		blend SrcAlpha One
 
 		CGPROGRAM
 		#pragma surface surf Standard alpha:fade
@@ -30,8 +30,10 @@ Shader "DGS/VertexLit Blended" {
 
 		void surf(Input IN, inout SurfaceOutputStandard o) {
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-			o.Emission = c.rgb* _EmisColor.rgb * _EmisPower;
-			o.Alpha = c.a * c.a * _EmisPower;
+			fixed3 c2 = c.rgb * _EmisColor.rgb * _EmisPower;
+			o.Emission = c2+ c.rgb*(_EmisPower/4);
+			//o.Alpha = c.a * c.a * _EmisPower;
+			o.Alpha = c2.r* c2.r;
 		}
 		ENDCG
 	}

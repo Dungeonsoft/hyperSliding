@@ -11,8 +11,10 @@ public class NodeFX : MonoBehaviour
     public float strengthFxBase=1; 
     float strengthFx;
     public AnimationCurve ac;
-    
-    Color emisColor;
+
+    public Color emisColor;
+    public Color emisColorMax;
+    public Color emisColorBase;
     public float emisPower;
     float emisPowerBase;
     public float emisPowerMax =10f;
@@ -30,9 +32,9 @@ public class NodeFX : MonoBehaviour
     private void Awake()
     {
         nodeMat = nodeObj.GetComponent<Renderer>().material;
-        emisColor = nodeMat.GetColor("_EmisColor");
         nodeMat.SetFloat("_EmisPower", emisPower);
         emisPowerBase = emisPower;
+        nodeMat.SetColor("_EmisColor", emisColorBase);
     }
 
     private void Start()
@@ -40,10 +42,13 @@ public class NodeFX : MonoBehaviour
         manualNodeSpeed = GameObject.Find("GameManager").GetComponent<GameManager>().manualNodeSpeed;
     }
 
+    float strengthFxColor;
     public void ActionCrashFX(float v)
     {
         //touchFxCon().NodeMoving();
         strengthFx = (v+1.0f)* strengthFxBase;
+
+        strengthFxColor = strengthFx / 4f;
         uAction += CrashFX;
 
         //RunDelayed(2f, () =>
@@ -68,6 +73,8 @@ public class NodeFX : MonoBehaviour
     void CrashFX()
     {
         emisPower = Mathf.Lerp(emisPowerBase, emisPowerBase * emisPowerMax* strengthFx, ac.Evaluate(lerpTime));
+        emisColor = Color.Lerp(emisColorBase, emisColorMax* strengthFxColor, ac.Evaluate(lerpTime));
+        nodeMat.SetColor("_EmisColor",emisColor);
         nodeMat.SetFloat("_EmisPower", emisPower);
 
         if (lerpTime >= 1)
@@ -75,6 +82,7 @@ public class NodeFX : MonoBehaviour
             //Debug.Log("Crash Clear!!");
             lerpTime = 0.0f;
             nodeMat.SetFloat("_EmisPower", emisPowerBase);
+            nodeMat.SetColor("_EmisColor", emisColorBase);
             uAction -= CrashFX;
         }
         else
