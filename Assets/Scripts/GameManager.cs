@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 터치 이펙트들을 미리 모아놓는 폴더 역할 리스트 배열.
     /// </summary>
-    List<Transform> tFxKids01 = new List<Transform>();
+    public List<Transform> tFxKids01 = new List<Transform>();
 
     /// <summary>
     /// 터치가 발생하면 터치 이펙트를 모아놓는 폴더역할 리스트 배열.
@@ -512,7 +512,8 @@ public class GameManager : MonoBehaviour
             List<TouchFxCon> cc = ht.GetComponent<NodeFX>().tfc;
             foreach (var v in cc)
             {
-                v.NodeMoving();
+                Debug.Log("이차 파동형 이펙트 안생김");
+                v.NodeMovingNo();
             }
 
 
@@ -582,32 +583,33 @@ public class GameManager : MonoBehaviour
         Vector3 pos = hitTransform.position;
 
         // 파동형 이펙트.
-        foreach (var v in tFxKids01)
-        {
-            if (v.gameObject.activeSelf == false)
-            {
-                //Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
-                v.gameObject.SetActive(true);
-                v.GetComponent<TouchFxCon>().FxCon();
-                v.position = new Vector3(pos.x, 0.3f, pos.z);
+        //Debug.Log("파동형 이펙트");
+        //foreach (var v in tFxKids01)
+        //{
+        //    if (v.gameObject.activeSelf == false)
+        //    {
+        //        //Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
+        //        //v.gameObject.SetActive(true);
+        //        v.GetComponent<TouchFxCon>().FxCon();
+        //        v.position = new Vector3(pos.x, 0.3f, pos.z);
 
-                //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
-                hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
+        //        //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
+        //        hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
 
-                break;
-            }
-        }
+        //        break;
+        //    }
+        //}
 
         // 점멸형 이펙트.
         foreach (var v in tFxKids02)
         {
             if (v.gameObject.activeSelf == false)
             {
-                //Debug.Log("터치 이펙트02 함수 실행__3 :: 이름: " + v.name);
+                Debug.Log("터치 이펙트02 함수 실행 1:: 이름: " + v.name);
                 v.gameObject.SetActive(true);
                 v.GetComponent<TouchFxCon>().FxCon();
                 v.position = new Vector3(pos.x, 0.3f, pos.z);
-
+                v.GetComponent<TouchFxCon>().PoseMoving(hitTransform);
                 //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
                 hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
                 break;
