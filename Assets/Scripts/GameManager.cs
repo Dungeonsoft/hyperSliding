@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
     {
 
         mixRnd = Random.Range( rMixV.x, rMixV.y);
-        Debug.Log("Random Mix Counter : " + mixRnd);
+        //Debug.Log("Random Mix Counter : " + mixRnd);
 
         timeDigit.text = "00:00:00";
         timer = 0;
