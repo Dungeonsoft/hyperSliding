@@ -46,13 +46,12 @@ public class BgAnim : MonoBehaviour
 
     void Update()
     {
-        baseH += Time.deltaTime * colorChangeSpeed; 
+        baseH += Time.deltaTime * colorChangeSpeed;
 
-        rBase.material.SetColor("_EmisColor", baseClr);
-        
+
         float intervalBtClrsFloat = intervalBtClrs / 360f;
         float newH = 0;
-       
+
         for (int i = 0; i < rMat.Length; i++)
         {
             newH = (baseH + intervalBtClrsFloat * i);
@@ -65,6 +64,10 @@ public class BgAnim : MonoBehaviour
             rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, baseS, baseV));
         }
 
-        rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
+        if (rBase != null)
+        {
+            //rBase.material.SetColor("_EmisColor", baseClr);
+            rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
+        }
     }
 }
