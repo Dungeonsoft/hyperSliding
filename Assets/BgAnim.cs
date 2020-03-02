@@ -6,8 +6,11 @@ public class BgAnim : MonoBehaviour
 {
     public Color baseClr;
     float baseH;
+    float baseS;
+    float baseV;
     public float intervalBtClrs;
 
+    public Renderer rBase;
     public Renderer[] rMat;
 
     float outH, outS, outV;
@@ -23,7 +26,8 @@ public class BgAnim : MonoBehaviour
         Debug.Log("intervalBtClrs" + intervalBtClrs / 360f);
         Color.RGBToHSV(baseClr, out outH, out outS, out outV);
         baseH = outH;
-        Debug.Log("outH: "+ outH + "outS: " + outS + "outV: " + outV);
+        baseS = outS;
+        baseV = outV;
         
         for(int i =0; i<rMat.Length; i++)
         {
@@ -36,40 +40,31 @@ public class BgAnim : MonoBehaviour
                 else isCheck = false;
             }
             rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, outS, outV));
-
-            float hh, ss, vv = 0;
-            Color cc =rMat[i].material.GetColor("_EmisColor");
-            Color.RGBToHSV(cc, out hh, out ss, out vv);
-
-            //Debug.Log("Color: " + i + " : " +hh+" :: "+ss+ " :: " + vv); ;
         }
 
-        oldBaseClr = baseClr;
     }
 
-    Color oldBaseClr;
     void Update()
     {
         baseH += Time.deltaTime * colorChangeSpeed; 
-        // if (baseClr == oldBaseClr) return;
 
-        Color.RGBToHSV(baseClr, out outH, out outS, out outV);
-
-        outH = baseH;
-
+        rBase.material.SetColor("_EmisColor", baseClr);
+        
+        float intervalBtClrsFloat = intervalBtClrs / 360f;
+        float newH = 0;
+       
         for (int i = 0; i < rMat.Length; i++)
         {
-            var newH = (outH + (intervalBtClrs / 360f) * i);
+            newH = (baseH + intervalBtClrsFloat * i);
             bool isCheck = true;
             while (isCheck)
             {
                 if (newH > 1f) newH -= 1f;
                 else isCheck = false;
             }
-            //Debug.Log("newH: " + newH);
-            rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, outS, outV));
+            rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, baseS, baseV));
         }
 
-        oldBaseClr = baseClr;
+        rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
     }
 }
