@@ -1,18 +1,215 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+
+/// <summary>
+/// 가상의 아몬드서버를 만든다.
+/// 차후에 서버를 지원 받으면 이부분을 연결한다.
+/// </summary>
+public class AmondServer
+{
+    /// <summary>
+    /// 서버에서 광고가 가능한지를 체크하여 boolean 값으로 받아온다.
+    /// </summary>
+    /// <param name="ck"></param>
+    public bool CheckActivateCM_Server()
+    {
+        return true;
+    }
+
+
+    /// <summary>
+    /// 서버에서(정확히는 구글리더보드)에서 정보를 가지고 오게 한다.
+    /// 연결된 경우가 아니면(구글리더보드로그인을 안했거나 온라인이 아니면) 
+    /// 폰 내부에서 최고 점수를 가지고 온다.
+    /// </summary>
+    /// <returns></returns>
+    public int CheckBestScore_Server()
+    {
+        // 현재는 서버와 연결되지 않았으니 로컬에서 정볼ㄹ 가지고 오게 하거나.
+        // 한번도 실행한 적이 없다면 페이크 점수를 가지고 오게 한다.(테스트 상태)
+        // 페이크 점수는 차후 서버와 연동하여 점수를 가지고 오게 되면 삭제한다.
+
+        var hScore = PlayerPrefs.GetInt("HighScore");
+
+        if (hScore > 0)
+            return hScore;
+        else
+            return Random.Range(1000, 100000000);
+    }
+
+
+    /// <summary>
+    ///  구글 리더보드 연동이 되었는지 체크하여 boolean 값을 돌려준다.
+    ///  현재는 구현되어 있지 않으니 false 를 리턴한다.
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckleaderBoardOn_Server()
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// 구글플레이에 연동하는 코드를 실행한다.
+    /// 이미 연동 되어 있으면 바로 리더보드를 열도록 한다.
+    /// </summary>
+    public void ConnectGoogle_Server()
+    {
+        Debug.Log("구글플레이 연동");
+    }
+}
 
 public class IntroManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    #region variables
+    
+    public Text bestScore;
+
+    AmondServer aServer = new AmondServer();
+
+
+    public Image googlePlay;
+    /// <summary>
+    /// 두개의 이미지를 넣는다.
+    /// 첫번째는 구글리더보드가 연결되지 않았다는 이미지.
+    /// 두번째는 구글 리더보드가 연결되었다는 이미지.
+    /// </summary>
+    public Sprite[] googleLeaderBoard = new Sprite[2];
+
+
+
+    public Image item_Btn;
+    /// <summary>
+    /// 게임에서 사용되는 아이템이미지를 모아놓는다.
+    /// </summary>
+    public Sprite[] items;
+
+    /// <summary>
+    /// 광고 가능여부를 보여는 스프라이트를 넣는다.
+    /// 첫번째는 광고 불가 상태
+    /// 두번째는 광고 가능 상태
+    /// </summary>
+    public Sprite[] connectCM_Sprite;
+    /// <summary>
+    /// 스프라이트가 들어가는 UI Image 컴포넌트를 연결한다.
+    /// </summary>
+    public Image connectCM;
+
+    /// <summary>
+    /// 광고가 가능한 상태인지를 받아올때 사용되는 boolean 변수.
+    /// </summary>
+    bool isAct = false;
+    #endregion
+
+    void OnEnable()
     {
-        
+        CheckBestScore();
+        CheckleaderBoardOn();
+        CheckItems();
+        CheckActivateCM();
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// BestScore를 체크하여 가지고 온다.
+    /// </summary>
+    void CheckBestScore()
     {
-        
+        bestScore.text = aServer.CheckBestScore_Server().ToString("000000000");
+    }
+
+    /// <summary>
+    /// 리더보드 연동상태를 체크하여 가지고 온다.
+    /// </summary>
+    void CheckleaderBoardOn()
+    {
+        bool isLbOn = false;
+        isLbOn = aServer.CheckleaderBoardOn_Server();
+
+        // 구글 리더보드가 연결이 안되어 있으면 구글플레이 가입 유도아이콘을 보여주고
+        // 가입되어 있으면 바로 리더보드를 보여주도록 한다.
+        if (isLbOn == false)
+            googlePlay.sprite = googleLeaderBoard[0];
+        else
+            googlePlay.sprite = googleLeaderBoard[1];
+    }
+
+    /// <summary>
+    /// 구글 리더보드를 호출하는 메소드를 작성한다.
+    /// </summary>
+    public void ConnectGoogle()
+    {
+        aServer.ConnectGoogle_Server();
+    }
+
+    /// <summary>
+    /// 활성 아이템을 가지고 온다.
+    /// </summary>
+    void CheckItems()
+    {
+        // 아이템의 갯수를 가지고 온다.
+        var iCount = items.Length;
+
+        //CheckItemRange를 통하여 가지고 온 값을 이용해 몇개의 아이템이 보이게 할 것인지 정한다.
+        var showCount =0;
+        // 아이템은 기지정된 것들 중에서 하나가 나오게 만들어준다.
+        // 레벨이나 점수에 따른 범위의 제약을 파악하는 메소드를 먼저 실행하게 만들어 주고 그다음에
+        // 범위의 제약이 걸린 상태로 아이템이 나오게 해준다.
+        var iRange = CheckItemRange();
+
+        if(iRange<1000)
+        {
+            showCount = iCount;
+        }
+        if (iRange < 10000)
+        {
+            showCount = iCount;
+        }
+        if (iRange < 100000)
+        {
+            showCount = iCount;
+        }
+        if (iRange < 1000000)
+        {
+            showCount = iCount;
+        }
+        var getItemNum = Random.Range(0,showCount);
+
+        item_Btn.sprite = items[getItemNum];
+    }
+
+    public void ChangeItem()
+    {
+        Debug.Log("체인지 아이템");
+    }
+
+    int CheckItemRange()
+    {
+        //아이템이 나오는 범위를 측정하는 코드를 이곳에 작성한다.
+        return 1000;
+    }
+
+    /// <summary>
+    /// 광고 활성 여부를 체크하여 가지고 온다.
+    /// </summary>
+    void CheckActivateCM()
+    {
+        isAct = aServer.CheckActivateCM_Server();
+
+
+        Debug.Log("isAct :: "+isAct);
+        //활성화가 되어있지 않으면 터치가 되면 안되기에 레이캐스트를 끊는다.
+        connectCM.raycastTarget = isAct;
+        if (isAct == true)
+            connectCM.sprite = connectCM_Sprite[0];
+        else
+            connectCM.sprite = connectCM_Sprite[1];
+    }
+
+    public void ShowCM()
+    {
+        //광고 실행.
+        Debug.Log("광고 실행");
     }
 }
