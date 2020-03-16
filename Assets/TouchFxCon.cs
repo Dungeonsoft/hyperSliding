@@ -34,6 +34,8 @@ public class TouchFxCon : MonoBehaviour
 
     GameManager gb;
 
+    //public NodeScript
+
     private void Awake()
     {
         thisTrans = this.transform;
@@ -144,6 +146,13 @@ public class TouchFxCon : MonoBehaviour
         uAction = null;
     }
 
+
+
+    /// <summary>
+    /// 이곳에서 블럭을 이동함.
+    /// eVal이 1을 넘을 경우 다 이동을 한 것이기에 멈춤.
+    /// 여기서 블럭이 제자리에 가 있는지 확인하는 코드를 넣어야 됨.
+    /// </summary>
     void EndFX02()
     {
 
@@ -160,6 +169,15 @@ public class TouchFxCon : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 노드가 제위치에 들어갔는지 확인하는 메소드.
+    /// </summary>
+    void CheckCorrectPosition()
+    {
+
+    }
+
     Transform h;
     public void PoseMoving(Transform ht)
     {
@@ -170,8 +188,8 @@ public class TouchFxCon : MonoBehaviour
     void PoseMovingDel()
     {
         thisTrans.position = new Vector3(h.position.x, 0.3f, h.position.z);
-        Debug.Log("thisTrans    : " + thisTrans.position);
-        Debug.Log("hitTransform : " + h.position);
+        //Debug.Log("thisTrans    : " + thisTrans.position);
+        //Debug.Log("hitTransform : " + h.position);
 
     }
 

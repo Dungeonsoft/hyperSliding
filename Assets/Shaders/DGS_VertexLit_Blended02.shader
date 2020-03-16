@@ -1,12 +1,7 @@
-// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
-
-// Simplified VertexLit Blended Particle shader. Differences from regular VertexLit Blended Particle one:
-// - no AlphaTest
-// - no ColorMask
-
 Shader "DGS/VertexLit BlendedBG01" {
 	Properties{
-		_EmisColor("Color", Color) = (.2,.2,.2,0)
+		_EmisColor("Color1", Color) = (.2,.2,.2,0)
+		_EmisColor2("Color2", Color) = (.2,.2,.2,0)
 		_MainTex("Texture", 2D) = "white" {}
 		_EmisPower("Emissive Power", Range(0,20)) = 1
 		_AlphaPower("Alpha Power", Range(0,5)) = 1
@@ -23,6 +18,7 @@ Shader "DGS/VertexLit BlendedBG01" {
 
 		sampler2D _MainTex;
 		float4 _EmisColor;
+		float4 _EmisColor2;
 		float _EmisPower;
 		float _AlphaPower;
 
@@ -32,9 +28,9 @@ Shader "DGS/VertexLit BlendedBG01" {
 
 		void surf(Input IN, inout SurfaceOutputStandard o) {
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-			o.Emission = c.rgb* _EmisColor* _EmisPower;
-			//o.Alpha = c.a * c.a * _EmisPower;
-			o.Alpha = _AlphaPower*c.g;
+			o.Emission = (((c* _EmisColor)+((-1 * (c - 0.5) + 0.5) * _EmisColor2))*c*_EmisPower);
+			//o.Emission = c * _EmisColor * _EmisPower;
+			o.Alpha = _AlphaPower* c.r;
 		}
 		ENDCG
 	}

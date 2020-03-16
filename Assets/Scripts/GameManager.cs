@@ -11,8 +11,23 @@ public class NodeY
     public List<Transform> nodeX = new List<Transform>();
 }
 
+[System.Serializable]
+public class DelayTouch
+{
+    public Transform ht;
+    public bool m;
+}
+
+[System.Serializable]
+public class SpeedList
+{
+    public float manualNodeSpeed;
+    public float delaySpeed;
+}
+
 public class GameManager : MonoBehaviour
 {
+    public List<SpeedList> speedList;
     #region Variables
     public Vector2Int rMixV = new Vector2Int(1,2);
     public Transform puzzle;
@@ -78,8 +93,65 @@ public class GameManager : MonoBehaviour
     Action uAction = null;
     Action uActionTimer = null;
 
-    // 이펙트 발동 여부 체크//
-    //bool isFX = false;
+
+    /// <summary>
+    /// 플레이 기본시간을 정의한다. 기준은 초단위.
+    /// </summary>
+    public int defaultTime = 300;
+    public int remainingTime;
+    
+    /// <summary>
+    /// 시간을 표시하는 유아이를 연결한다.
+    /// </summary>
+    public Text timeUI;
+
+    /// <summary>
+    /// 라인점수 계산을 이미 했는지 기록하는 어레이변수.
+    /// </summary>
+    bool[] LineMatching = { false, false, false, false, false };
+
+
+    /// <summary>
+    /// 남은 시간을 보여주는 기능에 필요한 변수(분)
+    /// </summary>
+    int min;
+    /// <summary>
+    /// 남은 시간을 보여주는 기능에 필요한 변수(초)
+    /// </summary>
+    int sec;
+
+
+    /// <summary>
+    /// 게임 완료시 초당 주어지는 가산점수.
+    /// </summary>
+    public int perSecScore = 100;
+
+    /// <summary>
+    /// 스코어를 저장하는 변수.
+    /// </summary>
+    int score = 0;
+
+    /// <summary>
+    /// 스코어를 텍스트롤 변환하여 화면에 보여주는 유아이.
+    /// </summary>
+    public Text scoreUI;
+
+    /// <summary>
+    /// 실제 남은 시간을 나타내주기 위해 만든 int 변수
+    /// </summary>
+    int spendTime;
+
+    //Action DelayTouch;
+    public List<DelayTouch> dTouch = new List<DelayTouch>();
+    Transform hitTransform;
+
+    public Text speedDigit;
+
+    public float speedStepTimeDefault;
+    float speedLevelTime;
+
+    int speedLevel = 0;
+
     #endregion
 
 
@@ -114,25 +186,88 @@ public class GameManager : MonoBehaviour
             tFxKids02.Add(tFX02.GetChild(i));
             tFX02.GetChild(i).gameObject.SetActive(false);
         }
-
-
-
     }
 
-    private void Start()
+
+    /// <summary>
+    /// 게임의 스피드를 세팅한다.
+    /// </summary>
+    /// <param name="step"></param>
+    void SpeedSetting(int step)
     {
+        Debug.Log("Speed : " + step);
 
+        manualNodeSpeed = speedList[step].manualNodeSpeed;
+        delaySpeed = speedList[step].delaySpeed;
+
+        speedDigit.text = "X" + (step + 1);
+
+        speedLevelTime = speedStepTimeDefault;
+        Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
+    }
+
+    private void OnEnable()
+    {
         mixRnd = Random.Range( rMixV.x, rMixV.y);
-        //Debug.Log("Random Mix Counter : " + mixRnd);
 
+        // 점수 준 것을 체크하는 불린 변수들을 모두 초기화 한다.
+        #region 불린 변수 초기화.
+        foreach (var n in nScript)
+        {
+            n.alreadyScoreCount = false;
+        }
+        LineMatching = new bool[] { false, false, false, false, false };
+        #endregion
+
+        remainingTime = defaultTime;
+
+        // 시간의 효과(더하거나 빼는 것) 있으면 이 곳에 기술하여 처음에 더하게 해준다.
+
+        TimeAdd();
+
+        TimeCal();
         timeDigit.text = "00:00:00";
         timer = 0;
         uAction = MixCount;
+
+        speedLevel = 0;
+
+        SpeedSetting(speedLevel);
+
+    }
+
+
+    /// <summary>
+    /// 플레이 시간이 더해지거나 빠졌을 때 계산
+    /// </summary>
+    /// <param name="at">더해지거나 빠지는 시간(초)를 입력</param>
+    void TimeAdd(int at =0)
+    {
+        remainingTime += at;
+    }
+
+    bool isSpeedLvlDn = false;
+    /// <summary>
+    /// 유아이 상에 남은 시간을 보여주기 위한 메소드
+    /// </summary>
+    void TimeCal()
+    {
+        speedLevelTime -= Time.deltaTime;
+
+        if(speedLevelTime<= 0 && speedLevel > 0)
+        {
+            isSpeedLvlDn = true;
+             speedLevel -= 1;
+            SpeedSetting(speedLevel);
+        }
+        spendTime = remainingTime - Mathf.RoundToInt(timer);
+        min = spendTime / 60;
+        sec = spendTime % 60;
+        timeUI.text = min.ToString("00") + ":" + sec.ToString("00");
     }
 
     void MixCount()
     {
-        //Debug.Log("Mix Count 01 = " + mixCnt);
         if(mixRnd>mixCnt)
         {
             mixCnt++;
@@ -315,15 +450,15 @@ public class GameManager : MonoBehaviour
         return sNode;
     }
 
-    bool isMovingNode = false;
+    //bool isMovingNode = false;
 
     void MovingNodes()
     {
-        if (isMovingNode == false)
-        {
-            //Debug.Log("MovingNodes");
-            isMovingNode = true;
-        }
+        //if (isMovingNode == false)
+        //{
+        //    //Debug.Log("MovingNodes");
+        //    isMovingNode = true;
+        //}
 
         int cnt = mNodes.Count - 1;
         //Debug.Log("mNodes.Count: "+ mNodes.Count);
@@ -354,11 +489,14 @@ public class GameManager : MonoBehaviour
             //if (isMixed) Debug.Log("Lerp 끝난후 노드 위치 정리 : mNodes.Count : " + mNodes.Count);
             for (int i = 0; i < cnt; i++)
             {
-                mNodes[i].GetComponent<NodeScript>().poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
-                mNodes[i].GetComponent<NodeScript>().poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
+                var movedNode = mNodes[i].GetComponent<NodeScript>();
+                //Debug.Log("노드 이름 : "+i+" : "+ mNodes[i].name);
+                movedNode.poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
+                movedNode.poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
 
                 mNodes[i].position = mNodesPos[i + 1];
             }
+
 
             lVal = 0.0f;
 
@@ -371,9 +509,26 @@ public class GameManager : MonoBehaviour
             {
                 uAction = MixCount;
             }
+
+
+
             // 셔플이 다 되면 모든 블럭이 이동후 이곳으로 온다.
+            // 점수 계산도 이곳에서 이루어진다.
             else
             {
+                #region 점수계산
+                //노드 하나하나의 위치가 맞을 때 점수를 계산하기 위한 for문.
+                for (int i = 0; i < cnt; i++)
+                {
+                    var movedNode = mNodes[i].GetComponent<NodeScript>();
+                    // 각각 노드 점수계산하는 메소드 호출//
+                    CalScore(movedNode);
+                }
+
+                //줄이 맞았을때 점수를 계산하는 메소드 호출.
+                CalLineScore();
+                #endregion
+
                 // 크래쉬 이펙트가 끝났으니 다시 크래쉬 이펙트를 사용할 수 있게 초기화한다.
                 // 초기화 하는 방법은 NodeFX에 있는 isFX를 false로 바꾸는 것이다.
                 for (int i = 0; i < cnt; i++)
@@ -387,6 +542,9 @@ public class GameManager : MonoBehaviour
                     Debug.Log("YOU WIN!!!");
                     uActionTimer = null;
                     timeDigit.color = Color.yellow;
+
+                    // 남은 시간을 초당 100 점으로 계산하여 더해준다.
+                    AddScore(spendTime * perSecScore);
                 }
                 else
                 {
@@ -403,7 +561,7 @@ public class GameManager : MonoBehaviour
                 if (dTouch.Count > 0)
                     dTouch.RemoveAt(0);
 
-                isMovingNode = false;
+                //isMovingNode = false;
                 if (dTouch.Count == 0)
                 {
                     uAction -= CalcurateMovableNode;
@@ -421,16 +579,80 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [System.Serializable]
-    public class DelayTouch
+    /// <summary>
+    /// 점수계산하는 메소드 인자는 노드에 붙어있는 노드 스크립트이며 여기서 정보를 호출하여 계산한다.
+    /// </summary>
+    /// <param name="ns"></param>
+    void CalScore(NodeScript ns)
     {
-        public Transform ht;
-        public bool m;
+        if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
+        {
+            ns.alreadyScoreCount = true;
+            score += 10;
+            scoreUI.text = score.ToString("000000000");
+            Debug.Log("스코어 10점 추가");
+
+
+
+            //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
+            //시간은 초기화 된다.
+            if (isSpeedLvlDn == false) speedLevel++;
+            else isSpeedLvlDn = false;
+            if (speedLevel > 9) speedLevel = 9;
+            SpeedSetting(speedLevel);
+
+        }
     }
 
-   //Action DelayTouch;
-    public List<DelayTouch> dTouch = new List<DelayTouch>();
-    Transform hitTransform;
+
+    /// <summary>
+    /// 점수를 추가하기 위한 메소드. 메소드에 추가될 점수를 인자로 불러온다.
+    /// </summary>
+    /// <param name="s"></param>
+    void AddScore(int s)
+    {
+        score += s;
+        scoreUI.text = score.ToString("000000000");
+        Debug.Log("스코어 지정된 점수 추가");
+    }
+
+    /// <summary>
+    /// 라인 점수 계산하는 메소드.
+    /// </summary>
+    void CalLineScore()
+    {
+        // 줄별 맟춤을 계산.
+        for (int i = 0; i < 5; i++)
+        {
+            bool isBreak = false;
+            for (int j = 0; j < 5; j++)
+            {
+                NodeScript ns = nScript[i + j];
+
+                if (ns.oriPosX != ns.poxNowX || ns.oriPosY != ns.poxNowY)
+                {
+                    isBreak = true;
+                    break;
+                }
+            }
+
+            if(isBreak ==false && LineMatching[i] == false)
+            {
+                LineMatching[i] = true;
+                Debug.Log("점수 백점 추가");
+                score += 100;
+                scoreUI.text = score.ToString("000000000");
+
+                //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
+                //시간은 초기화 된다.
+                if (isSpeedLvlDn == false) speedLevel += 2;
+                else isSpeedLvlDn = false;
+                if (speedLevel > 9) speedLevel = 9;
+                SpeedSetting(speedLevel);
+            }
+        }
+    }
+
     // 터치를 하면 노드를 터치했는지 감지한다.
     void CheckClick()
     {
@@ -472,8 +694,6 @@ public class GameManager : MonoBehaviour
 
     void TouchAction(Transform ht, bool isMovable)
     {
-
-
         string tn = ht.name;
         //Debug.Log("Transform Name: "+tn);
 
@@ -542,6 +762,11 @@ public class GameManager : MonoBehaviour
     }
 
 
+
+    /// <summary>
+    /// 모든 노드가 제위치로 가 맞았는지 검사하는 메소드.
+    /// </summary>
+    /// <returns></returns>
     bool CheckCorrect()
     {
         //Debug.Log(nScript.Length);
@@ -560,20 +785,26 @@ public class GameManager : MonoBehaviour
 
     int h = 0;
     int m = 0;
+    int s = 0;
     void CheckTime()
     {
         timer += Time.deltaTime;
-        if (timer >= 60.0f)
-        {
-            m++; 
-            timer -= 60.0f; ;
-        }
-        if(m>= 60)
-        {
-            h++;
-            m -= 60;
-        }
-        timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+timer.ToString();
+        m = Mathf.RoundToInt(timer / 60f);
+        h = m / 60;
+        s = Mathf.RoundToInt(timer) % 60;
+        //if (timer >= 60.0f)
+        //{
+        //    m++; 
+        //    timer -= 60.0f; ;
+        //}
+        //if(m>= 60)
+        //{
+        //    h++;
+        //    m -= 60;
+        //}
+        timeDigit.text =h.ToString("00")+":"+ m.ToString("00") + ":"+s.ToString("00");
+
+        TimeCal();
     }
 
     void TouchFX()
@@ -629,5 +860,4 @@ public class GameManager : MonoBehaviour
             uActionTimer();
         }
     }
-
 }

@@ -10,4 +10,6 @@ public class NodeScript : MonoBehaviour
     public int poxNowX;
     public int poxNowY;
 
+    public bool alreadyScoreCount = false;
+
 }

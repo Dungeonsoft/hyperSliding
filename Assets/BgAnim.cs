@@ -62,12 +62,13 @@ public class BgAnim : MonoBehaviour
                 else isCheck = false;
             }
             rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, baseS, baseV));
+            rMat[i].material.SetColor("_EmisColor2", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
         }
 
-        if (rBase != null)
-        {
-            //rBase.material.SetColor("_EmisColor", baseClr);
-            rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
-        }
+        //if (rBase != null)
+        //{
+        //    //rBase.material.SetColor("_EmisColor", baseClr);
+        //    rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
+        //}
     }
 }
