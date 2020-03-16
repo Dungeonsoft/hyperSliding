@@ -23,6 +23,8 @@ public class SpeedList
 {
     public float manualNodeSpeed;
     public float delaySpeed;
+    public int speedScoreBonus;
+    public float decreaseTime;
 }
 
 public class GameManager : MonoBehaviour
@@ -152,6 +154,12 @@ public class GameManager : MonoBehaviour
 
     int speedLevel = 0;
 
+    public int comboLevelBase = 0;
+    public int comboLevel = 1;
+    public int comboMaxMoving = 30;
+    public int ComboMovingCount = 0;
+    public bool isComboLvDn = false;
+
     #endregion
 
 
@@ -202,7 +210,7 @@ public class GameManager : MonoBehaviour
 
         speedDigit.text = "X" + (step + 1);
 
-        speedLevelTime = speedStepTimeDefault;
+        speedLevelTime = speedList[step].decreaseTime;
         Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
     }
 
@@ -231,6 +239,8 @@ public class GameManager : MonoBehaviour
         uAction = MixCount;
 
         speedLevel = 0;
+
+        comboLevel = comboLevelBase;
 
         SpeedSetting(speedLevel);
 
@@ -543,8 +553,18 @@ public class GameManager : MonoBehaviour
                     uActionTimer = null;
                     timeDigit.color = Color.yellow;
 
-                    // 남은 시간을 초당 100 점으로 계산하여 더해준다.
+                    Debug.Log("Score: " + score);
+                    Debug.Log("Remain Time Bonus: " + spendTime * perSecScore);
+                    // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
                     AddScore(spendTime * perSecScore);
+
+                    Debug.Log("Score: "+score);
+                    Debug.Log("Speed Level: " + speedLevel);
+                    Debug.Log("Add Score Percent: " + (speedList[speedLevel].speedScoreBonus * 0.01f));
+                    Debug.Log("Speed Bonus: " + Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
+
+                    // 남은 시간을 최종 스피드 레벨에 따른 보너스를 지급한다.
+                    AddScore(Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
                 }
                 else
                 {
@@ -588,22 +608,31 @@ public class GameManager : MonoBehaviour
         if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
         {
             ns.alreadyScoreCount = true;
-            score += 10;
+            score += 10 * comboLevel;
+
+            // 다음번부터 콤보 보너스를 적용하기 위해 콤보레벨을 올려준다.
+            comboLevel++;
+            
             scoreUI.text = score.ToString("000000000");
             Debug.Log("스코어 10점 추가");
 
-
+            
 
             //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
             //시간은 초기화 된다.
-            if (isSpeedLvlDn == false) speedLevel++;
+            if (isSpeedLvlDn == false)
+            {
+                // 스피드 레벨을 올려준다.
+                speedLevel++;
+            }
             else isSpeedLvlDn = false;
             if (speedLevel > 9) speedLevel = 9;
-            SpeedSetting(speedLevel);
 
+
+            // 스피드 레벨을 실제 적용한다.
+            SpeedSetting(speedLevel);
         }
     }
-
 
     /// <summary>
     /// 점수를 추가하기 위한 메소드. 메소드에 추가될 점수를 인자로 불러온다.
@@ -658,6 +687,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+
             Debug.Log("터치 함");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -666,6 +696,14 @@ public class GameManager : MonoBehaviour
             hitTransform = hit.transform;
             if (hitTransform.CompareTag("Node"))
             {
+                // 콤보 횟수를 계산한다.
+                ComboMovingCount++;
+                if(ComboMovingCount>=comboMaxMoving)
+                {
+                    Debug.Log("콤보 초기화!");
+                    comboLevel = 1;
+                    ComboMovingCount = 0;
+                }
 
                 //터치 이펙트 함수 실행.
                 //Debug.Log("터치 이펙트 함수 실행__1");
