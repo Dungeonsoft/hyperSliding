@@ -64,27 +64,30 @@ public class AmondServer
 public class IntroManager : MonoBehaviour
 {
     #region variables
-    
-    public Text bestScore;
+
+    /// <summary>
+    /// 텍스트메쉬 프로의 텍스트를 이용하여 최고 점수를 표현한다.
+    /// </summary>
+    public TMPro.TextMeshProUGUI bestScore;
 
     AmondServer aServer = new AmondServer();
 
 
-    public Image googlePlay;
+    public Image AmondPlay;
     /// <summary>
     /// 두개의 이미지를 넣는다.
     /// 첫번째는 구글리더보드가 연결되지 않았다는 이미지.
     /// 두번째는 구글 리더보드가 연결되었다는 이미지.
     /// </summary>
-    public Sprite[] googleLeaderBoard = new Sprite[2];
+    public Sprite[] amondLeaderBoard = new Sprite[2];
 
 
 
-    public Image item_Btn;
+    public Transform item_Btn;
     /// <summary>
     /// 게임에서 사용되는 아이템이미지를 모아놓는다.
     /// </summary>
-    public Sprite[] items;
+    public Object[] items;
 
     /// <summary>
     /// 광고 가능여부를 보여는 스프라이트를 넣는다.
@@ -111,6 +114,21 @@ public class IntroManager : MonoBehaviour
         CheckActivateCM();
     }
 
+    void ShowItem(int r)
+    {
+        //Debug.Log("Item Count: "+ item_Btn.childCount);
+        //Debug.Log("Item Child Name: " + item_Btn.GetChild(0).name);
+        if (item_Btn.childCount > 0)
+        {
+            DestroyImmediate(item_Btn.GetChild(0));
+        }
+        //int r = Random.Range(0, 3);
+        GameObject GO = Instantiate(items[r]) as GameObject;
+        GO.name = "Item_RandomSel";
+        GO.transform.parent = item_Btn;
+        GO.transform.localPosition = Vector3.zero;
+    }
+
     /// <summary>
     /// BestScore를 체크하여 가지고 온다.
     /// </summary>
@@ -130,9 +148,9 @@ public class IntroManager : MonoBehaviour
         // 구글 리더보드가 연결이 안되어 있으면 구글플레이 가입 유도아이콘을 보여주고
         // 가입되어 있으면 바로 리더보드를 보여주도록 한다.
         if (isLbOn == false)
-            googlePlay.sprite = googleLeaderBoard[0];
+            AmondPlay.sprite = amondLeaderBoard[0];
         else
-            googlePlay.sprite = googleLeaderBoard[1];
+            AmondPlay.sprite = amondLeaderBoard[1];
     }
 
     /// <summary>
@@ -176,7 +194,7 @@ public class IntroManager : MonoBehaviour
         }
         var getItemNum = Random.Range(0,showCount);
 
-        item_Btn.sprite = items[getItemNum];
+        ShowItem(getItemNum);
     }
 
     public void ChangeItem()
@@ -201,10 +219,10 @@ public class IntroManager : MonoBehaviour
         Debug.Log("isAct :: "+isAct);
         //활성화가 되어있지 않으면 터치가 되면 안되기에 레이캐스트를 끊는다.
         connectCM.raycastTarget = isAct;
-        if (isAct == true)
-            connectCM.sprite = connectCM_Sprite[0];
-        else
-            connectCM.sprite = connectCM_Sprite[1];
+        //if (isAct == true)
+        //    connectCM.sprite = connectCM_Sprite[0];
+        //else
+        //    connectCM.sprite = connectCM_Sprite[1];
     }
 
     public void ShowCM()
