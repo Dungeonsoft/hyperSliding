@@ -161,13 +161,17 @@ public class GameManager : MonoBehaviour
     public int ComboMovingCount = 0;
     public bool isComboLvDn = false;
 
+    public bool isPause = false;
+
     #endregion
 
 
     private void Awake()
     {
+
+        isPause = false;
         nodeSpeed = baseNodeSpeed;
-        puzzle = transform.parent.Find("Puzzle");
+        //puzzle = transform.parent.Find("Puzzle");
 
         nScript = puzzle.GetComponentsInChildren<NodeScript>();
 
@@ -215,8 +219,22 @@ public class GameManager : MonoBehaviour
         Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
     }
 
+    private void OnDisable()
+    {
+        Debug.Log("InGame OnDisable End!");
+        uAction = null;
+        uActionTimer = null;
+    }
+
     private void OnEnable()
     {
+        Debug.Log("InGame OnEnable Start!");
+        // 델리게이트에 있는 것들을 다 지운다.
+        //uAction = null;
+        //uActionTimer = null;
+
+        isPause = false;
+
         mixRnd = Random.Range( rMixV.x, rMixV.y);
 
         // 점수 준 것을 체크하는 불린 변수들을 모두 초기화 한다.
@@ -234,10 +252,31 @@ public class GameManager : MonoBehaviour
 
         TimeAdd();
 
+        Debug.Log("시간 계산 시작.");
         TimeCal();
         timeDigit.text = "00:00:00";
         timer = 0;
+
+        Debug.Log("섞기 횟수를 초기화 함");
+        mixCnt = 0;
+        isMixed = false;
+
+        /// 스코어 초기화.
+        score = 0;
+        scoreUI.text = "000000000";
+
+        nodeSpeed = baseNodeSpeed;
+
+
         uAction = MixCount;
+        if(uAction != null)
+        {
+            Debug.Log("====uAction is not NULL");
+        }
+        else
+        {
+            Debug.Log("=====uAction is NULL");
+        }
 
         speedLevel = 0;
 
@@ -263,6 +302,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void TimeCal()
     {
+        Debug.Log("시간 계산 들어옴");
         speedLevelTime -= Time.deltaTime;
 
         if(speedLevelTime<= 0 && speedLevel > 0)
@@ -279,8 +319,10 @@ public class GameManager : MonoBehaviour
 
     void MixCount()
     {
-        if(mixRnd>mixCnt)
+        Debug.Log("MixCount1: " + mixCnt);
+        if (mixRnd>mixCnt)
         {
+            Debug.Log("MixCount2: "+ mixCnt);
             mixCnt++;
             uAction = CalcurateMovableNode;
         }
@@ -688,6 +730,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void CheckClick()
     {
+        if (isPause == true) return;
         if (Input.GetMouseButtonDown(0))
         {
             // 터치 사운드 발생.
@@ -892,14 +935,21 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (uAction != null)
+        if (uAction == null)
         {
-            uAction();
+            Debug.Log("=== In Update, uAction is NULL!");
         }
+        else
+        {
+            Debug.Log("=== In Update, uAction is not NULL!" + uAction.Method.Name);
+        }
+        uAction?.Invoke();
 
-        if(uActionTimer != null)
-        {
-            uActionTimer();
-        }
+        uActionTimer?.Invoke();
+    }
+
+    public void TouchPause()
+    {
+        isPause = !isPause;
     }
 }

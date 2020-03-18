@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class SetCameraScreen : MonoBehaviour
 {
-    public Transform PuzzleTf;
+    public List<Transform> scaleShrinkObj;
+    public List<Transform> scaleShrinkCvs;
+    public List<Transform> scaleExpandObj;
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,12 +23,30 @@ public class SetCameraScreen : MonoBehaviour
         Debug.Log("newScreenRatio : " + newScreenRatio);
 
 
-        float changeScaleZ = screenRatio / newScreenRatio;
-        float changeScaleX =  newScreenRatio/ screenRatio;
+        float shrinkScaleZ = screenRatio / newScreenRatio;
+        float ExpandScaleZ =  newScreenRatio/ screenRatio;
 
-        Debug.Log("Change Sclale : "+ changeScaleZ);
+        Debug.Log("Shrink Sclale : " + shrinkScaleZ);
+        Debug.Log("Expand Sclale : " + ExpandScaleZ);
 
-        PuzzleTf.localScale = new Vector3(1f, 1f, changeScaleZ);
+        foreach (var o in scaleShrinkObj)
+        {
+            o.localScale = new Vector3(1f, 1f, shrinkScaleZ);
+        }
+        foreach (var o in scaleShrinkCvs)
+        {
+            o.localScale = new Vector3(1f, shrinkScaleZ, 1f);
+        }
+        foreach (var o in scaleExpandObj)
+        {
+            o.localScale = new Vector3(1f, 1f, ExpandScaleZ);
+        }
+
+        Debug.Log("orthographicSize: " + GetComponent<Camera>().orthographicSize);
+        Debug.Log("aspect: " + GetComponent<Camera>().aspect);
+
+        // 9-16 ::: aspect: 0.5624309
+        // 9-18 ::: aspect: 0.4994475
     }
 
 }
