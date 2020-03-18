@@ -29,6 +29,7 @@ public class SpeedList
 
 public class GameManager : MonoBehaviour
 {
+    public AudioSource audioClick;
     public List<SpeedList> speedList;
     #region Variables
     public Vector2Int rMixV = new Vector2Int(1,2);
@@ -682,12 +683,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 터치를 하면 노드를 터치했는지 감지한다.
+    /// <summary>
+    /// 터치를 하면 노드를 터치했는지 감지한다. 
+    /// </summary>
     void CheckClick()
     {
         if (Input.GetMouseButtonDown(0))
         {
-
+            // 터치 사운드 발생.
+            audioClick.Play();
             Debug.Log("터치 함");
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
