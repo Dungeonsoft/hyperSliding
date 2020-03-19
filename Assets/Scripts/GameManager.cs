@@ -163,11 +163,15 @@ public class GameManager : MonoBehaviour
 
     public bool isPause = false;
 
+    public int lineCorrectScore = 100;
+    public int comboDefaultScore = 10;
+
     #endregion
 
 
     private void Awake()
     {
+
 
         isPause = false;
         nodeSpeed = baseNodeSpeed;
@@ -303,7 +307,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void TimeCal()
     {
-        Debug.Log("시간 계산 들어옴");
+        //Debug.Log("시간 계산 들어옴");
         speedLevelTime -= Time.deltaTime;
 
         if(speedLevelTime<= 0 && speedLevel > 0)
@@ -320,7 +324,7 @@ public class GameManager : MonoBehaviour
 
     void MixCount()
     {
-        Debug.Log("MixCount1: " + mixCnt);
+        //Debug.Log("MixCount1: " + mixCnt);
         if (mixRnd>mixCnt)
         {
             Debug.Log("MixCount2: "+ mixCnt);
@@ -596,11 +600,12 @@ public class GameManager : MonoBehaviour
                     Debug.Log("YOU WIN!!!");
                     uActionTimer = null;
                     timeDigit.color = Color.yellow;
+                    timeUI.color = Color.yellow;
 
                     Debug.Log("Score: " + score);
                     Debug.Log("Remain Time Bonus: " + spendTime * perSecScore);
                     // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
-                    AddScore(spendTime * perSecScore);
+                    AddScore(spendTime * perSecScore * comboLevel);
 
                     Debug.Log("Score: "+score);
                     Debug.Log("Speed Level: " + speedLevel);
@@ -609,6 +614,8 @@ public class GameManager : MonoBehaviour
 
                     // 남은 시간을 최종 스피드 레벨에 따른 보너스를 지급한다.
                     AddScore(Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
+
+                    ScoreSaveToLocal();
                 }
                 else
                 {
@@ -652,13 +659,13 @@ public class GameManager : MonoBehaviour
         if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
         {
             ns.alreadyScoreCount = true;
-            score += 10 * comboLevel;
-
+            //score += 10 * comboLevel;
+            int addComboScore = comboDefaultScore * comboLevel;
+            AddScore(addComboScore);
             // 다음번부터 콤보 보너스를 적용하기 위해 콤보레벨을 올려준다.
             comboLevel++;
             
-            scoreUI.text = score.ToString("000000000");
-            Debug.Log("스코어 10점 추가");
+            //Debug.Log("스코어 10점 추가");
 
             
 
@@ -713,8 +720,7 @@ public class GameManager : MonoBehaviour
             {
                 LineMatching[i] = true;
                 Debug.Log("점수 백점 추가");
-                score += 100;
-                scoreUI.text = score.ToString("000000000");
+                AddScore(lineCorrectScore*comboLevel);
 
                 //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
                 //시간은 초기화 된다.
@@ -724,6 +730,11 @@ public class GameManager : MonoBehaviour
                 SpeedSetting(speedLevel);
             }
         }
+    }
+
+    void ScoreSaveToLocal()
+    {
+        PlayerPrefs.SetInt("HighScore", score);
     }
 
     /// <summary>

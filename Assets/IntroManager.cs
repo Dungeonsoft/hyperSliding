@@ -32,12 +32,9 @@ public class AmondServer
         // 한번도 실행한 적이 없다면 페이크 점수를 가지고 오게 한다.(테스트 상태)
         // 페이크 점수는 차후 서버와 연동하여 점수를 가지고 오게 되면 삭제한다.
 
-        var hScore = PlayerPrefs.GetInt("HighScore");
+        var hScore = PlayerPrefs.GetInt("HighScore", 0);
 
-        if (hScore > 0)
-            return hScore;
-        else
-            return Random.Range(1000, 100000000);
+        return hScore;
     }
 
 
@@ -104,10 +101,16 @@ public class IntroManager : MonoBehaviour
     /// 광고가 가능한 상태인지를 받아올때 사용되는 boolean 변수.
     /// </summary>
     bool isAct = false;
+
+    int savedScore;
+    string KeyString;
+
     #endregion
 
     void OnEnable()
     {
+        
+
         CheckBestScore();
         CheckleaderBoardOn();
         CheckItems();

@@ -5238,7 +5238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &526890354
 Transform:
   m_ObjectHideFlags: 0
@@ -9161,7 +9161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &806812794
 Transform:
   m_ObjectHideFlags: 0
@@ -18528,6 +18528,8 @@ MonoBehaviour:
   ComboMovingCount: 0
   isComboLvDn: 0
   isPause: 0
+  lineCorrectScore: 100
+  comboDefaultScore: 10
 --- !u!1 &1643175427
 GameObject:
   m_ObjectHideFlags: 0
