@@ -253,9 +253,10 @@ public class GameManager : MonoBehaviour
         TimeAdd();
 
         Debug.Log("시간 계산 시작.");
-        TimeCal();
         timeDigit.text = "00:00:00";
         timer = 0;
+        TimeCal();
+
 
         Debug.Log("섞기 횟수를 초기화 함");
         mixCnt = 0;
