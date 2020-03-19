@@ -166,6 +166,10 @@ public class GameManager : MonoBehaviour
     public int lineCorrectScore = 100;
     public int comboDefaultScore = 10;
 
+    public List<TMPro.TextMeshProUGUI> scoreTextFailComple;
+    public GameObject gameFailWin;
+    public GameObject gameCompleWin;
+
     #endregion
 
 
@@ -316,10 +320,33 @@ public class GameManager : MonoBehaviour
              speedLevel -= 1;
             SpeedSetting(speedLevel);
         }
+
         spendTime = remainingTime - Mathf.RoundToInt(timer);
+        if (spendTime <= 0)
+        {
+            spendTime = 0;
+            Debug.Log("게임시간종료");
+            ShowGameFailWin();
+        }
+
         min = spendTime / 60;
         sec = spendTime % 60;
         timeUI.text = min.ToString("00") + ":" + sec.ToString("00");
+    }
+
+
+    void ShowGameFailWin()
+    {
+        TouchPause();
+        ScoreSaveToLocal();
+       gameFailWin.SetActive(true);
+    }
+     void ShowCompleWin()
+    {
+        TouchPause();
+        ScoreSaveToLocal();
+        gameCompleWin.SetActive(true);
+
     }
 
     void MixCount()
@@ -327,7 +354,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("MixCount1: " + mixCnt);
         if (mixRnd>mixCnt)
         {
-            Debug.Log("MixCount2: "+ mixCnt);
+            //Debug.Log("MixCount2: "+ mixCnt);
             mixCnt++;
             uAction = CalcurateMovableNode;
         }
@@ -616,6 +643,7 @@ public class GameManager : MonoBehaviour
                     AddScore(Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
 
                     ScoreSaveToLocal();
+                    ShowCompleWin();
                 }
                 else
                 {
@@ -734,7 +762,14 @@ public class GameManager : MonoBehaviour
 
     void ScoreSaveToLocal()
     {
-        PlayerPrefs.SetInt("HighScore", score);
+        var showScore = PlayerPrefs.GetInt("HighScore");
+        if (score > showScore) showScore = score;
+        PlayerPrefs.SetInt("HighScore", showScore);
+
+        foreach(var v in scoreTextFailComple)
+        {
+            v.text = showScore.ToString("000000000");
+        }
     }
 
     /// <summary>
@@ -885,10 +920,13 @@ public class GameManager : MonoBehaviour
     int s = 0;
     void CheckTime()
     {
-        timer += Time.deltaTime;
+
+        // 게임이 멈춰 있을 때는 작동을 하지 않는다. (계속 같은 시간을 보여줌)
+        if (isPause == false) timer += Time.deltaTime;
+
         m = Mathf.RoundToInt(timer / 60f);
         h = m / 60;
-        s = Mathf.RoundToInt(timer) % 60;
+        s =  Mathf.RoundToInt(timer) % 60;
         //if (timer >= 60.0f)
         //{
         //    m++; 
@@ -947,14 +985,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (uAction == null)
-        {
-            Debug.Log("=== In Update, uAction is NULL!");
-        }
-        else
-        {
-            Debug.Log("=== In Update, uAction is not NULL!" + uAction.Method.Name);
-        }
+        //if (uAction == null)
+        //{
+        //    Debug.Log("=== In Update, uAction is NULL!");
+        //}
+        //else
+        //{
+        //    Debug.Log("=== In Update, uAction is not NULL!" + uAction.Method.Name);
+        //}
         uAction?.Invoke();
 
         uActionTimer?.Invoke();
