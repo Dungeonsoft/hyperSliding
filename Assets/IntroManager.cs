@@ -116,17 +116,21 @@ public class IntroManager : MonoBehaviour
 
     void ShowItem(int r)
     {
+        Debug.Log("Random Value: " + r);
         //Debug.Log("Item Count: "+ item_Btn.childCount);
         //Debug.Log("Item Child Name: " + item_Btn.GetChild(0).name);
         if (item_Btn.childCount > 0)
         {
-            DestroyImmediate(item_Btn.GetChild(0));
+            Debug.Log("Will Destroy Item: "+ item_Btn.GetChild(0).name);
+            Destroy(item_Btn.GetChild(0).gameObject);
         }
         //int r = Random.Range(0, 3);
         GameObject GO = Instantiate(items[r]) as GameObject;
         GO.name = "Item_RandomSel";
         GO.transform.parent = item_Btn;
         GO.transform.localPosition = Vector3.zero;
+        GO.transform.localEulerAngles = Vector3.zero ;
+        GO.transform.localScale = Vector3.one;
     }
 
     /// <summary>
@@ -168,6 +172,8 @@ public class IntroManager : MonoBehaviour
     {
         // 아이템의 갯수를 가지고 온다.
         var iCount = items.Length;
+        Debug.Log("items Count: "+ iCount);
+
 
         //CheckItemRange를 통하여 가지고 온 값을 이용해 몇개의 아이템이 보이게 할 것인지 정한다.
         var showCount =0;
@@ -178,18 +184,22 @@ public class IntroManager : MonoBehaviour
 
         if(iRange<1000)
         {
+            Debug.Log("Range: 1");
             showCount = iCount;
         }
-        if (iRange < 10000)
+        else if (iRange < 10000)
         {
+            Debug.Log("Range: 2");
             showCount = iCount;
         }
-        if (iRange < 100000)
+        else if(iRange < 100000)
         {
+            Debug.Log("Range: 3");
             showCount = iCount;
         }
-        if (iRange < 1000000)
+        else if(iRange < 1000000)
         {
+            Debug.Log("Range: 4");
             showCount = iCount;
         }
         var getItemNum = Random.Range(0,showCount);
