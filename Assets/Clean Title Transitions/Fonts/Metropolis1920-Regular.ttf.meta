@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: be8c5921a27544e099c917b048082e9a
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Metropolis1920
+  fontNames:
+  - Metropolis1920
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 97bfb7f159444408c93610d9d36b4d35, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

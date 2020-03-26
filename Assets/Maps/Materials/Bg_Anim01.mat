@@ -25,7 +25,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaPower: 1
-    - _EmisPower: 2.2
+    - _EmisPower: 1
     m_Colors:
     - _EmisColor: {r: 0.3594768, g: 0.039215684, b: 1, a: 1}
     - _EmisColor2: {r: 0.2, g: 0.2, b: 0.2, a: 0}

@@ -170,6 +170,8 @@ public class GameManager : MonoBehaviour
     public GameObject gameFailWin;
     public GameObject gameCompleWin;
 
+    int scoreIncreasePercent = 0;
+
     #endregion
 
 
@@ -232,6 +234,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("InGame OnDisable End!");
         uAction = null;
         uActionTimer = null;
+
+        // 일회성 아이템으로 인한 스코어 증가 정도를 초기화 한다.
+        scoreIncreasePercent = 0;
+
     }
 
     private void OnEnable()
@@ -292,9 +298,7 @@ public class GameManager : MonoBehaviour
         comboLevel = comboLevelBase;
 
         SpeedSetting(speedLevel);
-
     }
-
 
     /// <summary>
     /// 플레이 시간이 더해지거나 빠졌을 때 계산
@@ -633,6 +637,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log("Remain Time Bonus: " + spendTime * perSecScore);
                     // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
                     AddScore(spendTime * perSecScore * comboLevel);
+                    AddScoreIcreaseItem();
 
                     Debug.Log("Score: "+score);
                     Debug.Log("Speed Level: " + speedLevel);
@@ -948,24 +953,6 @@ public class GameManager : MonoBehaviour
 
         Vector3 pos = hitTransform.position;
 
-        // 파동형 이펙트.
-        //Debug.Log("파동형 이펙트");
-        //foreach (var v in tFxKids01)
-        //{
-        //    if (v.gameObject.activeSelf == false)
-        //    {
-        //        //Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
-        //        //v.gameObject.SetActive(true);
-        //        v.GetComponent<TouchFxCon>().FxCon();
-        //        v.position = new Vector3(pos.x, 0.3f, pos.z);
-
-        //        //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
-        //        hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
-
-        //        break;
-        //    }
-        //}
-
         // 점멸형 이펙트.
         foreach (var v in tFxKids02)
         {
@@ -982,6 +969,27 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 광고를 보고 활성화 되는 아이템을 적용하는 메소드.
+    /// </summary>
+    /// <param name="k"></param>
+    public void ApplyItem(Kinds k)
+    {
+        switch (k)
+        {
+            case Kinds.scoreFinalIncrease10:
+                scoreIncreasePercent = 10;
+                break;
+        }
+    }
+
+    void AddScoreIcreaseItem()
+    {
+        var addScore = Mathf.RoundToInt(score * (scoreIncreasePercent / 100.0f));
+        AddScore(addScore);
+    }
+
 
     private void Update()
     {
