@@ -123,7 +123,7 @@ public class IntroManager : MonoBehaviour
 
     void OnEnable()
     {
-        
+        SetNodePosOrigin();
 
         CheckBestScore();
         CheckleaderBoardOn();
@@ -132,24 +132,40 @@ public class IntroManager : MonoBehaviour
 
         isCmAllow = false;
         cmEquiped.SetActive(false);
+
+        //새로운 비지엠 작동.
+        BG_Intrudution bgi = GameObject.FindObjectOfType<BG_Intrudution>();
+        bgi.SetNewBGM();
+    }
+
+
+   public List<Transform> nodes;
+
+    void SetNodePosOrigin()
+    {
+        foreach(var v in nodes)
+        {
+            NodeScript ns = v.GetComponent<NodeScript>();
+            ns.poxNowX = ns.oriPosX;
+            ns.poxNowY = ns.oriPosY;
+            v.localPosition = new Vector3(-2+ns.oriPosY,0,2-ns.oriPosX);
+        }
+
+        Debug.Log("Set Node Pos Orozin");
     }
 
     private void OnDisable()
     {
-        if(isCmAllow == true)
-        {
-
-        }
     }
 
     void ShowItem(int r)
     {
-        Debug.Log("Random Value: " + r);
-        Debug.Log("Item Count: "+ item_Btn.childCount);
+        //Debug.Log("Random Value: " + r);
+        //Debug.Log("Item Count: "+ item_Btn.childCount);
         //Debug.Log("Item Child Name: " + item_Btn.GetChild(0).name);
         if (item_Btn.childCount > 0)
         {
-            Debug.Log("Will Destroy Item: "+ item_Btn.GetChild(0).name);
+            //Debug.Log("Will Destroy Item: "+ item_Btn.GetChild(0).name);
             Destroy(item_Btn.GetChild(0).gameObject);
         }
         //int r = Random.Range(0, 3);
@@ -200,7 +216,7 @@ public class IntroManager : MonoBehaviour
     {
         // 아이템의 갯수를 가지고 온다.
         var iCount = items.Length;
-        Debug.Log("items Count: "+ iCount);
+        //Debug.Log("items Count: "+ iCount);
 
 
         //CheckItemRange를 통하여 가지고 온 값을 이용해 몇개의 아이템이 보이게 할 것인지 정한다.

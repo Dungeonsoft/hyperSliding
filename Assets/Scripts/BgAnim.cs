@@ -23,7 +23,7 @@ public class BgAnim : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("intervalBtClrs" + intervalBtClrs / 360f);
+        //Debug.Log("intervalBtClrs" + intervalBtClrs / 360f);
         Color.RGBToHSV(baseClr, out outH, out outS, out outV);
         baseH = outH;
         baseS = outS;

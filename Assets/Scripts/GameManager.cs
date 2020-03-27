@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
     /// <param name="step"></param>
     void SpeedSetting(int step)
     {
-        Debug.Log("Speed : " + step);
+        //Debug.Log("Speed : " + step);
 
         manualNodeSpeed = speedList[step].manualNodeSpeed;
         delaySpeed = speedList[step].delaySpeed;
@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
         speedDigit.text = "X" + (step + 1);
 
         speedLevelTime = speedList[step].decreaseTime;
-        Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
+        //Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
     }
 
     private void OnDisable()
@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("InGame OnEnable Start!");
+        //Debug.Log("InGame OnEnable Start!");
         // 델리게이트에 있는 것들을 다 지운다.
         //uAction = null;
         //uActionTimer = null;
@@ -266,13 +266,13 @@ public class GameManager : MonoBehaviour
 
         TimeAdd();
 
-        Debug.Log("시간 계산 시작.");
+        //Debug.Log("시간 계산 시작.");
         timeDigit.text = "00:00:00";
         timer = 0;
         TimeCal();
 
 
-        Debug.Log("섞기 횟수를 초기화 함");
+        //Debug.Log("섞기 횟수를 초기화 함");
         mixCnt = 0;
         isMixed = false;
 
@@ -283,15 +283,22 @@ public class GameManager : MonoBehaviour
         nodeSpeed = baseNodeSpeed;
 
 
+        //모든 노드를 노멀상태로 초기화.
+        for (int i = 0; i < nScript.Length; i++)
+        {
+            nScript[i].ChangeNodeToNormal(nType.Normal);
+        }
+
         uAction = MixCount;
-        if(uAction != null)
-        {
-            Debug.Log("====uAction is not NULL");
-        }
-        else
-        {
-            Debug.Log("=====uAction is NULL");
-        }
+        
+        //if(uAction != null)
+        //{
+        //    Debug.Log("====uAction is not NULL");
+        //}
+        //else
+        //{
+        //    Debug.Log("=====uAction is NULL");
+        //}
 
         speedLevel = 0;
 
@@ -612,6 +619,7 @@ public class GameManager : MonoBehaviour
                     var movedNode = mNodes[i].GetComponent<NodeScript>();
                     // 각각 노드 점수계산하는 메소드 호출//
                     CalScore(movedNode);
+
                 }
 
                 //줄이 맞았을때 점수를 계산하는 메소드 호출.
@@ -679,6 +687,10 @@ public class GameManager : MonoBehaviour
                     TouchAction(dTouch[0].ht, dTouch[0].m);
                     uAction -= MovingNodes;
                 }
+
+                // 노드의 컬러(형태)를 지정하기 위한 부분이다.
+                checkNodeColor();
+
             }
         }
     }
@@ -734,13 +746,17 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void CalLineScore()
     {
+        NodeScript ns = new NodeScript();
         // 줄별 맟춤을 계산.
         for (int i = 0; i < 5; i++)
         {
             bool isBreak = false;
             for (int j = 0; j < 5; j++)
             {
-                NodeScript ns = nScript[i + j];
+                ns = nScript[i*5 + j];
+
+                // 라인 체크를 하면서 동시에 정확한 위치에 있는지 확인한다.
+                // 라인이 맞게 되면 이부분이 먼저 실행이 되니 무시되는 것과 같게 된다.
 
                 if (ns.oriPosX != ns.poxNowX || ns.oriPosY != ns.poxNowY)
                 {
@@ -749,20 +765,75 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            if(isBreak ==false && LineMatching[i] == false)
+            if(isBreak ==false)
             {
-                LineMatching[i] = true;
-                Debug.Log("점수 백점 추가");
-                AddScore(lineCorrectScore*comboLevel);
 
-                //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
-                //시간은 초기화 된다.
-                if (isSpeedLvlDn == false) speedLevel += 2;
-                else isSpeedLvlDn = false;
-                if (speedLevel > 9) speedLevel = 9;
-                SpeedSetting(speedLevel);
+                for (int j = 0; j < 5; j++)
+                {
+                    ns = nScript[i*5 + j];
+                }
+
+                if (LineMatching[i])
+                {
+                    LineMatching[i] = true;
+                    Debug.Log("점수 백점 추가");
+                    AddScore(lineCorrectScore * comboLevel);
+
+                    //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
+                    //시간은 초기화 된다.
+                    if (isSpeedLvlDn == false) speedLevel += 2;
+                    else isSpeedLvlDn = false;
+                    if (speedLevel > 9) speedLevel = 9;
+                    SpeedSetting(speedLevel);
+                }
             }
         }
+
+    }
+
+    void checkNodeColor()
+    {
+        NodeScript ns = new NodeScript();
+        for (int i = 0; i < 25; i++)
+        {
+                ns = nScript[i];
+                ns.CheckPosition();
+        }
+
+        CheckLineColor();
+    }
+
+    void CheckLineColor()
+    {
+        bool isLine = true;
+        NodeScript ns = new NodeScript();
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                ns = nScript[i*5 + j];
+                if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY)
+                {
+                    isLine = true;
+                }
+                else
+                {
+                    isLine = false;
+                    break;
+                }
+            }
+            
+            if (isLine == true)
+            {
+                Debug.Log("Value I: "+i);
+                for (int j = 0; j < 5; j++)
+                {
+                    ns = nScript[i*5 + j];
+                    ns.ChangeNodeType(nType.CorrectLine);
+                }
+            }
+        }
+
     }
 
     void ScoreSaveToLocal()
@@ -771,7 +842,7 @@ public class GameManager : MonoBehaviour
         if (score > showScore) showScore = score;
         PlayerPrefs.SetInt("HighScore", showScore);
 
-        foreach(var v in scoreTextFailComple)
+        foreach (var v in scoreTextFailComple)
         {
             v.text = showScore.ToString("000000000");
         }
@@ -799,7 +870,7 @@ public class GameManager : MonoBehaviour
                 ComboMovingCount++;
                 if(ComboMovingCount>=comboMaxMoving)
                 {
-                    Debug.Log("콤보 초기화!");
+                    //Debug.Log("콤보 초기화!");
                     comboLevel = 1;
                     ComboMovingCount = 0;
                 }
@@ -812,16 +883,16 @@ public class GameManager : MonoBehaviour
 
                 if (dTouch.Count > 0)
                 {
-                    Debug.Log("두개이상");
+                    //Debug.Log("두개이상");
                     TouchFX();
-                    Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
+                    //Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
                     dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                 }
                 else
                 {
-                    Debug.Log("하나");
+                    //Debug.Log("하나");
                     TouchFX();
-                    Debug.Log("등록이 되었나 : "+ hitTransform.name+" :: "+hitTransform.GetComponent<NodeFX>().tfc.Count);
+                    //Debug.Log("등록이 되었나 : "+ hitTransform.name+" :: "+hitTransform.GetComponent<NodeFX>().tfc.Count);
                     dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                     TouchAction(hitTransform, isMovable);
                 }

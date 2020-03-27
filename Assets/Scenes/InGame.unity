@@ -267,6 +267,7 @@ MonoBehaviour:
   poxNowX: 1
   poxNowY: 1
   alreadyScoreCount: 0
+  nf: {fileID: 10219136}
 --- !u!114 &10219136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +333,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1143393719}
+  lineGlow: {fileID: 1306860699}
+  line: {fileID: 1110872324}
+  digit: {fileID: 1468520671}
+  isFirstMove: 0
 --- !u!1 &12342228
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +523,7 @@ GameObject:
   - component: {fileID: 13144025}
   - component: {fileID: 13144024}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -761,7 +768,7 @@ GameObject:
   - component: {fileID: 29673817}
   - component: {fileID: 29673816}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1588,7 +1595,7 @@ GameObject:
   - component: {fileID: 92716455}
   - component: {fileID: 92716454}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1755,7 +1762,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 94949934}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 374823453}
@@ -1765,7 +1772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 145}
+  m_AnchoredPosition: {x: 0, y: 79}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &99419390
@@ -1780,7 +1787,7 @@ GameObject:
   - component: {fileID: 99419393}
   - component: {fileID: 99419392}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2190,7 +2197,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 69bff394b7c9d6f438ce9cd4ff508a64, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2304,9 +2311,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   info:
   - 'DGS_BGM_HS_001: BPM -118'
-  - 
-  - 
-  - 
+  - 'DGS_BGM_HS_002: BPM -118'
+  - 'DGS_BGM_HS_003: BPM -118'
+  - 'DGS_BGM_HS_003: BPM -118'
+  BGM:
+  - {fileID: 8300000, guid: 69bff394b7c9d6f438ce9cd4ff508a64, type: 3}
+  - {fileID: 8300000, guid: 5033051ccbaa97c44abb76ba11c60b7e, type: 3}
+  - {fileID: 8300000, guid: b3dc3eca924137740b988e139708d08a, type: 3}
+  - {fileID: 8300000, guid: 2fd3276925d845a45b80b0294642458e, type: 3}
 --- !u!1 &130109418
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,7 +2331,7 @@ GameObject:
   - component: {fileID: 130109421}
   - component: {fileID: 130109420}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2532,6 +2544,7 @@ MonoBehaviour:
   poxNowX: 0
   poxNowY: 0
   alreadyScoreCount: 0
+  nf: {fileID: 156513596}
 --- !u!114 &156513596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2597,6 +2610,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 12863227}
+  lineGlow: {fileID: 1366144069}
+  line: {fileID: 1830542772}
+  digit: {fileID: 624123112}
+  isFirstMove: 0
 --- !u!1 &160295078
 GameObject:
   m_ObjectHideFlags: 0
@@ -2648,7 +2667,7 @@ GameObject:
   - component: {fileID: 161399614}
   - component: {fileID: 161399613}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3075,7 +3094,7 @@ GameObject:
   - component: {fileID: 201001888}
   - component: {fileID: 201001887}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3209,6 +3228,7 @@ MonoBehaviour:
   poxNowX: 4
   poxNowY: 3
   alreadyScoreCount: 0
+  nf: {fileID: 201422793}
 --- !u!114 &201422793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3274,6 +3294,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1745653642}
+  lineGlow: {fileID: 92716453}
+  line: {fileID: 729125070}
+  digit: {fileID: 1285804850}
+  isFirstMove: 0
 --- !u!1 &203584522
 GameObject:
   m_ObjectHideFlags: 0
@@ -3365,7 +3391,7 @@ GameObject:
   - component: {fileID: 205318293}
   - component: {fileID: 205318292}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3697,6 +3723,7 @@ MonoBehaviour:
   poxNowX: 1
   poxNowY: 0
   alreadyScoreCount: 0
+  nf: {fileID: 222178657}
 --- !u!114 &222178657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3762,6 +3789,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1254220414}
+  lineGlow: {fileID: 323922145}
+  line: {fileID: 1817668601}
+  digit: {fileID: 1481308421}
+  isFirstMove: 0
 --- !u!1 &233571075
 GameObject:
   m_ObjectHideFlags: 0
@@ -3929,7 +3962,7 @@ GameObject:
   - component: {fileID: 236925028}
   - component: {fileID: 236925027}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4051,7 +4084,7 @@ GameObject:
   - component: {fileID: 242569533}
   - component: {fileID: 242569532}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4601,7 +4634,7 @@ GameObject:
   - component: {fileID: 316141941}
   - component: {fileID: 316141940}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4680,7 +4713,7 @@ GameObject:
   - component: {fileID: 323922147}
   - component: {fileID: 323922146}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4759,7 +4792,7 @@ GameObject:
   - component: {fileID: 328505126}
   - component: {fileID: 328505125}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4838,7 +4871,7 @@ GameObject:
   - component: {fileID: 332955985}
   - component: {fileID: 332955984}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5067,7 +5100,7 @@ GameObject:
   - component: {fileID: 341878971}
   - component: {fileID: 341878970}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5398,7 +5431,7 @@ GameObject:
   - component: {fileID: 344751925}
   - component: {fileID: 344751924}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5477,7 +5510,7 @@ GameObject:
   - component: {fileID: 345096247}
   - component: {fileID: 345096246}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5635,7 +5668,7 @@ GameObject:
   - component: {fileID: 367430442}
   - component: {fileID: 367430441}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6151,6 +6184,7 @@ MonoBehaviour:
   poxNowX: 1
   poxNowY: 2
   alreadyScoreCount: 0
+  nf: {fileID: 393091587}
 --- !u!114 &393091587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6216,6 +6250,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1846017943}
+  lineGlow: {fileID: 13144023}
+  line: {fileID: 2015235422}
+  digit: {fileID: 1797063341}
+  isFirstMove: 0
 --- !u!1 &406198409
 GameObject:
   m_ObjectHideFlags: 0
@@ -6228,7 +6268,7 @@ GameObject:
   - component: {fileID: 406198412}
   - component: {fileID: 406198411}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6492,6 +6532,7 @@ MonoBehaviour:
   poxNowX: 0
   poxNowY: 3
   alreadyScoreCount: 0
+  nf: {fileID: 449668243}
 --- !u!114 &449668243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6557,6 +6598,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 203584523}
+  lineGlow: {fileID: 1375618674}
+  line: {fileID: 242569531}
+  digit: {fileID: 577433334}
+  isFirstMove: 0
 --- !u!1 &467743490
 GameObject:
   m_ObjectHideFlags: 0
@@ -6992,7 +7039,7 @@ GameObject:
   - component: {fileID: 490771208}
   - component: {fileID: 490771207}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7337,6 +7384,7 @@ MonoBehaviour:
   poxNowX: 3
   poxNowY: 2
   alreadyScoreCount: 0
+  nf: {fileID: 510599784}
 --- !u!114 &510599784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7402,6 +7450,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1108402212}
+  lineGlow: {fileID: 984245446}
+  line: {fileID: 332955983}
+  digit: {fileID: 639549281}
+  isFirstMove: 0
 --- !u!1 &513091427
 GameObject:
   m_ObjectHideFlags: 0
@@ -8132,6 +8186,32 @@ MonoBehaviour:
   connectCM: {fileID: 1139298453}
   cmEquiped: {fileID: 760247701}
   isCmAllow: 0
+  nodes:
+  - {fileID: 156513593}
+  - {fileID: 598452122}
+  - {fileID: 580640184}
+  - {fileID: 449668240}
+  - {fileID: 1198842307}
+  - {fileID: 222178654}
+  - {fileID: 10219133}
+  - {fileID: 393091584}
+  - {fileID: 1966419715}
+  - {fileID: 1303076399}
+  - {fileID: 1224104725}
+  - {fileID: 1818163839}
+  - {fileID: 1141210975}
+  - {fileID: 860463582}
+  - {fileID: 832945027}
+  - {fileID: 1682703457}
+  - {fileID: 958455672}
+  - {fileID: 510599781}
+  - {fileID: 1887758608}
+  - {fileID: 1743732415}
+  - {fileID: 737492112}
+  - {fileID: 662711884}
+  - {fileID: 1987087324}
+  - {fileID: 201422790}
+  - {fileID: 1650409044}
 --- !u!114 &526890356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9072,6 +9152,7 @@ MonoBehaviour:
   poxNowX: 0
   poxNowY: 2
   alreadyScoreCount: 0
+  nf: {fileID: 580640187}
 --- !u!114 &580640187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9137,6 +9218,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 929886059}
+  lineGlow: {fileID: 316141939}
+  line: {fileID: 966922881}
+  digit: {fileID: 370553009}
+  isFirstMove: 0
 --- !u!1 &583090380
 GameObject:
   m_ObjectHideFlags: 0
@@ -9664,6 +9751,7 @@ MonoBehaviour:
   poxNowX: 0
   poxNowY: 1
   alreadyScoreCount: 0
+  nf: {fileID: 598452125}
 --- !u!114 &598452125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9729,6 +9817,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1275770734}
+  lineGlow: {fileID: 161399612}
+  line: {fileID: 328505124}
+  digit: {fileID: 360361543}
+  isFirstMove: 0
 --- !u!1 &602783522
 GameObject:
   m_ObjectHideFlags: 0
@@ -10565,7 +10659,7 @@ GameObject:
   - component: {fileID: 652717093}
   - component: {fileID: 652717092}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10964,6 +11058,7 @@ MonoBehaviour:
   poxNowX: 4
   poxNowY: 1
   alreadyScoreCount: 0
+  nf: {fileID: 662711887}
 --- !u!114 &662711887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11029,6 +11124,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1473220214}
+  lineGlow: {fileID: 1711741712}
+  line: {fileID: 1282448842}
+  digit: {fileID: 1728943061}
+  isFirstMove: 0
 --- !u!1 &666094856
 GameObject:
   m_ObjectHideFlags: 0
@@ -12073,7 +12174,7 @@ GameObject:
   - component: {fileID: 720808789}
   - component: {fileID: 720808788}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12473,7 +12574,7 @@ GameObject:
   - component: {fileID: 729125072}
   - component: {fileID: 729125071}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12686,6 +12787,7 @@ MonoBehaviour:
   poxNowX: 4
   poxNowY: 0
   alreadyScoreCount: 0
+  nf: {fileID: 737492115}
 --- !u!114 &737492115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12751,6 +12853,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 5505802}
+  lineGlow: {fileID: 99419391}
+  line: {fileID: 1064818949}
+  digit: {fileID: 973185080}
+  isFirstMove: 0
 --- !u!1 &738313635
 GameObject:
   m_ObjectHideFlags: 0
@@ -12763,7 +12871,7 @@ GameObject:
   - component: {fileID: 738313638}
   - component: {fileID: 738313637}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13568,7 +13676,7 @@ GameObject:
   - component: {fileID: 767561196}
   - component: {fileID: 767561195}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14184,6 +14292,7 @@ MonoBehaviour:
   poxNowX: 2
   poxNowY: 4
   alreadyScoreCount: 0
+  nf: {fileID: 832945030}
 --- !u!114 &832945030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14249,6 +14358,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1581606006}
+  lineGlow: {fileID: 1798936470}
+  line: {fileID: 236925026}
+  digit: {fileID: 736131262}
+  isFirstMove: 0
 --- !u!1 &837319492
 GameObject:
   m_ObjectHideFlags: 0
@@ -14716,6 +14831,7 @@ MonoBehaviour:
   poxNowX: 2
   poxNowY: 3
   alreadyScoreCount: 0
+  nf: {fileID: 860463585}
 --- !u!114 &860463585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14781,6 +14897,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1019254485}
+  lineGlow: {fileID: 738313636}
+  line: {fileID: 1890843770}
+  digit: {fileID: 1821616627}
+  isFirstMove: 0
 --- !u!1 &870311541
 GameObject:
   m_ObjectHideFlags: 0
@@ -15308,23 +15430,19 @@ MonoBehaviour:
   - digitColor: {r: 1, g: 1, b: 1, a: 1}
     lineColor: {r: 1, g: 1, b: 1, a: 1}
     lineGlowColor: {r: 0, g: 0, b: 0, a: 0}
-    baseColor: {r: 0, g: 0, b: 0, a: 1}
-    baseAlpha: 0
+    baseColor: {r: 0, g: 0, b: 0, a: 0.23529412}
   - digitColor: {r: 1, g: 1, b: 1, a: 1}
     lineColor: {r: 1, g: 1, b: 1, a: 1}
     lineGlowColor: {r: 1, g: 0, b: 0, a: 1}
-    baseColor: {r: 0, g: 0, b: 0, a: 1}
-    baseAlpha: 0
+    baseColor: {r: 0, g: 0, b: 0, a: 0.15686275}
   - digitColor: {r: 1, g: 0.81568635, b: 0, a: 1}
     lineColor: {r: 1, g: 1, b: 1, a: 1}
-    lineGlowColor: {r: 1, g: 0.81568635, b: 0, a: 1}
-    baseColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-    baseAlpha: 0
+    lineGlowColor: {r: 1, g: 0.81568635, b: 0, a: 0.39215687}
+    baseColor: {r: 0, g: 0, b: 0, a: 0.078431375}
   - digitColor: {r: 0, g: 0.7058824, b: 0.9960785, a: 1}
     lineColor: {r: 1, g: 1, b: 1, a: 1}
-    lineGlowColor: {r: 0, g: 0.7058824, b: 0.9960785, a: 1}
-    baseColor: {r: 0, g: 0, b: 0, a: 0.23529412}
-    baseAlpha: 0
+    lineGlowColor: {r: 0, g: 0.7058824, b: 0.9960785, a: 0.39215687}
+    baseColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &907173821
 GameObject:
   m_ObjectHideFlags: 0
@@ -15752,9 +15870,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
-  m_CookingOptions: 14
+  m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &932024583
 MeshRenderer:
@@ -15837,7 +15955,7 @@ VideoPlayer:
   m_AspectRatio: 2
   m_DataSource: 0
   m_PlaybackSpeed: 1
-  m_AudioOutputMode: 2
+  m_AudioOutputMode: 0
   m_TargetAudioSources: []
   m_DirectAudioVolumes: []
   m_Url: 
@@ -16337,6 +16455,7 @@ MonoBehaviour:
   poxNowX: 3
   poxNowY: 1
   alreadyScoreCount: 0
+  nf: {fileID: 958455675}
 --- !u!114 &958455675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16402,6 +16521,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 49492042}
+  lineGlow: {fileID: 1856854487}
+  line: {fileID: 1623886977}
+  digit: {fileID: 882092247}
+  isFirstMove: 0
 --- !u!1 &963079350
 GameObject:
   m_ObjectHideFlags: 0
@@ -16516,7 +16641,7 @@ GameObject:
   - component: {fileID: 966857339}
   - component: {fileID: 966857338}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16595,7 +16720,7 @@ GameObject:
   - component: {fileID: 966922883}
   - component: {fileID: 966922882}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16753,7 +16878,7 @@ GameObject:
   - component: {fileID: 984245448}
   - component: {fileID: 984245447}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18133,7 +18258,7 @@ GameObject:
   - component: {fileID: 1064818951}
   - component: {fileID: 1064818950}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18360,7 +18485,7 @@ GameObject:
   - component: {fileID: 1103438186}
   - component: {fileID: 1103438185}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18673,7 +18798,7 @@ GameObject:
   - component: {fileID: 1110872326}
   - component: {fileID: 1110872325}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18913,7 +19038,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139298451}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1147653965}
@@ -18923,7 +19048,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -238}
+  m_AnchoredPosition: {x: 0, y: -310}
   m_SizeDelta: {x: 281, y: 184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1139298453
@@ -19057,6 +19182,7 @@ MonoBehaviour:
   poxNowX: 2
   poxNowY: 2
   alreadyScoreCount: 0
+  nf: {fileID: 1141210978}
 --- !u!114 &1141210978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19122,6 +19248,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 2003686967}
+  lineGlow: {fileID: 341878969}
+  line: {fileID: 367430440}
+  digit: {fileID: 1995184704}
+  isFirstMove: 0
 --- !u!1 &1143393718
 GameObject:
   m_ObjectHideFlags: 0
@@ -19829,7 +19961,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
@@ -20076,6 +20208,7 @@ MonoBehaviour:
   poxNowX: 0
   poxNowY: 4
   alreadyScoreCount: 0
+  nf: {fileID: 1198842310}
 --- !u!114 &1198842310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20141,6 +20274,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 137460890}
+  lineGlow: {fileID: 29673815}
+  line: {fileID: 1645000327}
+  digit: {fileID: 658686087}
+  isFirstMove: 0
 --- !u!1 &1208027025
 GameObject:
   m_ObjectHideFlags: 0
@@ -21102,6 +21241,7 @@ MonoBehaviour:
   poxNowX: 2
   poxNowY: 0
   alreadyScoreCount: 0
+  nf: {fileID: 1224104728}
 --- !u!114 &1224104728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21167,6 +21307,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 929576624}
+  lineGlow: {fileID: 345096245}
+  line: {fileID: 767561194}
+  digit: {fileID: 604991730}
+  isFirstMove: 0
 --- !u!1 &1224862947
 GameObject:
   m_ObjectHideFlags: 0
@@ -21933,7 +22079,7 @@ GameObject:
   - component: {fileID: 1282448844}
   - component: {fileID: 1282448843}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22222,6 +22368,7 @@ MonoBehaviour:
   poxNowX: 1
   poxNowY: 4
   alreadyScoreCount: 0
+  nf: {fileID: 1303076402}
 --- !u!114 &1303076402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22287,6 +22434,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 2106378934}
+  lineGlow: {fileID: 1103438184}
+  line: {fileID: 966857337}
+  digit: {fileID: 1652189148}
+  isFirstMove: 0
 --- !u!1 &1306860698
 GameObject:
   m_ObjectHideFlags: 0
@@ -22299,7 +22452,7 @@ GameObject:
   - component: {fileID: 1306860701}
   - component: {fileID: 1306860700}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22543,7 +22696,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316493969}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0000042962815}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 892581930}
@@ -22555,7 +22708,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -485}
+  m_AnchoredPosition: {x: 0, y: -520}
   m_SizeDelta: {x: 720, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1316493971
@@ -23036,7 +23189,7 @@ GameObject:
   - component: {fileID: 1366144071}
   - component: {fileID: 1366144070}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23188,7 +23341,7 @@ GameObject:
   - component: {fileID: 1375618676}
   - component: {fileID: 1375618675}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26272,7 +26425,7 @@ GameObject:
   - component: {fileID: 1623886979}
   - component: {fileID: 1623886978}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26351,7 +26504,7 @@ GameObject:
   - component: {fileID: 1645000329}
   - component: {fileID: 1645000328}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26485,6 +26638,7 @@ MonoBehaviour:
   poxNowX: 4
   poxNowY: 4
   alreadyScoreCount: 0
+  nf: {fileID: 1650409047}
 --- !u!114 &1650409047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26550,6 +26704,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 583090381}
+  lineGlow: {fileID: 344751923}
+  line: {fileID: 205318291}
+  digit: {fileID: 850739355}
+  isFirstMove: 0
 --- !u!1 &1652189147
 GameObject:
   m_ObjectHideFlags: 0
@@ -27017,6 +27177,7 @@ MonoBehaviour:
   poxNowX: 3
   poxNowY: 0
   alreadyScoreCount: 0
+  nf: {fileID: 1682703460}
 --- !u!114 &1682703460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27082,6 +27243,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 954730838}
+  lineGlow: {fileID: 2001781053}
+  line: {fileID: 490771206}
+  digit: {fileID: 1481039810}
+  isFirstMove: 0
 --- !u!1 &1695877991
 GameObject:
   m_ObjectHideFlags: 0
@@ -27173,7 +27340,7 @@ GameObject:
   - component: {fileID: 1711741714}
   - component: {fileID: 1711741713}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27883,6 +28050,7 @@ MonoBehaviour:
   poxNowX: 3
   poxNowY: 4
   alreadyScoreCount: 0
+  nf: {fileID: 1743732418}
 --- !u!114 &1743732418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27948,6 +28116,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1772124674}
+  lineGlow: {fileID: 1790886491}
+  line: {fileID: 406198410}
+  digit: {fileID: 1695877992}
+  isFirstMove: 0
 --- !u!1 &1745653641
 GameObject:
   m_ObjectHideFlags: 0
@@ -28118,7 +28292,7 @@ GameObject:
   - component: {fileID: 1753616009}
   - component: {fileID: 1753616008}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28620,7 +28794,7 @@ GameObject:
   - component: {fileID: 1773127981}
   - component: {fileID: 1773127980}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28699,7 +28873,7 @@ GameObject:
   - component: {fileID: 1778128067}
   - component: {fileID: 1778128066}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28778,7 +28952,7 @@ GameObject:
   - component: {fileID: 1790886493}
   - component: {fileID: 1790886492}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28936,7 +29110,7 @@ GameObject:
   - component: {fileID: 1798936472}
   - component: {fileID: 1798936471}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29088,7 +29262,7 @@ GameObject:
   - component: {fileID: 1817668603}
   - component: {fileID: 1817668602}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29222,6 +29396,7 @@ MonoBehaviour:
   poxNowX: 2
   poxNowY: 1
   alreadyScoreCount: 0
+  nf: {fileID: 1818163842}
 --- !u!114 &1818163842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29287,6 +29462,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1598355199}
+  lineGlow: {fileID: 652717091}
+  line: {fileID: 130109419}
+  digit: {fileID: 1520371607}
+  isFirstMove: 0
 --- !u!1 &1821616626
 GameObject:
   m_ObjectHideFlags: 0
@@ -29626,7 +29807,7 @@ GameObject:
   - component: {fileID: 1830542774}
   - component: {fileID: 1830542773}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30428,7 +30609,7 @@ GameObject:
   - component: {fileID: 1856854489}
   - component: {fileID: 1856854488}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30636,6 +30817,7 @@ MonoBehaviour:
   poxNowX: 3
   poxNowY: 3
   alreadyScoreCount: 0
+  nf: {fileID: 1887758611}
 --- !u!114 &1887758611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30701,6 +30883,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1426080302}
+  lineGlow: {fileID: 1773127979}
+  line: {fileID: 1778128065}
+  digit: {fileID: 1749309531}
+  isFirstMove: 0
 --- !u!1 &1890843769
 GameObject:
   m_ObjectHideFlags: 0
@@ -30713,7 +30901,7 @@ GameObject:
   - component: {fileID: 1890843772}
   - component: {fileID: 1890843771}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30831,7 +31019,7 @@ GameObject:
   - component: {fileID: 1915295445}
   - component: {fileID: 1915295444}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31636,6 +31824,7 @@ MonoBehaviour:
   poxNowX: 1
   poxNowY: 3
   alreadyScoreCount: 0
+  nf: {fileID: 1966419718}
 --- !u!114 &1966419718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31701,6 +31890,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 1224862948}
+  lineGlow: {fileID: 1915295443}
+  line: {fileID: 1753616007}
+  digit: {fileID: 690333995}
+  isFirstMove: 0
 --- !u!1 &1966969676
 GameObject:
   m_ObjectHideFlags: 0
@@ -32244,6 +32439,7 @@ MonoBehaviour:
   poxNowX: 4
   poxNowY: 2
   alreadyScoreCount: 0
+  nf: {fileID: 1987087327}
 --- !u!114 &1987087327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32309,6 +32505,12 @@ MonoBehaviour:
   emisPowerMax: 2
   isFX: 0
   tfc: []
+  ntd: {fileID: 895886686}
+  digitBase: {fileID: 875640210}
+  lineGlow: {fileID: 720808787}
+  line: {fileID: 201001886}
+  digit: {fileID: 1562735061}
+  isFirstMove: 0
 --- !u!1 &1995184703
 GameObject:
   m_ObjectHideFlags: 0
@@ -32549,7 +32751,7 @@ GameObject:
   - component: {fileID: 2001781055}
   - component: {fileID: 2001781054}
   m_Layer: 0
-  m_Name: Line
+  m_Name: Line_Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32713,7 +32915,7 @@ GameObject:
   - component: {fileID: 2015235424}
   - component: {fileID: 2015235423}
   m_Layer: 0
-  m_Name: Line_White
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33613,7 +33815,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087206580}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.000028613742}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1614640340}
@@ -33628,7 +33830,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -4}
+  m_AnchoredPosition: {x: 0, y: -71.00001}
   m_SizeDelta: {x: 672, y: 83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2087206582

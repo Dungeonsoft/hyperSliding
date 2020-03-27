@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+public enum nType { Normal, Move, CorrectPos, CorrectLine };
+
+
+
+[System.Serializable]
 public class Define
 {
     public Color digitColor;
@@ -13,7 +18,7 @@ public class Define
 
     public Color baseColor;
 
-    public float baseAlpha;
+    //public float baseAlpha;
 }
 
 [System.Serializable]
