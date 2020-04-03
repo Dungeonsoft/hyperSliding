@@ -27,7 +27,7 @@ Shader "DGS/VertexLit BlendedBG00" {
 		void surf(Input IN, inout SurfaceOutputStandard o) {
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
 			o.Emission = c.rgb * _EmisColor * _EmisPower;
-			o.Alpha = _AlphaPower * (-1*(c.a-0.5)+0.5);
+			o.Alpha = _AlphaPower *c.a/*  * (-1*(c.a-0.5)+0.5)*/;
 			//o.Emission = o.Alpha;
 			//0.Alpha = 0;
 		}

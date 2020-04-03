@@ -34,6 +34,8 @@ public class TouchFxCon : MonoBehaviour
 
     GameManager gb;
 
+    Texture getTexFromMat;
+
     //public NodeScript
 
     private void Awake()
@@ -42,6 +44,8 @@ public class TouchFxCon : MonoBehaviour
         thisMat = GetComponent<Renderer>().material;
         this.gameObject.SetActive(false);
         gb = GameObject.Find("GameManager").GetComponent<GameManager>();
+        getTexFromMat = thisMat.GetTexture("_MainTex");
+
     }
 
     public void FxCon()
@@ -89,6 +93,10 @@ public class TouchFxCon : MonoBehaviour
         {
             thisTrans.localScale = Vector3.one * acScale.Evaluate(eVal)* scaleRange;
 
+
+
+            thisMat.SetFloat("_TexContrast", acOpaque.Evaluate(eVal));
+
             if (eVal >= 1)
             {
                 //Debug.Log("End FX");
@@ -106,7 +114,7 @@ public class TouchFxCon : MonoBehaviour
             #region 파동형 이펙트 후처리로 삽입
             Debug.Log("파동형 이펙트");
 
-            /*
+            
             if (isNoMoving == false)
             {
                 foreach (var v in gb.tFxKids01)
@@ -125,7 +133,7 @@ public class TouchFxCon : MonoBehaviour
                     }
                 }
             }
-            */
+            
             #endregion
 
         }

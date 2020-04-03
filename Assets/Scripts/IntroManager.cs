@@ -134,7 +134,7 @@ public class IntroManager : MonoBehaviour
         cmEquiped.SetActive(false);
 
         //새로운 비지엠 작동.
-        BG_Intrudution bgi = GameObject.FindObjectOfType<BG_Intrudution>();
+        BG_Introdution bgi = GameObject.FindObjectOfType<BG_Introdution>();
         bgi.SetNewBGM();
     }
 

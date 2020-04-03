@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RandomRange = UnityEngine.Random;
 
 public class NodeScript : MonoBehaviour
 {
@@ -54,4 +56,27 @@ public class NodeScript : MonoBehaviour
         nf.NodeToNormal(t);
     }
 
+    public IngameItems AddIngameItem(int randomRate = 15)
+    {
+        int r = RandomRange.Range(0, 10000);
+        randomRate *= 100;
+
+        if (r < randomRate)
+        {
+            IngameItems igItem = RandomEnum<IngameItems>();
+
+            return igItem;
+        }
+        else
+        {
+            return IngameItems.None;
+        }
+    }
+
+
+    public static T RandomEnum<T>()
+    {
+        Array values = Enum.GetValues(typeof(T));
+        return (T)values.GetValue(new System.Random().Next(1, values.Length));
+    }
 }

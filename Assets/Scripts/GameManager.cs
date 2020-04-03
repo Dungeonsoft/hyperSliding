@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+public enum IngameItems
+{
+    None,IncreaseTime10,IncreaseScore50
+}
+
+
 [System.Serializable]
 public class NodeY
 {
@@ -102,11 +108,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public int defaultTime = 300;
     public int remainingTime;
-    
+
     /// <summary>
     /// 시간을 표시하는 유아이를 연결한다.
     /// </summary>
-    public Text timeUI;
+    public TMPro.TextMeshProUGUI timeUI;
 
     /// <summary>
     /// 라인점수 계산을 이미 했는지 기록하는 어레이변수.
@@ -137,7 +143,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 스코어를 텍스트롤 변환하여 화면에 보여주는 유아이.
     /// </summary>
-    public Text scoreUI;
+    public TMPro.TextMeshProUGUI scoreUI;
 
     /// <summary>
     /// 실제 남은 시간을 나타내주기 위해 만든 int 변수
@@ -148,7 +154,7 @@ public class GameManager : MonoBehaviour
     public List<DelayTouch> dTouch = new List<DelayTouch>();
     Transform hitTransform;
 
-    public Text speedDigit;
+    public TMPro.TextMeshProUGUI speedDigit;
 
     public float speedStepTimeDefault;
     float speedLevelTime;
@@ -183,10 +189,11 @@ public class GameManager : MonoBehaviour
         nodeSpeed = baseNodeSpeed;
         //puzzle = transform.parent.Find("Puzzle");
 
-        nScript = puzzle.GetComponentsInChildren<NodeScript>();
+        //nScript = puzzle.GetComponentsInChildren<NodeScript>();
 
         //hideNode = puzzle.GetChild(Random.Range(0, 25));
-        hideNode = puzzle.GetChild(24);
+        hideNode = nScript[24].transform;
+        hideNode.gameObject.SetActive(true);
         hideX = hideNode.GetComponent<NodeScript>().poxNowX;
         hideY = hideNode.GetComponent<NodeScript>().poxNowY;
 
@@ -289,6 +296,16 @@ public class GameManager : MonoBehaviour
             nScript[i].ChangeNodeToNormal(nType.Normal);
         }
 
+        //Debug.LogError("Hang on a second! I gotta see Them!");
+
+
+        hideNode = nScript[24].transform;
+        hideNode.gameObject.SetActive(true);
+        hideX = hideNode.GetComponent<NodeScript>().poxNowX;
+        hideY = hideNode.GetComponent<NodeScript>().poxNowY;
+
+        hideNode.gameObject.SetActive(false);
+
         uAction = MixCount;
         
         //if(uAction != null)
@@ -383,7 +400,7 @@ public class GameManager : MonoBehaviour
 
     void CalcurateMovableNode()
     {
-        //Debug.Log("움직일 노드를 찾는 계산을 함");
+        //Debug.Log("움직일 노드를 찾는 계산을 함 ori1X: "+ ori1X+" = ori1Y: "+ ori1Y);
         ori2X = ori1X;
         ori2Y = ori1Y;
         ori1X = hideX;
@@ -463,19 +480,34 @@ public class GameManager : MonoBehaviour
         mNodes = new List<Transform>();
         if (r < 5)
         {
+            //Debug.Log("R Num: " + r);
             int interVal = Mathf.Abs(hideX - ori1X);
             if (hideX > ori1X)
             {
                 for (var i = 0; i <= interVal; i++)
                 {
-                    mNodes.Add(AddNode(posN[r - i]));
+                    if (AddNode(posN[r - i]) != null)
+                    {
+                        mNodes.Add(AddNode(posN[r - i]));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("There is nothing to add :: " + posN[r - i]);
+                    }
                 }
             }
             else
             {
                 for (var i = 0; i <= interVal; i++)
                 {
-                    mNodes.Add(AddNode(posN[r + i]));
+                    if (AddNode(posN[r + i]) != null)
+                    {
+                        mNodes.Add(AddNode(posN[r + i]));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("There is nothing to add :: " + posN[r + i]);
+                    }
                 }
             }
         }
@@ -486,14 +518,28 @@ public class GameManager : MonoBehaviour
             {
                 for (var i = 0; i <= interVal; i++)
                 {
-                    mNodes.Add(AddNode(posN[r - i]));
+                    if (AddNode(posN[r - i]) != null)
+                    {
+                        mNodes.Add(AddNode(posN[r - i]));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("There is nothing to add :: " + posN[r - i]);
+                    }
                 }
             }
             else
             {
                 for (var i = 0; i <= interVal; i++)
                 {
-                    mNodes.Add(AddNode(posN[r + i]));
+                    if (AddNode(posN[r + i]) != null)
+                    {
+                        mNodes.Add(AddNode(posN[r + i]));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("There is nothing to add :: " + posN[r + i]);
+                    }
                 }
             }
         }
@@ -503,7 +549,9 @@ public class GameManager : MonoBehaviour
         mNodesPos = new List<Vector3>();
         foreach (var node in mNodes)
         {
-            mNodesPos.Add(node.position);
+            if (node == null) Debug.Log("Node is NULL");
+            //Debug.Log("NODE name: " + node.name+" ::: Avtive: "+ node.gameObject.activeSelf);
+            mNodesPos.Add(node.localPosition);
             isFX.Add(node.GetComponent<NodeFX>().isFX);
         }
 
@@ -523,8 +571,8 @@ public class GameManager : MonoBehaviour
             mNodes[0].GetComponent<NodeFX>().tfc = new List<TouchFxCon>();
         }
 
-        selNodePosition = mNodes[0].position;
-        hideNodePosition = hideNode.position;
+        selNodePosition = mNodes[0].localPosition;
+        hideNodePosition = hideNode.localPosition;
         uAction += MovingNodes;
         uAction -= CalcurateMovableNode;
         #endregion
@@ -543,6 +591,7 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+        if (sNode == null) Debug.Log("nPos Error:" + nPos.x+" ::: " +nPos.y);
         return sNode;
     }
 
@@ -566,7 +615,7 @@ public class GameManager : MonoBehaviour
             //{
             //    Debug.Log("V Value: " + v);
             //}
-            mNodes[i].position = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
+            mNodes[i].localPosition = Vector3.Lerp(mNodesPos[i], mNodesPos[i + 1], v);
 
             //벽 또는 다른 노드와 부딪힐때 이펙트를 발동시키는 부분. 
             if (isMixed)
@@ -590,19 +639,20 @@ public class GameManager : MonoBehaviour
                 movedNode.poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
                 movedNode.poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
 
-                mNodes[i].position = mNodesPos[i + 1];
+                mNodes[i].localPosition = mNodesPos[i + 1];
             }
 
 
             lVal = 0.0f;
 
-            hideNode.position = selNodePosition;
+            hideNode.localPosition = selNodePosition;
             hideNode.GetComponent<NodeScript>().poxNowX = hideX;
             hideNode.GetComponent<NodeScript>().poxNowY = hideY;
 
             // 최초 인게임 작동시 셔플이 다 되지 않았을때 오는 곳.
             if (isMixed != true)
             {
+                //Debug.LogError("Hang on a second! I gotta see Them!");
                 uAction = MixCount;
             }
 
@@ -703,10 +753,31 @@ public class GameManager : MonoBehaviour
     {
         if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
         {
+            IngameItems getItem =  ns.AddIngameItem();
+
+            switch (getItem)
+                {
+                case IngameItems.None:
+                    // 얻은 아이템이 없음.
+                    break;
+                case IngameItems.IncreaseTime10:
+                    // 시간추가.
+                    TimeAdd(10);
+                    break;
+                case IngameItems.IncreaseScore50:
+                    comboDefaultScore = 50;
+                    // 콤보점수 추가.
+                    break;
+            }
+
+            // 여기서 계산을 해주고 이펙트도 추가해준다.
+            // 이펙트 발생위치.
+
             ns.alreadyScoreCount = true;
             //score += 10 * comboLevel;
             int addComboScore = comboDefaultScore * comboLevel;
             AddScore(addComboScore);
+            comboDefaultScore = 10;
             // 다음번부터 콤보 보너스를 적용하기 위해 콤보레벨을 올려준다.
             comboLevel++;
             
@@ -727,6 +798,8 @@ public class GameManager : MonoBehaviour
 
             // 스피드 레벨을 실제 적용한다.
             SpeedSetting(speedLevel);
+
+
         }
     }
 
@@ -888,8 +961,7 @@ public class GameManager : MonoBehaviour
                     //Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
                     dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                 }
-                else
-                {
+                else                {
                     //Debug.Log("하나");
                     TouchFX();
                     //Debug.Log("등록이 되었나 : "+ hitTransform.name+" :: "+hitTransform.GetComponent<NodeFX>().tfc.Count);
@@ -1022,7 +1094,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("터치 이펙트 함수 실행__2");
 
-        Vector3 pos = hitTransform.position;
+        Vector3 pos = hitTransform.localPosition;
 
         // 점멸형 이펙트.
         foreach (var v in tFxKids02)
@@ -1032,7 +1104,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("터치 이펙트02 함수 실행 1:: 이름: " + v.name);
                 v.gameObject.SetActive(true);
                 v.GetComponent<TouchFxCon>().FxCon();
-                v.position = new Vector3(pos.x, 0.3f, pos.z);
+                v.localPosition = new Vector3(pos.x, 0.3f, pos.z);
                 v.GetComponent<TouchFxCon>().PoseMoving(hitTransform);
                 //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
                 hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
