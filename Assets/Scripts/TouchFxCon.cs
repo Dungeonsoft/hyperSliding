@@ -7,7 +7,9 @@ using ot = OpaqueType;
 public enum OpaqueType {normal, reverse }
 public class TouchFxCon : MonoBehaviour
 {
-    public float scaleRange =1;
+    public float scaleRange = 1;
+    public bool scaleReverse = false;
+
     public AnimationCurve acScale;
 
     AnimationCurve acOpaque;
@@ -19,7 +21,6 @@ public class TouchFxCon : MonoBehaviour
     public float emissivePower =1;
     public bool isUntilMoving;
     bool isNodeMoving;
-    bool isNoMoving;
     public OpaqueType oType = ot.normal;
     
 
@@ -34,7 +35,9 @@ public class TouchFxCon : MonoBehaviour
 
     GameManager gb;
 
-    Texture getTexFromMat;
+
+    Transform h;
+
 
     //public NodeScript
 
@@ -44,16 +47,15 @@ public class TouchFxCon : MonoBehaviour
         thisMat = GetComponent<Renderer>().material;
         this.gameObject.SetActive(false);
         gb = GameObject.Find("GameManager").GetComponent<GameManager>();
-        getTexFromMat = thisMat.GetTexture("_MainTex");
-
     }
 
-    public void FxCon()
+    public void FxCon(Transform ht)
     {
-        gameObject.SetActive(true);
+        h = ht;
+        //gameObject.SetActive(true);
         if (oType == ot.reverse)
         {
-            Debug.Log("터치 이펙트 함수 실행 2 :: 이름 :" + this.name + " 액티브 상태: " + gameObject.activeSelf);
+            //Debug.Log("터치 이펙트 함수 실행 2 :: 이름 :" + this.name + " 액티브 상태: " + gameObject.activeSelf);
         }
         timeStart = Time.time;
         speedFX = GetManualNodeSpeed();
@@ -91,8 +93,14 @@ public class TouchFxCon : MonoBehaviour
 
         if (isUntilMoving == false)
         {
-            thisTrans.localScale = Vector3.one * acScale.Evaluate(eVal)* scaleRange;
-
+            if (scaleReverse == false)
+            {
+                thisTrans.localScale = (Vector3.one * acScale.Evaluate(eVal) * scaleRange);
+            }
+            else
+            {
+                thisTrans.localScale = Vector3.one - Vector3.one * acScale.Evaluate(eVal) * scaleRange;
+            }
 
 
             thisMat.SetFloat("_TexContrast", acOpaque.Evaluate(eVal));
@@ -110,33 +118,45 @@ public class TouchFxCon : MonoBehaviour
             uAction = EndFX02;
 
             thisTrans.position = new Vector3(h.position.x, 0.3f, h.position.z);
+        }
+    }
 
-            #region 파동형 이펙트 후처리로 삽입
-            Debug.Log("파동형 이펙트");
 
-            
-            if (isNoMoving == false)
+    public void ShowFxRefract(Transform h)
+    {
+        gb = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if (this.transform.childCount > 0)
+        {
+            GameObject c = this.transform.GetChild(0).gameObject;
+            c.SetActive(true);
+            c.GetComponent<TouchFxCon>().ShowFxRefract(h);
+        }
+        this.transform.position = new Vector3(h.position.x, 0.3f, h.position.z);
+        acOpaque = acOpaque01;
+        timeStart = Time.time;
+        speedFX = GetManualNodeSpeed();
+
+        uAction = StartFX01;
+
+
+        /*
+        NodeScript ns = h.GetComponent<NodeScript>();
+        if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY)
+        {
+            foreach (var v in gb.tFxKids01)
             {
-                foreach (var v in gb.tFxKids01)
+                if (v.gameObject.activeSelf == false)
                 {
-                    if (v.gameObject.activeSelf == false)
-                    {
-                        //Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
-                        //v.gameObject.SetActive(true);
-                        v.GetComponent<TouchFxCon>().FxCon();
-                        v.position = new Vector3(h.position.x, 0.3f, h.position.z);
-
-                        //이펙트를 부모 역할을 하는 노드에 변수로 넣어 놓는다.
-                        //hitTransform.GetComponent<NodeFX>().tfc.Add(v.GetComponent<TouchFxCon>());
-
-                        break;
-                    }
+                    Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
+                    v.gameObject.SetActive(true);
+                    v.GetComponent<TouchFxCon>().FxCon(h);
+                    v.position = new Vector3(h.position.x, 0.3f, h.position.z);
+                    break;
                 }
             }
-            
-            #endregion
-
         }
+        */
     }
 
     public void NodeMoving()
@@ -146,18 +166,14 @@ public class TouchFxCon : MonoBehaviour
     public void NodeMovingNo()
     {
         isNodeMoving = true;
-        isNoMoving = true;
     }
 
     void EndFX01()
     {
         gameObject.SetActive(false);
         isNodeMoving = false;
-        isNoMoving = false;
         uAction = null;
     }
-
-
 
     /// <summary>
     /// 이곳에서 블럭을 이동함.
@@ -175,7 +191,6 @@ public class TouchFxCon : MonoBehaviour
         {
             gameObject.SetActive(false);
             isNodeMoving = false;
-            isNoMoving = false;
             uAction = null;
         }
     }
@@ -189,7 +204,6 @@ public class TouchFxCon : MonoBehaviour
 
     }
 
-    Transform h;
     public void PoseMoving(Transform ht)
     {
         h=ht;

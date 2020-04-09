@@ -135,7 +135,7 @@ public class IntroManager : MonoBehaviour
 
         //새로운 비지엠 작동.
         BG_Introdution bgi = GameObject.FindObjectOfType<BG_Introdution>();
-        bgi.SetNewBGM();
+        bgi.SetNewBgmIntro();
     }
 
 
@@ -148,7 +148,7 @@ public class IntroManager : MonoBehaviour
             NodeScript ns = v.GetComponent<NodeScript>();
             ns.poxNowX = ns.oriPosX;
             ns.poxNowY = ns.oriPosY;
-            v.localPosition = new Vector3(-2+ns.oriPosY,0,2-ns.oriPosX);
+            v.localPosition = new Vector3(-256 + ns.oriPosY * 128, 256 - ns.oriPosX * 128, 0);
         }
 
         Debug.Log("Set Node Pos Orozin");

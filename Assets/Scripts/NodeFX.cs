@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-
+using UnityEngine.UI;
 
 public class NodeFX : MonoBehaviour
 {
@@ -148,7 +146,7 @@ private void Start()
         if (isFirstMove == false) return;
         ntd= GameObject.FindObjectOfType<NodeTypeDefine>();
 
-        Debug.Log("NT"+name+ "Number: "+ nt.ToString());
+        //Debug.Log("NT"+name+ "Number: "+ nt.ToString());
         getDefine = ntd.nDefine[(int)nt];
         
         
@@ -180,10 +178,16 @@ private void Start()
         if (digit == null) SetChild();
 
 
-        digit.GetComponent<Renderer>().material.SetColor("_TintColor", d.digitColor);
-        line.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineColor);
-        lineGlow.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineGlowColor);
-        digitBase.GetComponent<Renderer>().material.SetColor("_TintColor", d.baseColor);
+        digit.GetComponent<Image>().color = d.digitColor;
+        line.GetComponent<Image>().color = d.lineColor;
+        lineGlow.GetComponent<Image>().color = d.lineGlowColor;
+        digitBase.GetComponent<Image>().color = d.baseColor;
+
+
+        //digit.GetComponent<Renderer>().material.SetColor("_TintColor", d.digitColor);
+        //line.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineColor);
+        //lineGlow.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineGlowColor);
+        //digitBase.GetComponent<Renderer>().material.SetColor("_TintColor", d.baseColor);
         
     }
 

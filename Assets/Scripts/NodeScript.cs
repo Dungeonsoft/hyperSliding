@@ -17,7 +17,7 @@ public class NodeScript : MonoBehaviour
 
     public bool alreadyScoreCount = false;
 
-
+    //public bool isWaitingRefractFx = false;
 
     public NodeFX nf;
 
@@ -32,6 +32,13 @@ public class NodeScript : MonoBehaviour
         if (oriPosX == poxNowX && oriPosY == poxNowY)
         {
             nf.NodeType(nType.CorrectPos);
+
+            //if (isWaitingRefractFx == true)
+            //{
+            //    GameManager gm = Transform.FindObjectOfType<GameManager>();
+            //    gm.ShowFxRefract(this.transform);
+            //    isWaitingRefractFx = false;
+            //}
         }
         else
         {
@@ -41,7 +48,7 @@ public class NodeScript : MonoBehaviour
 
     public void ChangeNodeType(nType t)
     {
-        Debug.Log(name+" :: "+t.ToString());
+        //Debug.Log(name+" :: "+t.ToString());
         nf.NodeType(t);
     }
 
