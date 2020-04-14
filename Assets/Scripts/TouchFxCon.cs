@@ -33,7 +33,7 @@ public class TouchFxCon : MonoBehaviour
 
     Action uAction;
 
-    GameManager gb;
+    public GameManager gb;
 
 
     Transform h;
@@ -46,7 +46,7 @@ public class TouchFxCon : MonoBehaviour
         thisTrans = this.transform;
         thisMat = GetComponent<Renderer>().material;
         this.gameObject.SetActive(false);
-        gb = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //gb = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     public void FxCon(Transform ht)

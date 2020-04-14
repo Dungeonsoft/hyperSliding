@@ -21,6 +21,7 @@ public class AutoAnimFx : MonoBehaviour
     public float speed = 1f;
     public float maxAddScale = 0.2f;
     public bool isHide = false;
+    public Transform parent;
 
     private void OnEnable()
     {
@@ -34,6 +35,7 @@ public class AutoAnimFx : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("이펙트 위치: "+this.transform.position);
         spendtime += Time.deltaTime * speed;
         mat01.SetColor(propertyName01, pColor01 * acAlpha01.Evaluate(spendtime));
         mat02.SetColor(propertyName02, pColor02 * acAlpha01.Evaluate(spendtime));
@@ -41,6 +43,7 @@ public class AutoAnimFx : MonoBehaviour
 
         if (spendtime >= 1)
         {
+            spendtime = 1;
             if (isHide == true)
                 this.gameObject.SetActive(false);
         }

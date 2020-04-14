@@ -15,7 +15,7 @@ public class NodeScript : MonoBehaviour
     int firstPosX;
     int firstPosY;
 
-    public bool alreadyScoreCount = false;
+    public bool alreadyScoreCount;
 
     //public bool isWaitingRefractFx = false;
 
@@ -67,7 +67,7 @@ public class NodeScript : MonoBehaviour
     {
         int r = RandomRange.Range(0, 10000);
         randomRate *= 100;
-
+        //Debug.Log("r value: "+r);
         if (r < randomRate)
         {
             IngameItems igItem = RandomEnum<IngameItems>();

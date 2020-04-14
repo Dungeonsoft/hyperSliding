@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DGS_Blur
+  m_Name: DGS_Blur_InGameStart
   m_Shader: {fileID: 4800000, guid: 52b52b574fa56e443ae7871f70a56165, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -20,5 +20,5 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _Radius: 7
+    - _Radius: -0.026505876
     m_Colors: []

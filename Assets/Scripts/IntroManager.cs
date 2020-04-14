@@ -171,7 +171,7 @@ public class IntroManager : MonoBehaviour
         //int r = Random.Range(0, 3);
         GameObject GO = Instantiate(items[r]) as GameObject;
         GO.name = "Item_RandomSel";
-        GO.transform.parent = item_Btn;
+        GO.transform.SetParent(item_Btn);
         GO.transform.localPosition = Vector3.zero;
         GO.transform.localEulerAngles = Vector3.zero ;
         GO.transform.localScale = Vector3.one;

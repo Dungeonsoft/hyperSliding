@@ -668,7 +668,7 @@ public class GameManager : MonoBehaviour
             // 최초 인게임 작동시 셔플이 다 되지 않았을때 오는 곳.
             if (isMixed != true)
             {
-                Debug.Log("Do Mix Count B");
+                //Debug.Log("Do Mix Count B");
                 uAction = MixCount;
             }
 
@@ -678,10 +678,12 @@ public class GameManager : MonoBehaviour
             // 점수 계산도 이곳에서 이루어진다.
             else
             {
+                //Debug.Log("점수 계산");
                 #region 점수계산
                 //노드 하나하나의 위치가 맞을 때 점수를 계산하기 위한 for문.
                 for (int i = 0; i < cnt; i++)
                 {
+                    //Debug.Log("노드별 점수 계산");
                     var movedNode = mNodes[i].GetComponent<NodeScript>();
                     // 각각 노드 점수계산하는 메소드 호출//
                     CalScore(movedNode);
@@ -763,7 +765,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator IeShowFxRefract(List<Transform> mn)
     {
-        Debug.Log("굴절 이펙트 발생");
+        //Debug.Log("굴절 이펙트 발생");
         for (int i = 0; i < mn.Count; i++)
         {
             NodeScript ns = mn[i].GetComponent<NodeScript>();
@@ -775,7 +777,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void RunFx(Transform trans,Vector3 pos)
+    void RunFx(Transform trans, Transform posT)
     {
         Debug.Log("======================= 아이템 이펙트 발생 ::: "+ trans.name);
         for (int i = 0; i < trans.childCount; i++)
@@ -783,8 +785,11 @@ public class GameManager : MonoBehaviour
             GameObject GO = trans.GetChild(i).gameObject;
             if (GO.activeSelf == false)
             {
+                Debug.Log("pos 위치: " + posT.position);
+
                 GO.SetActive(true);
-                GO.transform.position = pos;
+                GO.transform.position = new Vector3(posT.position.x,3f ,posT.position.z);
+                Debug.Log(GO.name + " ::: 위치: "+ GO.transform.position);
                 break;
             }
         }
@@ -799,10 +804,12 @@ public class GameManager : MonoBehaviour
     /// <param name="ns"></param>
     void CalScore(NodeScript ns)
     {
+        //Debug.Log("선택된 노드 이름: "+ns.name+" :: "+ ns.oriPosX+"="+ ns.poxNowX+"==="+ ns.oriPosY+"="+ns.oriPosY);
         if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
         {
             IngameItems getItem =  ns.AddIngameItem();
-            Vector3 positionFX = ns.transform.position;
+
+            //Debug.Log("getItem :: "+ getItem);
             switch (getItem)
                 {
                 case IngameItems.None:
@@ -812,13 +819,13 @@ public class GameManager : MonoBehaviour
                     // 시간추가.
                     TimeAdd(10);
                     // 이펙트 실행.
-                    RunFx(timeItemFx01, positionFX);
+                    RunFx(timeItemFx01, ns.transform);
                     break;
                 case IngameItems.IncreaseScore50:
                     // 콤보점수 추가.
                     comboDefaultScore = 50;
                     // 이펙트 실행.
-                    RunFx(comboItemFx01, positionFX);
+                    RunFx(comboItemFx01, ns.transform);
                     break;
             }
 
@@ -871,7 +878,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void CalLineScore()
     {
-        NodeScript ns = new NodeScript();
+        NodeScript ns;
         // 줄별 맟춤을 계산.
         for (int i = 0; i < 5; i++)
         {
@@ -918,7 +925,7 @@ public class GameManager : MonoBehaviour
 
     void checkNodeColor()
     {
-        NodeScript ns = new NodeScript();
+        NodeScript ns;
         for (int i = 0; i < 25; i++)
         {
                 ns = nScript[i];
@@ -931,7 +938,7 @@ public class GameManager : MonoBehaviour
     void CheckLineColor()
     {
         bool isLine = true;
-        NodeScript ns = new NodeScript();
+        NodeScript ns;
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 5; j++)
@@ -981,14 +988,14 @@ public class GameManager : MonoBehaviour
         if (isPause == true) return;
         // 터치 사운드 발생.
         audioClick.Play();
-        Debug.Log("터치 함");
+        //Debug.Log("터치 함");
 
         hitTransform = thisT;
 
         //hitTransform = hit.transform;
         if (hitTransform.CompareTag("Node"))
         {
-            Debug.Log("노드 클릭");
+            //Debug.Log("노드 클릭");
             // 콤보 횟수를 계산한다.
             ComboMovingCount++;
             if (ComboMovingCount >= comboMaxMoving)
@@ -999,23 +1006,23 @@ public class GameManager : MonoBehaviour
             }
 
             //터치 이펙트 함수 실행.
-            Debug.Log("터치 이펙트 함수 실행__1");
+            //Debug.Log("터치 이펙트 함수 실행__1");
 
 
             bool isMovable = false;
 
             if (dTouch.Count > 0)
             {
-                Debug.Log("두개이상");
+                //Debug.Log("두개이상");
                 TouchFX();
-                Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
+                //Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
                 dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
             }
             else
             {
-                Debug.Log("하나");
+                //Debug.Log("하나");
                 TouchFX();
-                Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
+                //Debug.Log("등록이 되었나 : " + hitTransform.name + " :: " + hitTransform.GetComponent<NodeFX>().tfc.Count);
                 dTouch.Add(new DelayTouch { ht = hitTransform, m = isMovable });
                 TouchAction(hitTransform, isMovable);
             }
@@ -1026,18 +1033,18 @@ public class GameManager : MonoBehaviour
     void TouchAction(Transform ht, bool isMovable)
     {
         string tn = ht.name;
-        Debug.Log("Transform Name: "+tn);
+        //Debug.Log("Transform Name: "+tn);
 
         NodeScript hideN = hideNode.GetComponent<NodeScript>();
         NodeScript hitN = ht.GetComponent<NodeScript>();
 
         // 이곳에 클릭한 노드들의 값을 저장.
 
-        Debug.Log("25번 노드 위치: " + hideN.poxNowX + " -- " + hideN.poxNowY);
-        Debug.Log("터치 노드 위치: " + hitN.poxNowX + " -- " + hitN.poxNowY);
+        //Debug.Log("25번 노드 위치: " + hideN.poxNowX + " -- " + hideN.poxNowY);
+        //Debug.Log("터치 노드 위치: " + hitN.poxNowX + " -- " + hitN.poxNowY);
         if ((hideN.poxNowX == hitN.poxNowX) || (hideN.poxNowY == hitN.poxNowY))
         {
-            Debug.Log("Movable!!");
+            //Debug.Log("Movable!!");
 
             // 이곳에 클릭한 노드들의 값을 저장.
             clickedNode.Add(new Vector2(hitN.poxNowX, hitN.poxNowY));
@@ -1164,6 +1171,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// TouchFX01 을 직접실행하는 메소드.
+    /// 현재는 관련되어 있는 이펙트 오브젝트를 임시 위치로 옮겨놓아 검색이 안되어 작동을 하지 않음.
+    /// </summary>
+    /// <param name="h"></param>
     public void ShowFxRefract(Transform h)
     {
         foreach (var v in tFxKids01)

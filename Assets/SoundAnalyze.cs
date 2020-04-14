@@ -46,6 +46,19 @@ public class SoundAnalyze : MonoBehaviour
         soundWeights =new float[scaleTYR.Count + 1];
     }
 
+    private void OnEnable()
+    {
+        // 바의 길이를 전부 초기화 하여 준다(Y 높이 0)
+        foreach (Transform v in scaleTYR)
+        {
+            v.localScale = new Vector3(1, 0, 1);
+        }
+        foreach (Transform v in scaleTYL)
+        {
+            v.localScale = new Vector3(1, 0, 1);
+        }
+    }
+
 
     void Update()
     {
