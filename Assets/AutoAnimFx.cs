@@ -35,7 +35,7 @@ public class AutoAnimFx : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("이펙트 위치: "+this.transform.position);
+        //Debug.Log("이펙트 위치: "+this.transform.position);
         spendtime += Time.deltaTime * speed;
         mat01.SetColor(propertyName01, pColor01 * acAlpha01.Evaluate(spendtime));
         mat02.SetColor(propertyName02, pColor02 * acAlpha01.Evaluate(spendtime));

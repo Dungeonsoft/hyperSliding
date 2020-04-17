@@ -40,6 +40,7 @@ public class FailWin : MonoBehaviour
 
         uAction = Count;
     }
+   
     void Count()
     {
         spandTime += Time.deltaTime;

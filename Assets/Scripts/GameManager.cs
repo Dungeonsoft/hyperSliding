@@ -173,6 +173,7 @@ public class GameManager : MonoBehaviour
     public int comboDefaultScore = 10;
 
     public List<TMPro.TextMeshProUGUI> scoreTextFailComple;
+    public List<TMPro.TextMeshProUGUI> endRanktext;
     public GameObject gameFailWin;
     public GameObject gameCompleWin;
 
@@ -360,7 +361,8 @@ public class GameManager : MonoBehaviour
         {
             spendTime = 0;
             Debug.Log("게임시간종료");
-            ShowGameFailWin();
+            //
+            ShowGameEndWin(gameFailWin);
         }
 
         min = spendTime / 60;
@@ -369,19 +371,17 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void ShowGameFailWin()
+    void ShowGameEndWin(GameObject win)
     {
-        TouchPause();
-        ScoreSaveToLocal();
-       gameFailWin.SetActive(true);
-    }
-     void ShowCompleWin()
-    {
-        TouchPause();
-        ScoreSaveToLocal();
-        gameCompleWin.SetActive(true);
 
+        Amondplugin ap = GameObject.Find("AmondPluginGO").GetComponent<Amondplugin>();
+        ap.EndGame(score, ScoreSaveToLocal);
+
+        TouchPause();
+        //ScoreSaveToLocal();
+        win.SetActive(true);
     }
+
 
     void MixCount()
     {
@@ -723,8 +723,7 @@ public class GameManager : MonoBehaviour
                     // 남은 시간을 최종 스피드 레벨에 따른 보너스를 지급한다.
                     AddScore(Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
 
-                    ScoreSaveToLocal();
-                    ShowCompleWin();
+                    ShowGameEndWin(gameCompleWin);
                 }
                 else
                 {
@@ -968,15 +967,23 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void ScoreSaveToLocal()
+    void ScoreSaveToLocal(Amond.Plugins.GameScoreDto result)
     {
-        var showScore = PlayerPrefs.GetInt("HighScore");
-        if (score > showScore) showScore = score;
-        PlayerPrefs.SetInt("HighScore", showScore);
+        Debug.Log("result Score: " +result.score);
+        Debug.Log("local Score: "+ score);
+        //var showScore = PlayerPrefs.GetInt("HighScore");
+        var showScore = result.score;
+        if (score < showScore) showScore = score;
+        //PlayerPrefs.SetInt("HighScore", showScore);
 
         foreach (var v in scoreTextFailComple)
         {
             v.text = showScore.ToString("000000000");
+        }
+
+        foreach(var v in endRanktext)
+        {
+            v.text = result.rank.ToString("000000000");
         }
     }
 
