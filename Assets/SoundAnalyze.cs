@@ -22,7 +22,10 @@ public class SoundAnalyze : MonoBehaviour
     const int sampleCount = 64;
 
 
-    public UnityEngine.UI.Image img;
+    public UnityEngine.UI.Image fxGlow;
+
+    // 백그라운드의 색의 강도를 조절해주기 위해 렌더러를 가져오는 변수.
+    public Renderer bgRenderer;
 
     public List<Transform> scaleT;
 
@@ -92,10 +95,10 @@ public class SoundAnalyze : MonoBehaviour
 
             Color newEmisColor =  Color.HSVToRGB(newH, s, v);
 
-            img.material.SetColor("_EmisColor", newEmisColor);
-            img.material.SetFloat("_EmisPower", pkf * ePowerWeight);
-            img.material.SetFloat("_AlphaPower", pkf * aPowerWeight);
-
+            fxGlow.material.SetColor("_EmisColor", newEmisColor);
+            fxGlow.material.SetFloat("_EmisPower", pkf * ePowerWeight);
+            fxGlow.material.SetFloat("_AlphaPower", pkf * aPowerWeight);
+            bgRenderer.material.SetFloat("_EmisPower", pkf*2+0.3f);
 
             for (int i = soundWeights.Length - 1; i > 0; i--)
             {

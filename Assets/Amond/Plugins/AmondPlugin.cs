@@ -9,6 +9,9 @@ namespace Amond.Plugins
         public bool IsAvailable;
         private static AmondPlugin _instance;
         private readonly AmondSdkPlugin _amondSdkPlugin;
+        
+        // 2020-04-21 추가.
+        private AdType _adType = AdType.Forced;
         private long _transactionId;
         private string _gameTicket = "";
 
@@ -67,13 +70,15 @@ namespace Amond.Plugins
         /// <returns>GameScoreDto</returns>
         public GameScoreDto ConnectAmond()
         {
-            if (IsAvailable == false) return null;
-
-            var result = _amondSdkPlugin.ConnectAmond();
-            if (result == null) return null;
-
-            return GetGameScore();
+            string result = _amondSdkPlugin.ConnectAmond();
+            return result == null ? DefaultGameScore() : GetGameScore();
         }
+
+        private static GameScoreDto DefaultGameScore()
+        {
+            return new GameScoreDto { nickname = "Unnamed", profileImageUrl = "", rank = 0, score = 0, totalPoint = 0 };
+        }
+
 
         private GameScoreDto GetGameScore()
         {
@@ -94,27 +99,29 @@ namespace Amond.Plugins
         {
             if (IsAvailable == false) return 0;
 
-            var result = _amondSdkPlugin.StartWatchingAd(adType);
+            string result = _amondSdkPlugin.StartWatchingAd(adType);
             if (result == null) return 0;
             Debug.Log("StartWatchingAd: " + result);
-            var adWatchDto = JsonUtility.FromJson<AdWatchDto>(result);
+            AdWatchDto adWatchDto = JsonUtility.FromJson<AdWatchDto>(result);
+            _adType = adType;
             _transactionId = adWatchDto.transactionId;
             return adWatchDto.transactionId;
         }
 
+
         /// <summary>
         /// 4. EndWatchingAd
         /// </summary>
-        /// <param name="adType"></param>
         /// <returns></returns>
-        public AdWatchDto EndWatchingAd(AdType adType)
+        public AdWatchDto EndWatchingAd()
         {
             if (IsAvailable == false) return null;
 
-            var result = _amondSdkPlugin.EndWatchingAd(adType, _transactionId);
+            string result = _amondSdkPlugin.EndWatchingAd(_adType, _transactionId);
             if (result == null) return null;
             Debug.Log("EndWatchingAd: " + result);
-            return JsonUtility.FromJson<AdWatchDto>(result);
+            AdWatchDto adWatchDto = JsonUtility.FromJson<AdWatchDto>(result);
+            return adWatchDto;
         }
 
         /// <summary>
@@ -125,13 +132,14 @@ namespace Amond.Plugins
         {
             if (IsAvailable == false) return null;
 
-            var result = _amondSdkPlugin.StartGame();
+            string result = _amondSdkPlugin.StartGame();
             if (result == null) return null;
             Debug.Log("StartGame: " + result);
-            var gameScoreDto = JsonUtility.FromJson<GameScoreDto>(result);
+            GameScoreDto gameScoreDto = JsonUtility.FromJson<GameScoreDto>(result);
             _gameTicket = gameScoreDto.gameTicket;
             return gameScoreDto.gameTicket;
         }
+
 
         /// <summary>
         /// 6. EndGame
@@ -161,6 +169,16 @@ namespace Amond.Plugins
             Debug.Log("GetLeaderBoardUrl: " + result);
             return result;
         }
+
+        public void OpenLeaderBoard()
+        {
+            _amondSdkPlugin.OpenLeaderBoard();
+        }
+
+        public void CloseLeaderBoard(Action<int> closeComplete)
+        {
+            _amondSdkPlugin.CloseLeaderBoard(closeComplete);
+        }
     }
 
     public class AndroidPlugin : AmondSdkPlugin
@@ -173,6 +191,8 @@ namespace Amond.Plugins
         //6. EndGame
         //7. GetLeaderBoardUrl
 
+        private const string PluginName = "io.amond.sdk.unity.PluginHelper";
+
         private static AndroidJavaClass _pluginClass;
         private static AndroidJavaObject _pluginInstance;
 
@@ -181,7 +201,10 @@ namespace Amond.Plugins
             get
             {
                 if (_pluginClass != null) return _pluginClass;
-                _pluginClass = new AndroidJavaClass("io.amond.sdk.unity.PluginHelper");
+                _pluginClass = new AndroidJavaClass(PluginName);
+                AndroidJavaClass playerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                AndroidJavaObject activity = playerClass.GetStatic<AndroidJavaObject>("currentActivity");
+                _pluginClass.SetStatic("mainActivity", activity);
                 return _pluginClass;
             }
         }
@@ -196,10 +219,28 @@ namespace Amond.Plugins
             }
         }
 
+        private class ReturnCallback : AndroidJavaProxy
+        {
+            private readonly Action<int> _returnHandler;
+
+            public ReturnCallback(Action<int> returnHandlerIn) : base(PluginName + "$ReturnCallback")
+            {
+                _returnHandler = returnHandlerIn;
+            }
+
+            // ReSharper disable once InconsistentNaming
+            public void onComplete(int result)
+            {
+                Debug.Log("onComplete:" + result);
+                if (_returnHandler != null)
+                    _returnHandler(result);
+            }
+        }
+
         public override void Init(EnvironmentType environment, string gameId)
         {
-            //Andorid Callback insert
-            var amondCallback = GameObject.Find("AmondCallback");
+            //Android Callback insert
+            GameObject amondCallback = GameObject.Find("AmondCallback");
             if (amondCallback == null)
             {
                 Debug.Log("Make AmondCallback");
@@ -247,6 +288,16 @@ namespace Amond.Plugins
         {
             return PluginInstance.Call<string>("getLeaderBoardUrl");
         }
+
+        public override void OpenLeaderBoard()
+        {
+            PluginInstance.Call("openLeaderBoard");
+        }
+
+        public override void CloseLeaderBoard(Action<int> closeComplete)
+        {
+            PluginInstance.Call("closeLeaderBoard", new ReturnCallback(closeComplete));
+        }
     }
 
     public class IPhonePlugin : AmondSdkPlugin
@@ -290,6 +341,16 @@ namespace Amond.Plugins
         {
             throw new NotImplementedException();
         }
+
+        public override void OpenLeaderBoard()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CloseLeaderBoard(Action<int> closeComplete)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class EditorPlugin : AmondSdkPlugin
@@ -321,7 +382,7 @@ namespace Amond.Plugins
 
         public override string EndWatchingAd(AdType adType, long transactionId)
         {
-            return "{\"transactionId\":1004}";
+            return "{\"adType\":\"" + adType + "\",\"transactionId\":1004}";
         }
 
         public override string StartGame()
@@ -332,12 +393,22 @@ namespace Amond.Plugins
         public override string EndGame(string gameTicket, int score)
         {
             return "{\"userId\":1004,\"nickname\":\"Unnamed\",\"profileImageUrl\":\"" + DefaultImageUrl + "\"" +
-                   ",\"rank\":1,\"totalPoint\":100,\"score\":1000}";
+                   ",\"rank\":1,\"totalPoint\":100,\"score\":" + score + "}";
         }
 
         public override string GetLeaderBoardUrl()
         {
             return "http://game.stage.amond.io/ranking?userId=1004&deviceId=2d8b2dd0&clientId=clientId";
+        }
+
+        public override void OpenLeaderBoard()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CloseLeaderBoard(Action<int> closeComplete)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -373,19 +444,21 @@ namespace Amond.Plugins
         public abstract string EndGame(string gameTicket, int score);
 
         public abstract string GetLeaderBoardUrl();
+
+        public abstract void OpenLeaderBoard();
+
+        public abstract void CloseLeaderBoard(Action<int> closeComplete);
     }
 
     [Serializable]
     public class AdWatchDto
     {
         public long transactionId;
-        public AdType adType;
 
         public override string ToString()
         {
             return "AdWatchDto{" +
                    "transactionId=" + transactionId +
-                   ", adType=" + adType +
                    '}';
         }
     }

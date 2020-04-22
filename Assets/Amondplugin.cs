@@ -34,7 +34,7 @@ public class Amondplugin : MonoBehaviour
     /// <param name="uData"></param>
     void SetUserData(GameScoreDto uData)
     {
-        Debug.Log("Set User Data 진입");
+        Debug.Log("Set User Data 진입: "+ uData);
         
         // 프로필 이미지 표시.
         StartCoroutine(GetProfileImage(uData.profileImageUrl));
@@ -105,16 +105,21 @@ public class Amondplugin : MonoBehaviour
         }
     }
 
+    public IntroManager iManager;
+    public UnityAdsManager uaManager;
+
     /// <summary>
     /// 3. StartWatchingAd
     /// 광고보기.
     /// </summary>
-    private void StartWatchingAd()
+    public void StartWatchingAd(AdType at)
     {
-        var transactionId = AmondPlugin.GetInstance().StartWatchingAd(AdType.Reward);
+        var transactionId = AmondPlugin.GetInstance().StartWatchingAd(at);
         if (transactionId > 0)
         {
             Debug.Log("3. Transaction ID: " + transactionId);
+
+            uaManager.ShowRewardedAd(at);
         }
         else
         {
@@ -122,15 +127,18 @@ public class Amondplugin : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// 4. EndWatchingAd
     /// </summary>
-    private void EndWatchingAd()
+    public void EndWatchingAd(AdType at)
     {
-        var result = AmondPlugin.GetInstance().EndWatchingAd(AdType.Reward);
+        var result = AmondPlugin.GetInstance().EndWatchingAd();
         if (result != null)
         {
             Debug.Log("4. " + result);
+
+            iManager.CheckCmResult(at);
         }
         else
         {
@@ -188,6 +196,30 @@ public class Amondplugin : MonoBehaviour
         {
             Debug.Log("Failed LeaderBoardUrl()");
         }
+    }
+
+    public GameObject webPanel_Canvas;
+
+    public void OpenLeaderBoard()
+    {
+        string getUrl = AmondPlugin.GetInstance().GetLeaderBoardUrl();
+        Application.OpenURL(getUrl);
+
+        //webPanel_Canvas.SetActive(true);
+        //Debug.Log("Open Leader Board!!!"); 
+        //AmondPlugin.GetInstance().OpenLeaderBoard();
+    }
+
+    public void CloseLeaderBoard()
+    {
+        //Debug.Log("Close Leader Board!!!");
+        //AmondPlugin.GetInstance().CloseLeaderBoard(CloseWebPanel);
+    }
+
+    public void CloseWebPanel(int num)
+    {
+        //if (num == 1)
+        //    webPanel_Canvas.SetActive(false);
     }
 
 }

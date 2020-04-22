@@ -69,6 +69,7 @@ private void Start()
         /// 타입의 기본은 항상 normal이다.
         SetType = nType.Normal;
         NodeType(SetType);
+        isFirstMove = false;
     }
 
     float strengthFxColor;

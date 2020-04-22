@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Amond.Plugins.AmondSdkPlugin;
 
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 가상의 아몬드서버를 만든다.
@@ -279,25 +283,61 @@ public class IntroManager : MonoBehaviour
         //    connectCM.sprite = connectCM_Sprite[1];
     }
 
+    public Amondplugin amdPlugin;
 
     /// <summary>
     /// 광고보기를 누르면 이 메소드를 실행한다.
     /// 광고 활성여부를 체크하며 비활성시 광고를 보여주고
     /// 광고보기를 통한 인게임 보상 아이템을 발동시킨다(액티브)
     /// </summary>
-    public void ShowCM()
+    public void ShowCM(int atNum)
     {
+        AdType at = (AdType)atNum;
+
         if (isCmAllow == false) {
             //광고 실행.
             Debug.Log("광고 실행: 광고와 관련된 코드를 실행한다.");
-            isCmAllow = true;
-            cmEquiped.SetActive(true);
             Kinds itemKind = item_Btn.GetChild(0).GetComponent<ItemProperty>().kind;
             gm.ApplyItem(itemKind);
+
+            // 아몬드 플러긴 광고 호출.
+            amdPlugin.StartWatchingAd(at);
         }
         else
         {
-            cmEquiped.SetActive(false);
+            //cmEquiped.SetActive(true);
         }
+    }
+
+    public void CheckCmResult(AdType at)
+    {
+        Debug.Log("Ad Type: "+ at);
+        switch (at)
+        {
+            case AdType.GameItem:
+                Debug.Log("광고보기 완료: 게임 아이템");
+                SuccessCM_GmaeItem();
+                break;
+
+            case AdType.GameContinue:
+                Debug.Log("광고보기 완료: 게임 컨티뉴");
+                break;
+            case AdType.Reward:
+                Debug.Log("광고보기 완료: 게임 리워드");
+                break;
+        }
+
+    }
+
+    void SuccessCM_GmaeItem()
+    {
+        isCmAllow = true;
+        cmEquiped.SetActive(true);
+
+        Debug.Log("광고 실행: 광고와 관련된 코드를 실행한다.");
+        isCmAllow = true;
+        cmEquiped.SetActive(true);
+        Kinds itemKind = item_Btn.GetChild(0).GetComponent<ItemProperty>().kind;
+        gm.ApplyItem(itemKind);
     }
 }

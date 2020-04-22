@@ -83,7 +83,7 @@ using static Amond.Plugins.AmondSdkPlugin;
         /// </summary>
         private void EndWatchingAd()
         {
-            var result = AmondPlugin.GetInstance().EndWatchingAd(AdType.Reward);
+            var result = AmondPlugin.GetInstance().EndWatchingAd();
             if (result != null)
             {
                 textResult.text = "4. " + result;
