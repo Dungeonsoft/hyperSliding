@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: SlidingPuzzle2020
+  companyName: Dungeonsoft
+  productName: SlidingPuzzle
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -646,6 +646,7 @@ PlayerSettings:
   ps4UseResolutionFallback: 0
   ps4ReprojectionSupport: 0
   ps4UseAudio3dBackend: 0
+  ps4UseLowGarlicFragmentationMode: 1
   ps4SocialScreenEnabled: 0
   ps4ScriptOptimizationLevel: 0
   ps4Audio3dVirtualSpeakerCount: 14
@@ -761,6 +762,7 @@ PlayerSettings:
   XboxOnePersistentLocalStorageSize: 0
   XboxOneXTitleMemory: 8
   XboxOneOverrideIdentityName: 
+  XboxOneOverrideIdentityPublisher: 
   vrEditorSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
