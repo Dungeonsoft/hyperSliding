@@ -98,7 +98,7 @@ public class SoundAnalyze : MonoBehaviour
             fxGlow.material.SetColor("_EmisColor", newEmisColor);
             fxGlow.material.SetFloat("_EmisPower", pkf * ePowerWeight);
             fxGlow.material.SetFloat("_AlphaPower", pkf * aPowerWeight);
-            bgRenderer.material.SetFloat("_EmisPower", pkf*1.4f+0.5f);
+            //bgRenderer.material.SetFloat("_EmisPower", pkf*3f+1f);
 
             for (int i = soundWeights.Length - 1; i > 0; i--)
             {

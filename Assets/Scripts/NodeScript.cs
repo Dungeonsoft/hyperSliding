@@ -86,4 +86,9 @@ public class NodeScript : MonoBehaviour
         Array values = Enum.GetValues(typeof(T));
         return (T)values.GetValue(new System.Random().Next(1, values.Length));
     }
+
+    public GameManager gm;
+    public AudioSource aSource;
+
+
 }

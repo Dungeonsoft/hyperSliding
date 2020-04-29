@@ -196,13 +196,6 @@ public class TouchFxCon : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// 노드가 제위치에 들어갔는지 확인하는 메소드.
-    /// </summary>
-    void CheckCorrectPosition()
-    {
-
-    }
 
     public void PoseMoving(Transform ht)
     {

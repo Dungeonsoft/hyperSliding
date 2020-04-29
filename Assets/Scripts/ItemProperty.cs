@@ -5,9 +5,9 @@ using UnityEngine;
 public enum Kinds
 {
     scoreAddPercent10,
-    timeAdd10,
+    timeAdd60,
     scoreFinalIncrease10,
-    speedDownLimit,
+    speedDownLimit5,
     speedAdd,
     itemFinder
 }

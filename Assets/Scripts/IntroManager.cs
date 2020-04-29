@@ -12,55 +12,55 @@ using Random = UnityEngine.Random;
 /// 가상의 아몬드서버를 만든다.
 /// 차후에 서버를 지원 받으면 이부분을 연결한다.
 /// </summary>
-public class AmondServer
-{
-    /// <summary>
-    /// 서버에서 광고가 가능한지를 체크하여 boolean 값으로 받아온다.
-    /// </summary>
-    /// <param name="ck"></param>
-    public bool CheckActivateCM_Server()
-    {
-        return true;
-    }
+//public class AmondServer
+//{
+//    /// <summary>
+//    /// 서버에서 광고가 가능한지를 체크하여 boolean 값으로 받아온다.
+//    /// </summary>
+//    /// <param name="ck"></param>
+//    public bool CheckActivateCM_Server()
+//    {
+//        return true;
+//    }
 
 
-    /// <summary>
-    /// 서버에서(정확히는 구글리더보드)에서 정보를 가지고 오게 한다.
-    /// 연결된 경우가 아니면(구글리더보드로그인을 안했거나 온라인이 아니면) 
-    /// 폰 내부에서 최고 점수를 가지고 온다.
-    /// </summary>
-    /// <returns></returns>
-    public int CheckBestScore_Server()
-    {
-        // 현재는 서버와 연결되지 않았으니 로컬에서 정볼ㄹ 가지고 오게 하거나.
-        // 한번도 실행한 적이 없다면 페이크 점수를 가지고 오게 한다.(테스트 상태)
-        // 페이크 점수는 차후 서버와 연동하여 점수를 가지고 오게 되면 삭제한다.
+//    /// <summary>
+//    /// 서버에서(정확히는 구글리더보드)에서 정보를 가지고 오게 한다.
+//    /// 연결된 경우가 아니면(구글리더보드로그인을 안했거나 온라인이 아니면) 
+//    /// 폰 내부에서 최고 점수를 가지고 온다.
+//    /// </summary>
+//    /// <returns></returns>
+//    public int CheckBestScore_Server()
+//    {
+//        // 현재는 서버와 연결되지 않았으니 로컬에서 정볼ㄹ 가지고 오게 하거나.
+//        // 한번도 실행한 적이 없다면 페이크 점수를 가지고 오게 한다.(테스트 상태)
+//        // 페이크 점수는 차후 서버와 연동하여 점수를 가지고 오게 되면 삭제한다.
 
-        var hScore = PlayerPrefs.GetInt("HighScore", 0);
+//        var hScore = PlayerPrefs.GetInt("HighScore", 0);
 
-        return hScore;
-    }
+//        return hScore;
+//    }
 
 
-    /// <summary>
-    ///  구글 리더보드 연동이 되었는지 체크하여 boolean 값을 돌려준다.
-    ///  현재는 구현되어 있지 않으니 false 를 리턴한다.
-    /// </summary>
-    /// <returns></returns>
-    public bool CheckleaderBoardOn_Server()
-    {
-        return false;
-    }
+//    /// <summary>
+//    ///  구글 리더보드 연동이 되었는지 체크하여 boolean 값을 돌려준다.
+//    ///  현재는 구현되어 있지 않으니 false 를 리턴한다.
+//    /// </summary>
+//    /// <returns></returns>
+//    public bool CheckleaderBoardOn_Server()
+//    {
+//        return false;
+//    }
 
-    /// <summary>
-    /// 구글플레이에 연동하는 코드를 실행한다.
-    /// 이미 연동 되어 있으면 바로 리더보드를 열도록 한다.
-    /// </summary>
-    public void ConnectGoogle_Server()
-    {
-        Debug.Log("구글플레이 연동");
-    }
-}
+//    /// <summary>
+//    /// 구글플레이에 연동하는 코드를 실행한다.
+//    /// 이미 연동 되어 있으면 바로 리더보드를 열도록 한다.
+//    /// </summary>
+//    //public void ConnectGoogle_Server()
+//    //{
+//    //    Debug.Log("구글플레이 연동");
+//    //}
+//}
 
 public class IntroManager : MonoBehaviour
 {
@@ -75,8 +75,9 @@ public class IntroManager : MonoBehaviour
     /// 텍스트메쉬 프로의 텍스트를 이용하여 최고 점수를 표현한다.
     /// </summary>
     public TMPro.TextMeshProUGUI bestScore;
+    public TMPro.TextMeshProUGUI userRank;
 
-    AmondServer aServer = new AmondServer();
+    //AmondServer aServer = new AmondServer();
 
 
     public Image AmondPlay;
@@ -129,10 +130,10 @@ public class IntroManager : MonoBehaviour
     {
         SetNodePosOrigin();
 
-        CheckBestScore();
-        CheckleaderBoardOn();
+        //CheckBestScore();
+        //CheckleaderBoardOn();
         CheckItems();
-        CheckActivateCM();
+        //CheckActivateCM();
 
         isCmAllow = false;
         cmEquiped.SetActive(false);
@@ -158,10 +159,6 @@ public class IntroManager : MonoBehaviour
         Debug.Log("Set Node Pos Orozin");
     }
 
-    private void OnDisable()
-    {
-    }
-
     void ShowItem(int r)
     {
         //Debug.Log("Random Value: " + r);
@@ -184,34 +181,37 @@ public class IntroManager : MonoBehaviour
     /// <summary>
     /// BestScore를 체크하여 가지고 온다.
     /// </summary>
-    void CheckBestScore()
+    public void CheckBestScore()
     {
-        bestScore.text = aServer.CheckBestScore_Server().ToString("000000000");
+        bestScore.text = endResult.score.ToString("00000000000");
+        userRank.text = endResult.rank.ToString();
     }
+
+    public Amond.Plugins.GameScoreDto endResult;
 
     /// <summary>
     /// 리더보드 연동상태를 체크하여 가지고 온다.
     /// </summary>
-    void CheckleaderBoardOn()
-    {
-        bool isLbOn = false;
-        isLbOn = aServer.CheckleaderBoardOn_Server();
+    //void CheckleaderBoardOn()
+    //{
+    //    bool isLbOn = false;
+    //    isLbOn = aServer.CheckleaderBoardOn_Server();
 
-        // 구글 리더보드가 연결이 안되어 있으면 구글플레이 가입 유도아이콘을 보여주고
-        // 가입되어 있으면 바로 리더보드를 보여주도록 한다.
-        if (isLbOn == false)
-            AmondPlay.sprite = amondLeaderBoard[0];
-        else
-            AmondPlay.sprite = amondLeaderBoard[1];
-    }
+    //    // 구글 리더보드가 연결이 안되어 있으면 구글플레이 가입 유도아이콘을 보여주고
+    //    // 가입되어 있으면 바로 리더보드를 보여주도록 한다.
+    //    if (isLbOn == false)
+    //        AmondPlay.sprite = amondLeaderBoard[0];
+    //    else
+    //        AmondPlay.sprite = amondLeaderBoard[1];
+    //}
 
-    /// <summary>
-    /// 구글 리더보드를 호출하는 메소드를 작성한다.
-    /// </summary>
-    public void ConnectGoogle()
-    {
-        aServer.ConnectGoogle_Server();
-    }
+    ///// <summary>
+    ///// 구글 리더보드를 호출하는 메소드를 작성한다.
+    ///// </summary>
+    //public void ConnectGoogle()
+    //{
+    //    aServer.ConnectGoogle_Server();
+    //}
 
     /// <summary>
     /// 활성 아이템을 가지고 온다.
@@ -269,19 +269,19 @@ public class IntroManager : MonoBehaviour
     /// <summary>
     /// 광고 활성 여부를 체크하여 가지고 온다.
     /// </summary>
-    void CheckActivateCM()
-    {
-        isAct = aServer.CheckActivateCM_Server();
+    //void CheckActivateCM()
+    //{
+    //    isAct = aServer.CheckActivateCM_Server();
 
 
-        Debug.Log("isAct :: "+isAct);
-        //활성화가 되어있지 않으면 터치가 되면 안되기에 레이캐스트를 끊는다.
-        connectCM.raycastTarget = isAct;
-        //if (isAct == true)
-        //    connectCM.sprite = connectCM_Sprite[0];
-        //else
-        //    connectCM.sprite = connectCM_Sprite[1];
-    }
+    //    Debug.Log("isAct :: "+isAct);
+    //    //활성화가 되어있지 않으면 터치가 되면 안되기에 레이캐스트를 끊는다.
+    //    connectCM.raycastTarget = isAct;
+    //    //if (isAct == true)
+    //    //    connectCM.sprite = connectCM_Sprite[0];
+    //    //else
+    //    //    connectCM.sprite = connectCM_Sprite[1];
+    //}
 
     public Amondplugin amdPlugin;
 
@@ -297,8 +297,8 @@ public class IntroManager : MonoBehaviour
         if (isCmAllow == false) {
             //광고 실행.
             Debug.Log("광고 실행: 광고와 관련된 코드를 실행한다.");
-            Kinds itemKind = item_Btn.GetChild(0).GetComponent<ItemProperty>().kind;
-            gm.ApplyItem(itemKind);
+            //Kinds itemKind = item_Btn.GetChild(0).GetComponent<ItemProperty>().kind;
+            //gm.ApplyItem(itemKind);
 
             // 아몬드 플러긴 광고 호출.
             amdPlugin.StartWatchingAd(at);

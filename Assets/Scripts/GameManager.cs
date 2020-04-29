@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -35,7 +36,6 @@ public class SpeedList
 
 public class GameManager : MonoBehaviour
 {
-    public AudioSource audioClick;
     public List<SpeedList> speedList;
     #region Variables
     public Vector2Int rMixV = new Vector2Int(1,2);
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 스코어를 저장하는 변수.
     /// </summary>
-    int score = 0;
+    int localScore = 0;
 
     /// <summary>
     /// 스코어를 텍스트롤 변환하여 화면에 보여주는 유아이.
@@ -172,12 +172,24 @@ public class GameManager : MonoBehaviour
     public int lineCorrectScore = 100;
     public int comboDefaultScore = 10;
 
+    public List<TMPro.TextMeshProUGUI> speedBonusTextFailComple;
+    public List<TMPro.TextMeshProUGUI> itemBonusTextFailComple;
+    public List<TMPro.TextMeshProUGUI> timeBonusTextFailComple;
     public List<TMPro.TextMeshProUGUI> scoreTextFailComple;
-    public List<TMPro.TextMeshProUGUI> endRanktext;
     public GameObject gameFailWin;
     public GameObject gameCompleWin;
 
     int scoreIncreasePercent = 0;
+    int timeAddSec = 0;
+    int speedLevelLimit = 0;
+
+
+    public AudioClip[] Clicks;
+
+
+    int speedBonus;
+    int itemBonus;
+    int timeBonus;
 
     #endregion
 
@@ -243,9 +255,10 @@ public class GameManager : MonoBehaviour
         uAction = null;
         uActionTimer = null;
 
-        // 일회성 아이템으로 인한 스코어 증가 정도를 초기화 한다.
-        scoreIncreasePercent = 0;
-
+        // 일회성 아이템으로 인한 스코어 증가 정도를 초기화 한다.(광고를 아직 보지 않은 상태이므로)
+        scoreIncreasePercent = 0;   // 스코어 증가 초기화.
+        timeAddSec = 0;             // 추가시간 초기화.
+        speedLevelLimit = 0;        // 스피드 최소레벨 초기화.
     }
 
     public BG_Introdution bg_Introdution;
@@ -273,7 +286,7 @@ public class GameManager : MonoBehaviour
         LineMatching = new bool[] { false, false, false, false, false };
         #endregion
 
-        remainingTime = defaultTime;
+        remainingTime = defaultTime + timeAddSec;
 
         // 시간의 효과(더하거나 빼는 것) 있으면 이 곳에 기술하여 처음에 더하게 해준다.
 
@@ -290,7 +303,7 @@ public class GameManager : MonoBehaviour
         isMixed = false;
 
         /// 스코어 초기화.
-        score = 0;
+        localScore = 0;
         scoreUI.text = "000000000";
 
         nodeSpeed = baseNodeSpeed;
@@ -349,7 +362,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("시간 계산 들어옴");
         speedLevelTime -= Time.deltaTime;
 
-        if(speedLevelTime<= 0 && speedLevel > 0)
+        if(speedLevelTime<= 0 && speedLevel > speedLevelLimit)
         {
             isSpeedLvlDn = true;
              speedLevel -= 1;
@@ -361,7 +374,38 @@ public class GameManager : MonoBehaviour
         {
             spendTime = 0;
             Debug.Log("게임시간종료");
-            //
+
+            ////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////
+            ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+
+            // 최종 스피드 레벨에 따른 보너스를 지급한다.
+            speedBonus = SpeedBonus();
+            AddScore(speedBonus);//결과 화면에 표시.-스피드 보너스.
+
+            // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
+            itemBonus = ItemBonus(); //결과 화면에 표시.-아이템보너스.
+            AddScore(itemBonus);
+
+
+            // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
+            timeBonus = TimeBonus();
+            AddScore(timeBonus); //결과 화면에 표시.-타임보너스.
+
+
+            Debug.Log("Score: " + localScore);
+            Debug.Log("Speed Bonus: " + speedBonus);
+            Debug.Log("Item Bonus: " + itemBonus);
+            Debug.Log("Time Bonus: " + timeBonus);
+
+
+            ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////
+
+
+
+            /// 실패 종료 화면 보여주기.
             ShowGameEndWin(gameFailWin);
         }
 
@@ -371,15 +415,27 @@ public class GameManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    ///  최종 결과를 화면에 보여주기 위해 실패 혹은 성공 창을 띄운다.
+    ///  창을 띄우기 전에 서버에 점수 데이터를 보내 검증을 하여
+    ///  오류가 있는지 확인을 한다.
+    ///  오류 확인이 끝나면(점수가 멀쩡하면) 그 내용을 UI에 표현해준다.
+    ///  실제 UI 표현은 ScoreSaveToLocal 메소드 내에서 이루어진다.
+    /// </summary>
+    /// <param name="win"></param>
     void ShowGameEndWin(GameObject win)
     {
 
+        //서버에 
         Amondplugin ap = GameObject.Find("AmondPluginGO").GetComponent<Amondplugin>();
-        ap.EndGame(score, ScoreSaveToLocal);
+
+        win.SetActive(true);
+
+        ap.EndGame(localScore, ScoreSaveToLocal);
+
 
         TouchPause();
         //ScoreSaveToLocal();
-        win.SetActive(true);
     }
 
 
@@ -709,19 +765,38 @@ public class GameManager : MonoBehaviour
                     timeDigit.color = Color.yellow;
                     timeUI.color = Color.yellow;
 
-                    Debug.Log("Score: " + score);
+                    Debug.Log("Score: " + localScore);
                     Debug.Log("Remain Time Bonus: " + spendTime * perSecScore);
+
+
+                    ////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////
+                    ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+
+                    // 최종 스피드 레벨에 따른 보너스를 지급한다.
+                    speedBonus = SpeedBonus();
+                    AddScore(speedBonus);//결과 화면에 표시.-스피드 보너스.
+
+                    // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
+                    itemBonus =  ItemBonus(); //결과 화면에 표시.-아이템보너스.
+                    AddScore(itemBonus);
+
+
                     // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
-                    AddScore(spendTime * perSecScore * comboLevel);
-                    AddScoreIcreaseItem();
+                    timeBonus = TimeBonus();
+                    AddScore(timeBonus); //결과 화면에 표시.-타임보너스.
 
-                    Debug.Log("Score: "+score);
-                    Debug.Log("Speed Level: " + speedLevel);
-                    Debug.Log("Add Score Percent: " + (speedList[speedLevel].speedScoreBonus * 0.01f));
-                    Debug.Log("Speed Bonus: " + Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
 
-                    // 남은 시간을 최종 스피드 레벨에 따른 보너스를 지급한다.
-                    AddScore(Mathf.RoundToInt(score * (speedList[speedLevel].speedScoreBonus * 0.01f)));
+                    Debug.Log("Score: " + localScore);
+                    Debug.Log("Speed Bonus: " + speedBonus);
+                    Debug.Log("Item Bonus: " + itemBonus);
+                    Debug.Log("Time Bonus: " + timeBonus);
+
+
+                    ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////
+
 
                     ShowGameEndWin(gameCompleWin);
                 }
@@ -867,8 +942,8 @@ public class GameManager : MonoBehaviour
     /// <param name="s"></param>
     void AddScore(int s)
     {
-        score += s;
-        scoreUI.text = score.ToString("000000000");
+        localScore += s;
+        scoreUI.text = localScore.ToString("000000000");
         //Debug.Log("스코어 지정된 점수 추가");
     }
 
@@ -967,25 +1042,90 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public List<GameObject> bestIcon;
+
     void ScoreSaveToLocal(Amond.Plugins.GameScoreDto result)
     {
-        Debug.Log("result Score: " +result.score);
-        Debug.Log("local Score: "+ score);
-        //var showScore = PlayerPrefs.GetInt("HighScore");
-        var showScore = result.score;
-        if (score < showScore) showScore = score;
+        Debug.Log("result Score: " +result.score); // 서버를 거쳐 돌아오는 점수는 항상 최고 점수이다.
+        Debug.Log("local Score: "+ localScore);  // 로컬 점수는 지금 플레이한 점수이다.
+
+        // 돌아온 리절트 스코어와 로컬 스코어 값이 값다면 현재 최고점수를 획득한 것이다.
+
+        var showScore =0;
+        
+        // 로컬스코어 값이 작으면 현재 최고기록 갱신을 못한것이기에 베스트 아이콘을 감춰준다.
+        if (localScore < showScore)
+        {
+            foreach(var v in bestIcon)
+            {
+                v.SetActive(false);
+            }
+            showScore = localScore;
+        }
+        else
+        {
+            foreach (var v in bestIcon)
+            {
+                v.SetActive(true);
+            }
+            showScore = result.score;
+        }
+
+
+        gameCompleWin.GetComponent<ShowInSequence>().finalScore = showScore;
+        gameFailWin.GetComponent<ShowInSequence>().finalScore = showScore;
+
         //PlayerPrefs.SetInt("HighScore", showScore);
 
-        foreach (var v in scoreTextFailComple)
+
+        // 로비로 진입했을때 랭크와 최고점수 값을 표시하기 위해 인트로 매니저에 값을 저장한다.
+        iManager.endResult = result;
+
+        foreach (var v in speedBonusTextFailComple)
         {
-            v.text = showScore.ToString("000000000");
+            v.text = speedBonus.ToString("000000000");
+        }
+        foreach (var v in itemBonusTextFailComple)
+        {
+            v.text = itemBonus.ToString("000000000");
+        }
+        foreach (var v in timeBonusTextFailComple)
+        {
+            v.text = timeBonus.ToString("000000000");
         }
 
-        foreach(var v in endRanktext)
+        // 게임을 컴플리트했을때 리워드를 하나씩 준다.
+        if (gameCompleWin.activeSelf == true)
         {
-            v.text = result.rank.ToString("000000000");
+            Debug.Log("게임성공결과창 켬");
+            reWardCount += 1;
+        }
+        else
+        {
+            Debug.Log("게임실패결과창 켬");
+        }
+
+        if (reWardCount<3)
+        {
+            rewardTitle.text = "Next Reward >";
+            rewardCountText.text = reWardCount + "/3";
+            rewardCountText.gameObject.SetActive(true);
+            rewardCmIcon.SetActive(false);
+        }
+        else
+        {
+            rewardTitle.text = "Get Reward >";
+            reWardCount = 0;
+            rewardCountText.gameObject.SetActive(false);
+            rewardCmIcon.SetActive(true);
         }
     }
+    int reWardCount = 0;
+    public TextMeshProUGUI rewardTitle;
+    public TextMeshProUGUI rewardCountText;
+    public GameObject rewardCmIcon;
+
+    public IntroManager iManager;
 
     /// <summary>
     /// 터치를 하면 노드를 터치했는지 감지한다. 
@@ -993,9 +1133,6 @@ public class GameManager : MonoBehaviour
     public void CheckClick(Transform thisT)
     {
         if (isPause == true) return;
-        // 터치 사운드 발생.
-        audioClick.Play();
-        //Debug.Log("터치 함");
 
         hitTransform = thisT;
 
@@ -1209,13 +1346,39 @@ public class GameManager : MonoBehaviour
             case Kinds.scoreFinalIncrease10:
                 scoreIncreasePercent = 10;
                 break;
+            case Kinds.timeAdd60:
+                timeAddSec = 60;
+                break;
+            case Kinds.speedDownLimit5:
+                speedLevelLimit = 4; // 스피드 레벨을 실제 계산할때는 0부터 시작(실제값 0이 화면에 표시되는 1과 같음)
+                break;
         }
     }
 
-    void AddScoreIcreaseItem()
+
+    /// <summary>
+    /// 스피드 보너스를 계산하여 반환한다.
+    /// </summary>
+    /// <returns></returns>
+    int SpeedBonus()
     {
-        var addScore = Mathf.RoundToInt(score * (scoreIncreasePercent / 100.0f));
-        AddScore(addScore);
+        Debug.Log("Show Speed Bonus");
+        Debug.Log("Speed Level: "+ speedLevel);
+        Debug.Log("Speed Bonus: "+ localScore * (speedList[speedLevel].speedScoreBonus * 0.01f));
+        return Mathf.RoundToInt(localScore * (speedList[speedLevel].speedScoreBonus * 0.01f));
+    }
+
+    /// <summary>
+    /// 스코어 증가 아이템을 첫 광고보고 획득하였을 때 실제 적용된다.
+    /// </summary>
+    int ItemBonus()
+    {
+        return Mathf.RoundToInt(localScore * (scoreIncreasePercent / 100.0f));
+    }
+
+    int TimeBonus()
+    {
+        return spendTime * perSecScore * comboLevel;
     }
 
 
@@ -1237,5 +1400,11 @@ public class GameManager : MonoBehaviour
     public void TouchPause()
     {
         isPause = !isPause;
+    }
+
+    public void GetClick(AudioSource aSource)
+    {
+        aSource.clip = Clicks[speedLevel];
+        aSource.Play();
     }
 }

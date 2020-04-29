@@ -19,6 +19,11 @@ public class Amondplugin : MonoBehaviour
     {
         Init();
     }
+
+    public void InitForced()
+    {
+        Init();
+    }
     /// <summary>
     /// //////////////////////////
     /// GameScoreDto uData
@@ -108,6 +113,13 @@ public class Amondplugin : MonoBehaviour
     public IntroManager iManager;
     public UnityAdsManager uaManager;
 
+
+    public void StartWatchingAdNum(int atNum)
+    {
+        AdType at = (AdType)atNum;
+
+        StartWatchingAd(at);
+    }
     /// <summary>
     /// 3. StartWatchingAd
     /// 광고보기.

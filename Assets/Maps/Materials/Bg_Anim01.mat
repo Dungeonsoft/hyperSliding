@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _GradTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 0.5}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 7e7e184f0a1a85c46baddcf708f83aa2, type: 3}
         m_Scale: {x: 1, y: 1}

@@ -7,6 +7,7 @@ public class GameCompleteControl : MonoBehaviour
 {
 
     public CanvasGroup cg;
+    public GameObject scoreBoard;
     public AnimationCurve ac;
     public float alphaSpeed =0.3f;
     float spendTime = 0;
@@ -15,6 +16,7 @@ public class GameCompleteControl : MonoBehaviour
     {
         spendTime = 0;
         uAction = ShowCavas;
+        scoreBoard.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -28,7 +30,9 @@ public class GameCompleteControl : MonoBehaviour
 
         if(spendTime>=1.0f)
         {
+            Debug.Log("스코어보드 보이기");
             spendTime = 0.0f;
+            scoreBoard.SetActive(true);
             uAction = null;
         }
         spendTime += Time.deltaTime*alphaSpeed;

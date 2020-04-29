@@ -16,6 +16,8 @@ public class BlurControl : MonoBehaviour
 
     Action uAction;
 
+    public GameObject bg;
+
     private void OnEnable()
     {
         Debug.Log("Blur Control Start!");
@@ -26,6 +28,19 @@ public class BlurControl : MonoBehaviour
 
         uAction = BlurCon1;
 
+        // 처음 시작할 때는 BG를 감춰준다.
+        // BG를 감추는 것은 속도가 느려지기 때문.
+        bg.SetActive(false);
+
+
+    }
+
+    /// <summary>
+    /// 레디 셋 고가 끝나면 비지를 보여준다.
+    /// </summary>
+    public void ShowBg()
+    {
+        bg.SetActive(true);
     }
 
     void BlurCon1()

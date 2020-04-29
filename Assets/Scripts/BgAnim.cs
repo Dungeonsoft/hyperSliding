@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using random = UnityEngine.Random;
 
 public class BgAnim : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class BgAnim : MonoBehaviour
 
     float outH, outS, outV;
 
+    public List<Texture> gradationImgs;
+    Texture gradationImgSel;
     /// <summary>
     /// 색의 변화 속도를 조절한다. 1을 1초의 기준으로 잡고 값이 크면 더 빠르게 작으면 느리게
     /// </summary>
@@ -29,9 +32,17 @@ public class BgAnim : MonoBehaviour
         baseS = outS;
         baseV = 0;
         
-        for(int i =0; i<rMat.Length; i++)
+    }
+    private void OnEnable()
+    {
+        baseV = 0;
+
+        var num = random.Range(0, gradationImgs.Count);
+        gradationImgSel = gradationImgs[num];
+
+        for (int i = 0; i < rMat.Length; i++)
         {
-            var newH = (outH + (intervalBtClrs/360f) * i);
+            var newH = (outH + (intervalBtClrs / 360f) * i);
             //Debug.Log("newH: "+ newH);
             bool isCheck = true;
             while (isCheck)
@@ -40,11 +51,10 @@ public class BgAnim : MonoBehaviour
                 else isCheck = false;
             }
             rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, outS, outV));
+            rMat[i].material.SetTexture("_GradTex", gradationImgSel);
+            rMat[i].material.SetTextureOffset("_GradTex", new Vector2(0,0));
         }
-    }
-    private void OnEnable()
-    {
-        baseV = 0;
+
     }
     void Update()
     {
@@ -68,14 +78,8 @@ public class BgAnim : MonoBehaviour
                 if (newH > 1f) newH -= 1f;
                 else isCheck = false;
             }
-            rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, baseS, baseV));
-            rMat[i].material.SetColor("_EmisColor2", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
+            rMat[i].material.SetColor("_EmisColor", Color.HSVToRGB(newH, baseS/2, baseV));
+            rMat[i].material.SetTextureOffset("_GradTex", new Vector2(0, baseH*3f));
         }
-
-        //if (rBase != null)
-        //{
-        //    //rBase.material.SetColor("_EmisColor", baseClr);
-        //    rBase.material.SetColor("_EmisColor", Color.HSVToRGB(newH - (intervalBtClrsFloat / 2f), baseS, baseV));
-        //}
     }
 }
