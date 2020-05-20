@@ -20,10 +20,10 @@ public class BlurControl : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Blur Control Start!");
+        //Debug.Log("Blur Control Start!");
         spendTime = delayTime;
         blurValue = defaultBlurValue;
-        Debug.Log("blurValue :   " + blurValue);
+        //Debug.Log("blurValue :   " + blurValue);
         thisBurImg.material.SetFloat(matPropertyName, blurValue);
 
         uAction = BlurCon1;

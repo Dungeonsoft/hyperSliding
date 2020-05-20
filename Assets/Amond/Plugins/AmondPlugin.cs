@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using static Amond.Plugins.AmondSdkPlugin;
 
@@ -6,18 +7,12 @@ namespace Amond.Plugins
 {
     public class AmondPlugin
     {
-        public bool IsAvailable;
+        public bool Available;
         private static AmondPlugin _instance;
         private readonly AmondSdkPlugin _amondSdkPlugin;
-        
-        // 2020-04-21 추가.
-        private AdType _adType = AdType.Forced;
-        private long _transactionId;
-        private string _gameTicket = "";
 
         public delegate void CallbackIsAvailable(string value);
-
-        public CallbackIsAvailable SetCallbackIsAvailable;
+        public CallbackIsAvailable CallbackAvailable;
 
         private AmondPlugin()
         {
@@ -49,7 +44,7 @@ namespace Amond.Plugins
             Debug.Log("SetAvailable: " + value);
             if (value.ToLower().Equals("true"))
             {
-                IsAvailable = true;
+                Available = true;
             }
         }
 
@@ -76,15 +71,14 @@ namespace Amond.Plugins
 
         private static GameScoreDto DefaultGameScore()
         {
-            return new GameScoreDto { nickname = "Unnamed", profileImageUrl = "", rank = 0, score = 0, totalPoint = 0 };
+            return new GameScoreDto {nickname = "Unnamed", profileImageUrl = "", rank = 0, score = 0, totalPoint = 0};
         }
-
 
         private GameScoreDto GetGameScore()
         {
-            if (IsAvailable == false) return null;
+            if (Available == false) return null;
 
-            var result = _amondSdkPlugin.GetGameScore();
+            string result = _amondSdkPlugin.GetGameScore();
             if (result == null) return null;
             Debug.Log("GetGameScore: " + result);
             return JsonUtility.FromJson<GameScoreDto>(result);
@@ -95,51 +89,40 @@ namespace Amond.Plugins
         /// </summary>
         /// <param name="adType"></param>
         /// <returns></returns>
-        public long StartWatchingAd(AdType adType)
+        public bool StartWatchingAd(AdType adType)
         {
-            if (IsAvailable == false) return 0;
+            if (Available == false) return false;
 
-            string result = _amondSdkPlugin.StartWatchingAd(adType);
-            if (result == null) return 0;
+            bool result = _amondSdkPlugin.StartWatchingAd(adType);
             Debug.Log("StartWatchingAd: " + result);
-            AdWatchDto adWatchDto = JsonUtility.FromJson<AdWatchDto>(result);
-            _adType = adType;
-            _transactionId = adWatchDto.transactionId;
-            return adWatchDto.transactionId;
+            return result;
         }
-
 
         /// <summary>
         /// 4. EndWatchingAd
         /// </summary>
         /// <returns></returns>
-        public AdWatchDto EndWatchingAd()
+        public bool EndWatchingAd()
         {
-            if (IsAvailable == false) return null;
+            if (Available == false) return false;
 
-            string result = _amondSdkPlugin.EndWatchingAd(_adType, _transactionId);
-            if (result == null) return null;
+            bool result = _amondSdkPlugin.EndWatchingAd();
             Debug.Log("EndWatchingAd: " + result);
-            AdWatchDto adWatchDto = JsonUtility.FromJson<AdWatchDto>(result);
-            return adWatchDto;
+            return result;
         }
 
         /// <summary>
         /// 5. StartGame
         /// </summary>
         /// <returns></returns>
-        public string StartGame()
+        public bool StartGame()
         {
-            if (IsAvailable == false) return null;
+            if (Available == false) return false;
 
-            string result = _amondSdkPlugin.StartGame();
-            if (result == null) return null;
+            bool result = _amondSdkPlugin.StartGame();
             Debug.Log("StartGame: " + result);
-            GameScoreDto gameScoreDto = JsonUtility.FromJson<GameScoreDto>(result);
-            _gameTicket = gameScoreDto.gameTicket;
-            return gameScoreDto.gameTicket;
+            return result;
         }
-
 
         /// <summary>
         /// 6. EndGame
@@ -148,9 +131,9 @@ namespace Amond.Plugins
         /// <returns></returns>
         public GameScoreDto EndGame(int score)
         {
-            if (IsAvailable == false) return null;
+            if (Available == false) return null;
 
-            var result = _amondSdkPlugin.EndGame(_gameTicket, score);
+            string result = _amondSdkPlugin.EndGame(score);
             if (result == null) return null;
             Debug.Log("EndGame: " + result);
             return JsonUtility.FromJson<GameScoreDto>(result);
@@ -162,9 +145,9 @@ namespace Amond.Plugins
         /// <returns></returns>
         public string GetLeaderBoardUrl()
         {
-            if (IsAvailable == false) return null;
+            if (Available == false) return null;
 
-            var result = _amondSdkPlugin.GetLeaderBoardUrl();
+            string result = _amondSdkPlugin.GetLeaderBoardUrl();
             if (result == null) return null;
             Debug.Log("GetLeaderBoardUrl: " + result);
             return result;
@@ -173,11 +156,6 @@ namespace Amond.Plugins
         public void OpenLeaderBoard()
         {
             _amondSdkPlugin.OpenLeaderBoard();
-        }
-
-        public void CloseLeaderBoard(Action<int> closeComplete)
-        {
-            _amondSdkPlugin.CloseLeaderBoard(closeComplete);
         }
     }
 
@@ -189,7 +167,7 @@ namespace Amond.Plugins
         //4. EndWatchingAd
         //5. StartGame
         //6. EndGame
-        //7. GetLeaderBoardUrl
+        //7. OpenLeaderBoard
 
         private const string PluginName = "io.amond.sdk.unity.PluginHelper";
 
@@ -216,24 +194,6 @@ namespace Amond.Plugins
                 if (_pluginInstance != null) return _pluginInstance;
                 _pluginInstance = PluginClass.CallStatic<AndroidJavaObject>("getInstance");
                 return _pluginInstance;
-            }
-        }
-
-        private class ReturnCallback : AndroidJavaProxy
-        {
-            private readonly Action<int> _returnHandler;
-
-            public ReturnCallback(Action<int> returnHandlerIn) : base(PluginName + "$ReturnCallback")
-            {
-                _returnHandler = returnHandlerIn;
-            }
-
-            // ReSharper disable once InconsistentNaming
-            public void onComplete(int result)
-            {
-                Debug.Log("onComplete:" + result);
-                if (_returnHandler != null)
-                    _returnHandler(result);
             }
         }
 
@@ -264,24 +224,24 @@ namespace Amond.Plugins
             return PluginInstance.Call<string>("getGameScore");
         }
 
-        public override string StartWatchingAd(AdType adType)
+        public override bool StartWatchingAd(AdType adType)
         {
-            return PluginInstance.Call<string>("startWatchingAd", (int) adType);
+            return PluginInstance.Call<bool>("startWatchingAd", (int) adType);
         }
 
-        public override string EndWatchingAd(AdType adType, long transactionId)
+        public override bool EndWatchingAd()
         {
-            return PluginInstance.Call<string>("endWatchingAd", (int) adType, transactionId);
+            return PluginInstance.Call<bool>("endWatchingAd");
         }
 
-        public override string StartGame()
+        public override bool StartGame()
         {
-            return PluginInstance.Call<string>("startGame");
+            return PluginInstance.Call<bool>("startGame");
         }
 
-        public override string EndGame(string gameTicket, int score)
+        public override string EndGame(int score)
         {
-            return PluginInstance.Call<string>("endGame", gameTicket, score);
+            return PluginInstance.Call<string>("endGame", score);
         }
 
         public override string GetLeaderBoardUrl()
@@ -292,11 +252,6 @@ namespace Amond.Plugins
         public override void OpenLeaderBoard()
         {
             PluginInstance.Call("openLeaderBoard");
-        }
-
-        public override void CloseLeaderBoard(Action<int> closeComplete)
-        {
-            PluginInstance.Call("closeLeaderBoard", new ReturnCallback(closeComplete));
         }
     }
 
@@ -317,22 +272,22 @@ namespace Amond.Plugins
             throw new NotImplementedException();
         }
 
-        public override string StartWatchingAd(AdType adType)
+        public override bool StartWatchingAd(AdType adType)
         {
             throw new NotImplementedException();
         }
 
-        public override string EndWatchingAd(AdType adType, long transactionId)
+        public override bool EndWatchingAd()
         {
             throw new NotImplementedException();
         }
 
-        public override string StartGame()
+        public override bool StartGame()
         {
             throw new NotImplementedException();
         }
 
-        public override string EndGame(string gameTicket, int score)
+        public override string EndGame(int score)
         {
             throw new NotImplementedException();
         }
@@ -343,11 +298,6 @@ namespace Amond.Plugins
         }
 
         public override void OpenLeaderBoard()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void CloseLeaderBoard(Action<int> closeComplete)
         {
             throw new NotImplementedException();
         }
@@ -361,7 +311,7 @@ namespace Amond.Plugins
         {
             Debug.Log("Call Init()");
             AmondPlugin.GetInstance().SetAvailable("true");
-            AmondPlugin.GetInstance().SetCallbackIsAvailable("true");
+            AmondPlugin.GetInstance().CallbackAvailable("true");
         }
 
         public override string ConnectAmond()
@@ -375,22 +325,22 @@ namespace Amond.Plugins
                    ",\"rank\":1,\"totalPoint\":100,\"score\":1000}";
         }
 
-        public override string StartWatchingAd(AdType adType)
+        public override bool StartWatchingAd(AdType adType)
         {
-            return "{\"transactionId\":1004}";
+            return true;
         }
 
-        public override string EndWatchingAd(AdType adType, long transactionId)
+        public override bool EndWatchingAd()
         {
-            return "{\"adType\":\"" + adType + "\",\"transactionId\":1004}";
+            return true;
         }
 
-        public override string StartGame()
+        public override bool StartGame()
         {
-            return "{\"userId\":1004,\"gameTicket\":\"TEST-TICKET\"}";
+            return true;
         }
 
-        public override string EndGame(string gameTicket, int score)
+        public override string EndGame(int score)
         {
             return "{\"userId\":1004,\"nickname\":\"Unnamed\",\"profileImageUrl\":\"" + DefaultImageUrl + "\"" +
                    ",\"rank\":1,\"totalPoint\":100,\"score\":" + score + "}";
@@ -398,17 +348,12 @@ namespace Amond.Plugins
 
         public override string GetLeaderBoardUrl()
         {
-            return "http://game.stage.amond.io/ranking?userId=1004&deviceId=2d8b2dd0&clientId=clientId";
+            return "http://stage.ranker24.com/ranking?token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTAwNSIsInVzZXJfbmFtZSI6IiIsInNjb3BlIjpbIm9wZW5pZCJdLCJleHAiOjE1ODg5MDgyNTEsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiJkOTE3YmU2YS01OWE5LTQ0NTYtOTRhYy05NGU0MjM3Y2RlYjQiLCJjbGllbnRfaWQiOiJnYW1lLWh5cGVyLXNsaWRpbmcifQ.PNsWNRga_qGS6sX0tQM7uJT0fKloq9SFm1Rc5-t5a1nA_EciSFiJq4gs4AHqMY4XUK73LT1rdmhBYEnjXt2AdNELMfTWwLuhz6emClv2BZVH3Z8SVEDdwExXy4mXtvgSlGbDlFNBh1YCzj1AiLiRUMmnvmxi4wkYeTq2rLbmcWtCtd-ymPc0sfMDlSPcFwp0NolDoO98eSgHzh8wBsiskm7FtVUt8z_f5XmYhR12CiCtQMeOYl55VZkrtueha9rW6Vvioum2Qe2JtzVSQ_Z4nN2_DjFoWjjWS44QCS3YxG9wDB9efUh0ApPru7zGy4olQUxu0OvP6q8mZOG3dlT_2g";
         }
 
         public override void OpenLeaderBoard()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void CloseLeaderBoard(Action<int> closeComplete)
-        {
-            throw new NotImplementedException();
+            Application.OpenURL(GetLeaderBoardUrl());
         }
     }
 
@@ -435,32 +380,17 @@ namespace Amond.Plugins
 
         public abstract string GetGameScore();
 
-        public abstract string StartWatchingAd(AdType adType);
+        public abstract bool StartWatchingAd(AdType adType);
 
-        public abstract string EndWatchingAd(AdType adType, long transactionId);
+        public abstract bool EndWatchingAd();
 
-        public abstract string StartGame();
+        public abstract bool StartGame();
 
-        public abstract string EndGame(string gameTicket, int score);
+        public abstract string EndGame(int score);
 
         public abstract string GetLeaderBoardUrl();
 
         public abstract void OpenLeaderBoard();
-
-        public abstract void CloseLeaderBoard(Action<int> closeComplete);
-    }
-
-    [Serializable]
-    public class AdWatchDto
-    {
-        public long transactionId;
-
-        public override string ToString()
-        {
-            return "AdWatchDto{" +
-                   "transactionId=" + transactionId +
-                   '}';
-        }
     }
 
     [Serializable]
@@ -471,6 +401,8 @@ namespace Amond.Plugins
         public string profileImageUrl;
         public long rank;
         public int score;
+        public int prizeLowScore = 0;
+        public int prizeHighScore = 0;
         public long totalPoint;
         public string gameTicket;
 
@@ -482,6 +414,8 @@ namespace Amond.Plugins
                    ", profileImageUrl='" + profileImageUrl + '\'' +
                    ", rank=" + rank +
                    ", score=" + score +
+                   ", prizeLowScore=" + prizeLowScore +
+                   ", prizeHighScore=" + prizeHighScore +
                    ", totalPoint=" + totalPoint +
                    ", gameTicket='" + gameTicket + '\'' +
                    '}';

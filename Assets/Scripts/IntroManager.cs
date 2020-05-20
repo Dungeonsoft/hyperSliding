@@ -93,13 +93,15 @@ public class IntroManager : MonoBehaviour
     /// 아이템 활성 버튼의 역할을 하고, 이곳에 발동하는 아이템 아이콘이 보인다. 
     /// </summary>
     public Transform item_Btn;
+    public Transform item_Show_Ingame;
 
-    public GameObject Equiped;
+    //public GameObject Equiped;
 
     /// <summary>
     /// 게임에서 사용되는 아이템이미지를 모아놓는다.
     /// </summary>
     public Object[] items;
+    public Object[] itemsIngame;
 
     /// <summary>
     /// 광고 가능여부를 보여는 스프라이트를 넣는다.
@@ -111,7 +113,8 @@ public class IntroManager : MonoBehaviour
     /// 스프라이트가 들어가는 UI Image 컴포넌트를 연결한다.
     /// </summary>
     public Image connectCM;
-    public GameObject cmEquiped;
+    public GameObject beforeSel;
+    public GameObject afterSel;
     public bool isCmAllow = false;
 
     /// <summary>
@@ -133,10 +136,11 @@ public class IntroManager : MonoBehaviour
         //CheckBestScore();
         //CheckleaderBoardOn();
         CheckItems();
-        //CheckActivateCM();
 
+        //CheckActivateCM();
+        beforeSel.SetActive(true);
+        afterSel.SetActive(false);
         isCmAllow = false;
-        cmEquiped.SetActive(false);
 
         //새로운 비지엠 작동.
         BG_Introdution bgi = GameObject.FindObjectOfType<BG_Introdution>();
@@ -161,21 +165,35 @@ public class IntroManager : MonoBehaviour
 
     void ShowItem(int r)
     {
-        //Debug.Log("Random Value: " + r);
-        //Debug.Log("Item Count: "+ item_Btn.childCount);
-        //Debug.Log("Item Child Name: " + item_Btn.GetChild(0).name);
         if (item_Btn.childCount > 0)
         {
-            //Debug.Log("Will Destroy Item: "+ item_Btn.GetChild(0).name);
             Destroy(item_Btn.GetChild(0).gameObject);
         }
-        //int r = Random.Range(0, 3);
-        GameObject GO = Instantiate(items[r]) as GameObject;
-        GO.name = "Item_RandomSel";
-        GO.transform.SetParent(item_Btn);
-        GO.transform.localPosition = Vector3.zero;
-        GO.transform.localEulerAngles = Vector3.zero ;
-        GO.transform.localScale = Vector3.one;
+
+        GameObject GO1 = Instantiate(items[r]) as GameObject;
+        GO1.name = "Item_RandomSel";
+        GO1.transform.SetParent(item_Btn);
+        GO1.transform.localPosition = Vector3.zero;
+        GO1.transform.localEulerAngles = Vector3.zero ;
+        GO1.transform.localScale = Vector3.one;
+
+        beforeSel.SetActive(true);
+        afterSel.SetActive(false);
+
+        if (item_Show_Ingame.childCount > 0)
+        {
+            Destroy(item_Show_Ingame.GetChild(0).gameObject);
+        }
+
+        GameObject GO2 = Instantiate(itemsIngame[r]) as GameObject;
+        GO2.name = "Item_RandomSel_Ingame";
+        GO2.transform.SetParent(item_Show_Ingame);
+        GO2.transform.localPosition = Vector3.zero;
+        GO2.transform.localEulerAngles = Vector3.zero;
+        GO2.transform.localScale = Vector3.one;
+        item_Show_Ingame.gameObject.SetActive(false);
+
+
     }
 
     /// <summary>
@@ -183,7 +201,8 @@ public class IntroManager : MonoBehaviour
     /// </summary>
     public void CheckBestScore()
     {
-        bestScore.text = endResult.score.ToString("00000000000");
+        Debug.Log("endResult"+endResult);
+        bestScore.text = endResult.score.ToString();
         userRank.text = endResult.rank.ToString();
     }
 
@@ -309,35 +328,18 @@ public class IntroManager : MonoBehaviour
         }
     }
 
-    public void CheckCmResult(AdType at)
+
+    public void SuccessCM_GmaeItem()
     {
-        Debug.Log("Ad Type: "+ at);
-        switch (at)
-        {
-            case AdType.GameItem:
-                Debug.Log("광고보기 완료: 게임 아이템");
-                SuccessCM_GmaeItem();
-                break;
-
-            case AdType.GameContinue:
-                Debug.Log("광고보기 완료: 게임 컨티뉴");
-                break;
-            case AdType.Reward:
-                Debug.Log("광고보기 완료: 게임 리워드");
-                break;
-        }
-
-    }
-
-    void SuccessCM_GmaeItem()
-    {
-        isCmAllow = true;
-        cmEquiped.SetActive(true);
-
         Debug.Log("광고 실행: 광고와 관련된 코드를 실행한다.");
         isCmAllow = true;
-        cmEquiped.SetActive(true);
+        gm.isCmAllow = isCmAllow;
+
+        beforeSel.SetActive(false);
+        afterSel.SetActive(true);
         Kinds itemKind = item_Btn.GetChild(0).GetComponent<ItemProperty>().kind;
         gm.ApplyItem(itemKind);
+
+        item_Show_Ingame.gameObject.SetActive(true);
     }
 }

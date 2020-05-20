@@ -24,10 +24,10 @@ namespace Amond.Plugins
             }
         }
 
-        public void SetAvailable(string isAvailable)
+        public void SetAvailable(string available)
         {
-            AmondPlugin.GetInstance().SetAvailable(isAvailable);
-            AmondPlugin.GetInstance().SetCallbackIsAvailable(isAvailable);
+            AmondPlugin.GetInstance().SetAvailable(available);
+            AmondPlugin.GetInstance().CallbackAvailable(available);
         }
     }
 }

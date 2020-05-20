@@ -60,6 +60,7 @@ public class ShowInSequence : MonoBehaviour
     {
         foreach (var v in sData)
         {
+            Debug.Log("현재 오브잭트 이름: "+v.data.name);
             v.data.SetActive(false);
         }
         isStartRollingScore = false;
@@ -79,6 +80,7 @@ public class ShowInSequence : MonoBehaviour
             finalScoreText.text = Mathf.CeilToInt(finalScore * spendTime).ToString("00000000000");
             if (spendTime>= 1f)
             {
+                finalScoreText.text = finalScore.ToString("00000000000");
                 isStartRollingScore = false;
                 spendTime = 0f;
             }

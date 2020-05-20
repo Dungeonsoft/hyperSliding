@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="24px" viewBox="0 0 17 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>colon@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <text id="text-1" font-family="SwaggerTTF, Swagger TTF" font-size="20" font-weight="normal" letter-spacing="0.767830909" fill="#FFEFE5">
+            <tspan x="181" y="326">:</tspan>
+        </text>
+        <filter x="-183.3%" y="-55.0%" width="466.7%" height="210.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="3.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.572512928   0 0 0 0 0.537080793  0 0 0 0.478583916 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="리더보드-메인--copy-12" transform="translate(-175.000000, -307.000000)" stroke="#FF6F6F">
+            <g id="colon">
+                <use fill="#FFEFE5" fill-opacity="1" stroke-opacity="1" filter="url(#filter-2)" xlink:href="#text-1"></use>
+                <use fill="#FFEFE5" fill-opacity="1" stroke-opacity="1" xlink:href="#text-1"></use>
+                <use xlink:href="#text-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -40,12 +40,14 @@ public class BG_Introdution : MonoBehaviour
         int sel = UnityEngine.Random.Range(0, bmIntroName.Length);
         audio.clip = Resources.Load(bgmIntroPath+"/"+ bmIntroName[sel]) as AudioClip;
         audio.Play();
-        uAction = VolumeUp;
+        uAction = UpSound;
 
 
         // 인게임 배경음악 미리 선택해 놓음.
         sel = UnityEngine.Random.Range(0, bmIngameName.Length);
         aClipIngame = Resources.Load(bgmIngamePath + "/" + bmIngameName[sel]) as AudioClip;
+
+        GetComponent<SoundAnalyze>().Restart();
     }
 
 
@@ -70,19 +72,63 @@ public class BG_Introdution : MonoBehaviour
     }
 
 
-    void VolumeUp()
-    {
-        volume += Time.deltaTime;
-        audio.volume = volume;
-
-        if (volume >= 1)
-        {
-            uAction = null;
-        }
-    }
 
     private void Update()
     {
         uAction?.Invoke();
+    }
+
+    public void GamePause()
+    {
+        uAction = DnSound;
+    }
+
+
+    public void GameUnpause()
+    {
+        uAction = UpSound;
+    }
+
+    public void GameComplete()
+    {
+        Debug.Log("게임 배경음 반으로 줄임");
+        uAction = DnSoundHalf;
+    }
+
+
+    void UpSound()
+    {
+        volume += Time.deltaTime;
+        audio.volume = volume;
+        if(audio.volume>= 1.0f)
+        {
+            volume = 1.0f;
+            audio.volume = volume;
+            uAction = null;
+        }
+    }
+
+    void DnSound()
+    {
+        volume -= Time.deltaTime;
+        audio.volume = volume;
+        if (audio.volume <= 0.0f)
+        {
+            volume = 0.0f;
+            audio.volume = volume;
+            uAction = null;
+        }
+    }
+
+    void DnSoundHalf()
+    {
+        volume -= Time.deltaTime;
+        audio.volume = volume;
+        if (audio.volume <= 0.2f)
+        {
+            volume = 0.2f;
+            audio.volume = volume;
+            uAction = null;
+        }
     }
 }

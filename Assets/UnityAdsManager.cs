@@ -7,7 +7,7 @@ public class UnityAdsManager : MonoBehaviour
 {
     void Awake()
     {
-        Advertisement.Initialize("3565741", true);
+        Advertisement.Initialize("3565741", false);
     }
 
 
@@ -39,17 +39,20 @@ public class UnityAdsManager : MonoBehaviour
 
     public  Amondplugin amdPlugin;
 
+    public GameObject gameFailWin;
     // 광고가 종료된 후 자동으로 호출되는 콜백 함수 
     private void HandleShowResult(ShowResult result)
     {
+        gameFailWin.GetComponent<FailWin>().ShowCmToggleOn(false);
         switch (result)
         {
             case ShowResult.Finished:
                 // 광고를 성공적으로 시청한 경우 보상 지급 
                 Debug.Log("광고보기==완료!");
                 amdPlugin.EndWatchingAd(atManager);
-                //DoSomeRewardAction();
                 break;
+
+
             case ShowResult.Skipped:
                 // 스킵 되었다면 뭔가 그런짓을 하면 보상을 줄 수 없잖아! 같은 창을 띄워야곘죠?
                 Debug.Log("광고보기==스킵!");
@@ -61,5 +64,6 @@ public class UnityAdsManager : MonoBehaviour
                 break;
         }
     }
+
 }
 ////////////RewardedAdsManger///////////

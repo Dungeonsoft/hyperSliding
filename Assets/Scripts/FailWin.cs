@@ -18,12 +18,15 @@ public class FailWin : MonoBehaviour
     public GameObject inGame;
     public GameObject GameFail;
 
+    bool isShowCM = false;
+
 
     void OnEnable()
     {
+        isShowCM = false;
         // 초기화 할것 이곳에 먼저 정리.
         spandTime = 0;
-        inGameManager.TouchPause();
+        inGameManager.GamePause();
 
         // 모든 숫자를 꺼준다.
         foreach(var v in counts)
@@ -43,6 +46,8 @@ public class FailWin : MonoBehaviour
    
     void Count()
     {
+        if (isShowCM == true) return;
+
         spandTime += Time.deltaTime;
         var nowTime = Mathf.RoundToInt(spandTime);
         if (nowTime == oldNowTime)
@@ -72,11 +77,18 @@ public class FailWin : MonoBehaviour
 
     public void CloseWin()
     {
-        inGameManager.TouchPause();
+        inGameManager.GamePause();
         intro.SetActive(true);
         inGame.SetActive(false);
         GameFail.SetActive(false);
         uAction = null;
     }
+
+    public void ShowCmToggleOn(bool v = false)
+    {
+        isShowCM = v;
+    }
+
+
 
 }

@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 실제 남은 시간을 나타내주기 위해 만든 int 변수
     /// </summary>
-    int spendTime;
+    public int spendTime;
 
     //Action DelayTouch;
     public List<DelayTouch> dTouch = new List<DelayTouch>();
@@ -172,6 +172,8 @@ public class GameManager : MonoBehaviour
     public int lineCorrectScore = 100;
     public int comboDefaultScore = 10;
 
+
+    public List<TMPro.TextMeshProUGUI> baseScoreTextFailComple;
     public List<TMPro.TextMeshProUGUI> speedBonusTextFailComple;
     public List<TMPro.TextMeshProUGUI> itemBonusTextFailComple;
     public List<TMPro.TextMeshProUGUI> timeBonusTextFailComple;
@@ -186,10 +188,20 @@ public class GameManager : MonoBehaviour
 
     public AudioClip[] Clicks;
 
-
+    int baseScore;
     int speedBonus;
     int itemBonus;
     int timeBonus;
+
+    public GameObject PauseWin;
+    public bool isCmAllow = false;
+
+    public Color[] speedLvColor;
+
+    public Image SpeedBar01;
+    public Image SpeedBar02;
+
+    public bool isShowContinueCm = false;
 
     #endregion
 
@@ -238,7 +250,7 @@ public class GameManager : MonoBehaviour
     /// <param name="step"></param>
     void SpeedSetting(int step)
     {
-        //Debug.Log("Speed : " + step);
+        //Debug.Log("Speed1 : " + step);
 
         manualNodeSpeed = speedList[step].manualNodeSpeed;
         delaySpeed = speedList[step].delaySpeed;
@@ -246,12 +258,30 @@ public class GameManager : MonoBehaviour
         speedDigit.text = "X" + (step + 1);
 
         speedLevelTime = speedList[step].decreaseTime;
-        //Debug.Log("Speed : " + step+ "::: Speed Level Time : "+ speedLevelTime);
+
+        // 스피드바 컬러세팅.
+        //Debug.Log("Speed2 : " + step);
+        //Debug.Log(speedLvColor[step]);
+        //Debug.Log("Speed3 : " + step);
+
+        SpeedBar01.transform.GetChild(0).GetComponent<Image>().color = speedLvColor[step];
+
+        SpeedBar01.fillAmount = 1.0f;
+        if (step <= 0)
+        {
+            SpeedBar02.gameObject.SetActive(false);
+        }
+        else
+        {
+            SpeedBar02.gameObject.SetActive(true);
+            SpeedBar02.transform.GetChild(0).GetComponent<Image>().color = speedLvColor[step - 1];
+            SpeedBar02.fillAmount = 0.0f;
+        }
     }
 
     private void OnDisable()
     {
-        Debug.Log("InGame OnDisable End!");
+        //Debug.Log("InGame OnDisable End!");
         uAction = null;
         uActionTimer = null;
 
@@ -259,11 +289,16 @@ public class GameManager : MonoBehaviour
         scoreIncreasePercent = 0;   // 스코어 증가 초기화.
         timeAddSec = 0;             // 추가시간 초기화.
         speedLevelLimit = 0;        // 스피드 최소레벨 초기화.
+
+        speedLevel = 0;
+
+        isShowContinueCm = false;
     }
 
     public BG_Introdution bg_Introdution;
     private void OnEnable()
     {
+        correctCount = 0;
         // BGM을 새로 세팅해준다.
         bg_Introdution.SetNewBgmIngame();
 
@@ -273,6 +308,7 @@ public class GameManager : MonoBehaviour
         //uAction = null;
         //uActionTimer = null;
 
+        PauseWin.SetActive(false);
         isPause = false;
 
         mixRnd = Random.Range( rMixV.x, rMixV.y);
@@ -325,7 +361,7 @@ public class GameManager : MonoBehaviour
 
         hideNode.gameObject.SetActive(false);
 
-        Debug.Log("Do Mix Count A");
+        //Debug.Log("Do Mix Count A");
         uAction = MixCount;
         
         //if(uAction != null)
@@ -337,11 +373,14 @@ public class GameManager : MonoBehaviour
         //    Debug.Log("=====uAction is NULL");
         //}
 
-        speedLevel = 0;
 
         comboLevel = comboLevelBase;
 
+        speedLevel = speedLevelLimit;
         SpeedSetting(speedLevel);
+
+
+        isShowContinueCm = false;
     }
 
     /// <summary>
@@ -365,9 +404,20 @@ public class GameManager : MonoBehaviour
         if(speedLevelTime<= 0 && speedLevel > speedLevelLimit)
         {
             isSpeedLvlDn = true;
-             speedLevel -= 1;
+             speedLevel --;
             SpeedSetting(speedLevel);
         }
+
+        // 스피드 레벨바의 유지시간을 표현하기 위한 바의 위치를 표시.
+        if (speedLevel > speedLevelLimit)
+        {
+            float fAmount = speedLevelTime / (speedList[speedLevel].decreaseTime);
+            SpeedBar01.fillAmount = fAmount;
+            SpeedBar02.fillAmount = 1.0f - fAmount;
+            //Debug.Log("F Amount: " + fAmount);
+
+        }// 스피드 레벨바의 유지시간을 표현하기 위한 바의 위치를 표시.
+
 
         spendTime = remainingTime - Mathf.RoundToInt(timer);
         if (spendTime <= 0)
@@ -407,6 +457,10 @@ public class GameManager : MonoBehaviour
 
             /// 실패 종료 화면 보여주기.
             ShowGameEndWin(gameFailWin);
+
+            uAction = null;
+            uActionTimer = null;
+
         }
 
         min = spendTime / 60;
@@ -434,7 +488,7 @@ public class GameManager : MonoBehaviour
         ap.EndGame(localScore, ScoreSaveToLocal);
 
 
-        TouchPause();
+        GamePause();
         //ScoreSaveToLocal();
     }
 
@@ -665,12 +719,6 @@ public class GameManager : MonoBehaviour
 
     void MovingNodes()
     {
-        //if (isMovingNode == false)
-        //{
-        //    //Debug.Log("MovingNodes");
-        //    isMovingNode = true;
-        //}
-
         int cnt = mNodes.Count - 1;
         //Debug.Log("mNodes.Count: "+ mNodes.Count);
         lVal += Time.deltaTime * nodeSpeed;
@@ -746,8 +794,8 @@ public class GameManager : MonoBehaviour
 
                 }
 
-                //줄이 맞았을때 점수를 계산하는 메소드 호출.
-                CalLineScore();
+                ////줄이 맞았을때 점수를 계산하는 메소드 호출.
+                //CalLineScore();
                 #endregion
 
                 // 크래쉬 이펙트가 끝났으니 다시 크래쉬 이펙트를 사용할 수 있게 초기화한다.
@@ -761,33 +809,39 @@ public class GameManager : MonoBehaviour
                 if (isCorrect == true)
                 {
                     Debug.Log("YOU WIN!!!");
+
+                    // 퍼즐 완료 스코어.
+                    AddScore(1000);
+                    Debug.Log("!! 퍼즐 완료 스코어 !!");
+                    
                     uActionTimer = null;
                     timeDigit.color = Color.yellow;
                     timeUI.color = Color.yellow;
 
                     Debug.Log("Score: " + localScore);
-                    Debug.Log("Remain Time Bonus: " + spendTime * perSecScore);
-
 
                     ////////////////////////////////////////////////////////////////////////////////
                     ////////////////////////////////////////////////////////////////////////////////
                     ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
 
+                    // 기본 점수를 먼저 표시한다.
+                    baseScore = 0;
+                    baseScore = localScore;
                     // 최종 스피드 레벨에 따른 보너스를 지급한다.
                     speedBonus = SpeedBonus();
-                    AddScore(speedBonus);//결과 화면에 표시.-스피드 보너스.
+                    AddScore(speedBonus,true);//결과 화면에 표시.-스피드 보너스.
 
                     // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
                     itemBonus =  ItemBonus(); //결과 화면에 표시.-아이템보너스.
-                    AddScore(itemBonus);
+                    AddScore(itemBonus, true);
 
 
                     // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
                     timeBonus = TimeBonus();
-                    AddScore(timeBonus); //결과 화면에 표시.-타임보너스.
+                    AddScore(timeBonus, true); //결과 화면에 표시.-타임보너스.
 
 
-                    Debug.Log("Score: " + localScore);
+                    Debug.Log("base Score: " + baseScore);
                     Debug.Log("Speed Bonus: " + speedBonus);
                     Debug.Log("Item Bonus: " + itemBonus);
                     Debug.Log("Time Bonus: " + timeBonus);
@@ -799,6 +853,7 @@ public class GameManager : MonoBehaviour
 
 
                     ShowGameEndWin(gameCompleWin);
+                    bg_Introdution.GameComplete();
                 }
                 else
                 {
@@ -897,7 +952,7 @@ public class GameManager : MonoBehaviour
                     break;
                 case IngameItems.IncreaseScore50:
                     // 콤보점수 추가.
-                    comboDefaultScore = 50;
+                    comboDefaultScore = 10 + 50; //10은 기본 스코어 +50은 콤보아이템 획득했을 때 추가로 얻는 점수.
                     // 이펙트 실행.
                     RunFx(comboItemFx01, ns.transform);
                     break;
@@ -907,12 +962,11 @@ public class GameManager : MonoBehaviour
             // 이펙트 발생위치.
 
             ns.alreadyScoreCount = true;
-            //score += 10 * comboLevel;
+            comboLevel++;
             int addComboScore = comboDefaultScore * comboLevel;
             AddScore(addComboScore);
             comboDefaultScore = 10;
             // 다음번부터 콤보 보너스를 적용하기 위해 콤보레벨을 올려준다.
-            comboLevel++;
             
             //Debug.Log("스코어 10점 추가");
 
@@ -934,17 +988,22 @@ public class GameManager : MonoBehaviour
 
 
         }
+
+        //줄이 맞았을때 점수를 계산하는 메소드 호출.
+        CalLineScore();
+
     }
 
     /// <summary>
     /// 점수를 추가하기 위한 메소드. 메소드에 추가될 점수를 인자로 불러온다.
     /// </summary>
     /// <param name="s"></param>
-    void AddScore(int s)
+    void AddScore(int s, bool isGameEnd = false)
     {
+        Debug.Log("Add Score:" + s + " === 게임완료상태: " + isGameEnd);
         localScore += s;
-        scoreUI.text = localScore.ToString("000000000");
-        //Debug.Log("스코어 지정된 점수 추가");
+        if (isGameEnd == false)
+            scoreUI.text = localScore.ToString("000000000");
     }
 
     /// <summary>
@@ -952,6 +1011,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void CalLineScore()
     {
+        //Debug.Log("줄 맞춤 계산");
         NodeScript ns;
         // 줄별 맟춤을 계산.
         for (int i = 0; i < 5; i++)
@@ -966,6 +1026,7 @@ public class GameManager : MonoBehaviour
 
                 if (ns.oriPosX != ns.poxNowX || ns.oriPosY != ns.poxNowY)
                 {
+                    //Debug.Log("줄이 안맞음");
                     isBreak = true;
                     break;
                 }
@@ -973,24 +1034,28 @@ public class GameManager : MonoBehaviour
 
             if(isBreak ==false)
             {
+                //Debug.Log("줄이 맞음!!!");
 
                 for (int j = 0; j < 5; j++)
                 {
                     ns = nScript[i*5 + j];
                 }
 
-                if (LineMatching[i])
+                
+                if (LineMatching[i] == false)
                 {
+                    Debug.Log("한번도 라인이 맞아서 점수를 준 적이 없음: 라인 넘버: "+(i+1));
                     LineMatching[i] = true;
-                    Debug.Log("점수 백점 추가");
-                    AddScore(lineCorrectScore * comboLevel);
 
                     //스피드 레벨이 다운된 적이 없으니 스피드레벨을 1 올려준다.
                     //시간은 초기화 된다.
-                    if (isSpeedLvlDn == false) speedLevel += 2;
+                    if (isSpeedLvlDn == false) speedLevel += 1;
                     else isSpeedLvlDn = false;
                     if (speedLevel > 9) speedLevel = 9;
                     SpeedSetting(speedLevel);
+
+                    Debug.Log("점수 백점 추가");
+                    AddScore(lineCorrectScore * comboLevel);
                 }
             }
         }
@@ -1031,7 +1096,7 @@ public class GameManager : MonoBehaviour
             
             if (isLine == true)
             {
-                Debug.Log("Value I: "+i);
+                //Debug.Log("Value I: "+i);
                 for (int j = 0; j < 5; j++)
                 {
                     ns = nScript[i*5 + j];
@@ -1051,25 +1116,28 @@ public class GameManager : MonoBehaviour
 
         // 돌아온 리절트 스코어와 로컬 스코어 값이 값다면 현재 최고점수를 획득한 것이다.
 
-        var showScore =0;
+        var showScore = result.score;
         
+        // 점수를 현재 획득한 것으로 표시하게 로컬 점수로 바꾼다.
+        showScore = localScore;
+
         // 로컬스코어 값이 작으면 현재 최고기록 갱신을 못한것이기에 베스트 아이콘을 감춰준다.
-        if (localScore < showScore)
-        {
-            foreach(var v in bestIcon)
-            {
-                v.SetActive(false);
-            }
-            showScore = localScore;
-        }
-        else
-        {
-            foreach (var v in bestIcon)
-            {
-                v.SetActive(true);
-            }
-            showScore = result.score;
-        }
+        //if (localScore < showScore)
+        //{
+        //    foreach(var v in bestIcon)
+        //    {
+        //        v.SetActive(false);
+        //    }
+        //    showScore = localScore;
+        //}
+        //else
+        //{
+        //    foreach (var v in bestIcon)
+        //    {
+        //        v.SetActive(true);
+        //    }
+        //    showScore = result.score;
+        //}
 
 
         gameCompleWin.GetComponent<ShowInSequence>().finalScore = showScore;
@@ -1077,10 +1145,20 @@ public class GameManager : MonoBehaviour
 
         //PlayerPrefs.SetInt("HighScore", showScore);
 
+        Debug.Log("===============================");
+        Debug.Log("base Score: " + baseScore);
+        Debug.Log("Speed Bonus: " + speedBonus);
+        Debug.Log("Item Bonus: " + itemBonus);
+        Debug.Log("Time Bonus: " + timeBonus);
+        Debug.Log("===============================");
+
 
         // 로비로 진입했을때 랭크와 최고점수 값을 표시하기 위해 인트로 매니저에 값을 저장한다.
         iManager.endResult = result;
-
+        foreach (var v in baseScoreTextFailComple)
+        {
+            v.text = baseScore.ToString("000000000");
+        }
         foreach (var v in speedBonusTextFailComple)
         {
             v.text = speedBonus.ToString("000000000");
@@ -1095,30 +1173,32 @@ public class GameManager : MonoBehaviour
         }
 
         // 게임을 컴플리트했을때 리워드를 하나씩 준다.
-        if (gameCompleWin.activeSelf == true)
-        {
-            Debug.Log("게임성공결과창 켬");
-            reWardCount += 1;
-        }
-        else
-        {
-            Debug.Log("게임실패결과창 켬");
-        }
+        // 리워드 기능 삭제
+        //if (gameCompleWin.activeSelf == true)
+        //{
+        //    Debug.Log("게임성공결과창 켬");
+        //    reWardCount += 1;
+        //}
+        //else
+        //{
+        //    Debug.Log("게임실패결과창 켬");
+        //}
 
-        if (reWardCount<3)
-        {
-            rewardTitle.text = "Next Reward >";
-            rewardCountText.text = reWardCount + "/3";
-            rewardCountText.gameObject.SetActive(true);
-            rewardCmIcon.SetActive(false);
-        }
-        else
-        {
-            rewardTitle.text = "Get Reward >";
-            reWardCount = 0;
-            rewardCountText.gameObject.SetActive(false);
-            rewardCmIcon.SetActive(true);
-        }
+        //if (reWardCount<3)
+        //{
+        //    rewardTitle.gameObject.SetActive(true);
+        //    rewardTitle.text = "Next Reward >";
+        //    rewardCountText.text = reWardCount + "/3";
+        //    rewardCountText.gameObject.SetActive(true);
+        //    rewardCmIcon.SetActive(false);
+        //}
+        //else
+        //{
+        //    rewardTitle.text = "Get Reward >";
+        //    reWardCount = 0;
+        //    rewardCountText.gameObject.SetActive(false);
+        //    rewardCmIcon.SetActive(true);
+        //}
     }
     int reWardCount = 0;
     public TextMeshProUGUI rewardTitle;
@@ -1132,7 +1212,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CheckClick(Transform thisT)
     {
-        if (isPause == true) return;
+        if (isPause == true || isMixed == false) return;
 
         hitTransform = thisT;
 
@@ -1144,7 +1224,7 @@ public class GameManager : MonoBehaviour
             ComboMovingCount++;
             if (ComboMovingCount >= comboMaxMoving)
             {
-                Debug.Log("콤보 초기화!");
+                //Debug.Log("콤보 초기화!");
                 comboLevel = 1;
                 ComboMovingCount = 0;
             }
@@ -1245,24 +1325,27 @@ public class GameManager : MonoBehaviour
 
 
 
+    public int correctCount = 0;
     /// <summary>
     /// 모든 노드가 제위치로 가 맞았는지 검사하는 메소드.
     /// </summary>
     /// <returns></returns>
     bool CheckCorrect()
     {
+        correctCount = 0;
         //Debug.Log(nScript.Length);
         for (var i=0; i< nScript.Length; i++)
         {
             NodeScript s = nScript[i];
-            if (s.oriPosX != s.poxNowX || s.oriPosY != s.poxNowY)
+            if (s.oriPosX == s.poxNowX && s.oriPosY == s.poxNowY)
             {
-                //Debug.Log(s.name);
-                //Debug.Log("Corrected Node :: "+ i);
-                return false;
+                correctCount++;
             }
         }
-        return true;
+        if (correctCount == nScript.Length)
+            return true;
+        else
+            return false;
     }
 
     int h = 0;
@@ -1344,12 +1427,23 @@ public class GameManager : MonoBehaviour
         switch (k)
         {
             case Kinds.scoreFinalIncrease10:
+                Debug.Log("scoreIncreasePercent 10");
                 scoreIncreasePercent = 10;
+                timeAddSec = 0;
+                speedLevelLimit = 0;
                 break;
+
             case Kinds.timeAdd60:
+                Debug.Log("timeAddSec 60");
+                scoreIncreasePercent = 0;
                 timeAddSec = 60;
+                speedLevelLimit = 0;
                 break;
+
             case Kinds.speedDownLimit5:
+                Debug.Log("speedLevelLimit 4");
+                scoreIncreasePercent = 0;
+                timeAddSec = 0;
                 speedLevelLimit = 4; // 스피드 레벨을 실제 계산할때는 0부터 시작(실제값 0이 화면에 표시되는 1과 같음)
                 break;
         }
@@ -1381,29 +1475,55 @@ public class GameManager : MonoBehaviour
         return spendTime * perSecScore * comboLevel;
     }
 
+    public void ContinueCM()
+    {
+        remainingTime = 180;
+        TimeAdd();
+
+        //Debug.Log("시간 계산 시작.");
+        timeDigit.text = "00:00:00";
+        timer = 0;
+        TimeCal();
+        uActionTimer = CheckTime;
+
+        gameFailWin.SetActive(false);
+    }
+
 
     private void Update()
     {
-        //if (uAction == null)
-        //{
-        //    Debug.Log("=== In Update, uAction is NULL!");
-        //}
-        //else
-        //{
-        //    Debug.Log("=== In Update, uAction is not NULL!" + uAction.Method.Name);
-        //}
         uAction?.Invoke();
 
         uActionTimer?.Invoke();
     }
 
-    public void TouchPause()
+    private void OnApplicationPause(bool pause)
     {
+        if (pause)
+        {
+            PauseWin.SetActive(true);
+            isPause = true;
+        }
+    }
+
+
+    public void GamePause()
+    {
+        //PauseWin.SetActive(!PauseWin.activeSelf);
         isPause = !isPause;
     }
 
+    public void TouchPause()
+    {
+        PauseWin.SetActive(!PauseWin.activeSelf);
+        isPause = !isPause;
+    }
+
+
     public void GetClick(AudioSource aSource)
     {
+        if (isPause == true || isMixed == false) return;
+
         aSource.clip = Clicks[speedLevel];
         aSource.Play();
     }

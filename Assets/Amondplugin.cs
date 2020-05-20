@@ -14,10 +14,14 @@ public class Amondplugin : MonoBehaviour
     public TextMeshProUGUI amondPoint;
     public TextMeshProUGUI uRank;
     public TextMeshProUGUI bestScore;
+    public TextMeshProUGUI goalScore;
+
 
     private void Awake()
     {
         Init();
+
+        youGotAmondWin.SetActive(false);
     }
 
     public void InitForced()
@@ -46,11 +50,14 @@ public class Amondplugin : MonoBehaviour
         // 닉네임 표시.
         nickName.text = uData.nickname;
         // 아몬드 포인트 표시.
-        amondPoint.text = uData.totalPoint.ToString();
-        //랭크 표시.
+        amondPoint.text = uData.totalPoint.ToString()+"P";
+        // 랭크 표시.
         uRank.text = uData.rank.ToString();
-        //베스트 스코어 표시.
+        // 베스트 스코어 표시.
         bestScore.text = uData.score.ToString();
+        // 목표 스코어 범위 표시.
+        goalScore.text = uData.prizeLowScore + " ~ " + uData.prizeHighScore;
+
     }
 
     IEnumerator GetProfileImage(string url)
@@ -67,7 +74,7 @@ public class Amondplugin : MonoBehaviour
     private static void CheckAvailable(string value)
     {
         var Amondplugin = GameObject.Find("AmondPluginGO").GetComponent<Amondplugin>();
-        if (AmondPlugin.GetInstance().IsAvailable)
+        if (AmondPlugin.GetInstance().Available)
         {
             Debug.Log("Connect Amond is available");
             // Connect Amond
@@ -85,9 +92,9 @@ public class Amondplugin : MonoBehaviour
     private void Init()
     {
         // IsAvailable Callback
-        AmondPlugin.GetInstance().SetCallbackIsAvailable = Amondplugin.CheckAvailable;
+        AmondPlugin.GetInstance().CallbackAvailable = Amondplugin.CheckAvailable;
         // Init
-        AmondPlugin.GetInstance().Init(EnvironmentType.Stage, "game-hyper-sliding");
+        AmondPlugin.GetInstance().Init(EnvironmentType.Prod, "game-hyper-sliding");
         //buttonInit.SetActive(false);
     }
 
@@ -110,13 +117,18 @@ public class Amondplugin : MonoBehaviour
         }
     }
 
+    public GameManager gManager;
     public IntroManager iManager;
     public UnityAdsManager uaManager;
 
 
     public void StartWatchingAdNum(int atNum)
     {
+        if (gManager.isShowContinueCm == true) return;
+        gManager.isShowContinueCm = true;
+        Debug.Log("atNum: "+ atNum);
         AdType at = (AdType)atNum;
+        Debug.Log("atName: " + at);
 
         StartWatchingAd(at);
     }
@@ -126,10 +138,10 @@ public class Amondplugin : MonoBehaviour
     /// </summary>
     public void StartWatchingAd(AdType at)
     {
-        var transactionId = AmondPlugin.GetInstance().StartWatchingAd(at);
-        if (transactionId > 0)
+        bool result = AmondPlugin.GetInstance().StartWatchingAd(at);
+        if (result)
         {
-            Debug.Log("3. Transaction ID: " + transactionId);
+            Debug.Log("3. result: " + result);
 
             uaManager.ShowRewardedAd(at);
         }
@@ -146,11 +158,32 @@ public class Amondplugin : MonoBehaviour
     public void EndWatchingAd(AdType at)
     {
         var result = AmondPlugin.GetInstance().EndWatchingAd();
-        if (result != null)
+        if (result)
         {
             Debug.Log("4. " + result);
 
-            iManager.CheckCmResult(at);
+
+
+
+            switch (at)
+            {
+                case AdType.GameItem:
+                    Debug.Log("광고보기 완료: 게임 아이템");
+                    iManager.SuccessCM_GmaeItem();
+                    break;
+
+                case AdType.GameContinue:
+                    Debug.Log("광고보기 완료: 게임 컨티뉴");
+                    gManager.ContinueCM();
+                    break;
+
+                case AdType.Reward:
+                    Debug.Log("광고보기 완료: 게임 리워드");
+                    ShowYouGotAmondWin();
+                    break;
+            }
+
+
         }
         else
         {
@@ -158,15 +191,23 @@ public class Amondplugin : MonoBehaviour
         }
     }
 
+
+    public GameObject youGotAmondWin;
+    void ShowYouGotAmondWin()
+    {
+        youGotAmondWin.SetActive(true);
+    }
+
+
     /// <summary>
     /// 5. StartGame
     /// </summary>
     public void StartGame()
     {
         var result = AmondPlugin.GetInstance().StartGame();
-        if (result != null)
+        if (result)
         {
-            Debug.Log("5. Game ticket: " + result);
+            Debug.Log("5. Game start: " + result);
         }
         else
         {
@@ -214,12 +255,7 @@ public class Amondplugin : MonoBehaviour
 
     public void OpenLeaderBoard()
     {
-        string getUrl = AmondPlugin.GetInstance().GetLeaderBoardUrl();
-        Application.OpenURL(getUrl);
-
-        //webPanel_Canvas.SetActive(true);
-        //Debug.Log("Open Leader Board!!!"); 
-        //AmondPlugin.GetInstance().OpenLeaderBoard();
+        AmondPlugin.GetInstance().OpenLeaderBoard();
     }
 
     public void CloseLeaderBoard()
