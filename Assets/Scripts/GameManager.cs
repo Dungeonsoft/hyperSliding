@@ -1145,12 +1145,12 @@ public class GameManager : MonoBehaviour
 
         //PlayerPrefs.SetInt("HighScore", showScore);
 
-        Debug.Log("===============================");
-        Debug.Log("base Score: " + baseScore);
-        Debug.Log("Speed Bonus: " + speedBonus);
-        Debug.Log("Item Bonus: " + itemBonus);
-        Debug.Log("Time Bonus: " + timeBonus);
-        Debug.Log("===============================");
+        //Debug.Log("===============================");
+        //Debug.Log("base Score: " + baseScore);
+        //Debug.Log("Speed Bonus: " + speedBonus);
+        //Debug.Log("Item Bonus: " + itemBonus);
+        //Debug.Log("Time Bonus: " + timeBonus);
+        //Debug.Log("===============================");
 
 
         // 로비로 진입했을때 랭크와 최고점수 값을 표시하기 위해 인트로 매니저에 값을 저장한다.

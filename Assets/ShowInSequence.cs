@@ -60,7 +60,7 @@ public class ShowInSequence : MonoBehaviour
     {
         foreach (var v in sData)
         {
-            Debug.Log("현재 오브잭트 이름: "+v.data.name);
+            //Debug.Log("현재 오브잭트 이름: "+v.data.name);
             v.data.SetActive(false);
         }
         isStartRollingScore = false;
