@@ -138,25 +138,6 @@ public class TouchFxCon : MonoBehaviour
         speedFX = GetManualNodeSpeed();
 
         uAction = StartFX01;
-
-
-        /*
-        NodeScript ns = h.GetComponent<NodeScript>();
-        if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY)
-        {
-            foreach (var v in gb.tFxKids01)
-            {
-                if (v.gameObject.activeSelf == false)
-                {
-                    Debug.Log("터치 이펙트01 함수 실행__3 :: 이름: " + v.name);
-                    v.gameObject.SetActive(true);
-                    v.GetComponent<TouchFxCon>().FxCon(h);
-                    v.position = new Vector3(h.position.x, 0.3f, h.position.z);
-                    break;
-                }
-            }
-        }
-        */
     }
 
     public void NodeMoving()
@@ -214,7 +195,14 @@ public class TouchFxCon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(uAction != null)
+        //if (gb.isPause == true)
+        //{
+        //    gameObject.SetActive(false);
+        //    isNodeMoving = false;
+        //    uAction = null;
+        //}
+
+        if (uAction != null)
         {
             uAction();
         }

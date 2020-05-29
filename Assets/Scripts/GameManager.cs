@@ -203,14 +203,17 @@ public class GameManager : MonoBehaviour
 
     public bool isShowContinueCm = false;
 
+    public GameObject touchDefence;
     #endregion
 
 
     private void Awake()
     {
 
-
+        touchCount = 0;
         isPause = false;
+
+        touchDefence.SetActive(true);
         nodeSpeed = baseNodeSpeed;
         //puzzle = transform.parent.Find("Puzzle");
 
@@ -281,6 +284,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        touchCount = 0;
         //Debug.Log("InGame OnDisable End!");
         uAction = null;
         uActionTimer = null;
@@ -298,6 +302,7 @@ public class GameManager : MonoBehaviour
     public BG_Introdution bg_Introdution;
     private void OnEnable()
     {
+        touchCount = 0;
         correctCount = 0;
         // BGM을 새로 세팅해준다.
         bg_Introdution.SetNewBgmIngame();
@@ -310,6 +315,7 @@ public class GameManager : MonoBehaviour
 
         PauseWin.SetActive(false);
         isPause = false;
+        touchDefence.SetActive(true);
 
         mixRnd = Random.Range( rMixV.x, rMixV.y);
 
@@ -399,7 +405,7 @@ public class GameManager : MonoBehaviour
     void TimeCal()
     {
         //Debug.Log("시간 계산 들어옴");
-        speedLevelTime -= Time.deltaTime;
+        if (isPause == false) speedLevelTime -= Time.deltaTime;
 
         if(speedLevelTime<= 0 && speedLevel > speedLevelLimit)
         {
@@ -513,7 +519,15 @@ public class GameManager : MonoBehaviour
             // CheckClick이 최초로 들어가는 부분 //  그러니 다른 함수가 델리게이트에 있으면 안되는 그냥 단독으로 넣어준다.
             //uAction = CheckClick;
             uActionTimer = CheckTime;
+
+            StartCoroutine(TouchDefenceOff());
         }
+    }
+
+    IEnumerator TouchDefenceOff()
+    {
+        yield return null;
+        touchDefence.SetActive(false);
     }
 
     void CalcurateMovableNode()
@@ -782,6 +796,9 @@ public class GameManager : MonoBehaviour
             // 점수 계산도 이곳에서 이루어진다.
             else
             {
+                Debug.Log("touchCount::::: "+ touchCount);
+                touchCount--;
+
                 //Debug.Log("점수 계산");
                 #region 점수계산
                 //노드 하나하나의 위치가 맞을 때 점수를 계산하기 위한 for문.
@@ -1207,12 +1224,17 @@ public class GameManager : MonoBehaviour
 
     public IntroManager iManager;
 
+    public int touchCount = 0;
+
     /// <summary>
     /// 터치를 하면 노드를 터치했는지 감지한다. 
     /// </summary>
     public void CheckClick(Transform thisT)
     {
+        if (touchCount >= 5) return;
         if (isPause == true || isMixed == false) return;
+
+        touchCount++;
 
         hitTransform = thisT;
 
@@ -1294,13 +1316,15 @@ public class GameManager : MonoBehaviour
             List<TouchFxCon> cc = ht.GetComponent<NodeFX>().tfc;
             foreach (var v in cc)
             {
-                Debug.Log("이차 파동형 이펙트 안생김");
+                //Debug.Log("이차 파동형 이펙트 안생김");
                 v.NodeMovingNo();
             }
             
 
             // 잘못된 터치(이동불가) 일때는 터치 정보를 바로 삭제한다.
             dTouch.RemoveAt(0);
+            touchCount--;
+
 
             // 삭제 후 미리 들어와 있는 터치 정보가 있으면 다음 터치액션을 실행한다.
             if (dTouch.Count > 0)
@@ -1503,6 +1527,8 @@ public class GameManager : MonoBehaviour
         {
             PauseWin.SetActive(true);
             isPause = true;
+            //touchDefence.SetActive(true);
+
         }
     }
 
@@ -1511,12 +1537,15 @@ public class GameManager : MonoBehaviour
     {
         //PauseWin.SetActive(!PauseWin.activeSelf);
         isPause = !isPause;
+        //touchDefence.SetActive(isPause);
+
     }
 
     public void TouchPause()
     {
         PauseWin.SetActive(!PauseWin.activeSelf);
         isPause = !isPause;
+        //touchDefence.SetActive(isPause);
     }
 
 

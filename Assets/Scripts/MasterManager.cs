@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class MasterManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject[] firstShowObjs;
+
+    public GameObject[] normalShowObjs;
+
+    void Awake()
     {
-        
+       string isPlay = PlayerPrefs.GetString("isPlay","false");
+        if(isPlay == "false")
+        {
+            Show(false);
+            PlayerPrefs.SetString("isPlay", "true");
+        }
+        else if(isPlay == "true")
+        {
+            Show(true);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Show(bool isPlay = false)
     {
-        
+        foreach(var v in firstShowObjs)
+        {
+            v.SetActive(!isPlay);
+        }
+
+        foreach (var v in normalShowObjs)
+        {
+            v.SetActive(isPlay);
+        }
+
     }
+
 }
