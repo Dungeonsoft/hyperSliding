@@ -50,11 +50,6 @@ public class NodeFX : MonoBehaviour
 
     private void Awake()
     {
-        //nodeMat = nodeObj.GetComponent<Renderer>().material;
-        //nodeMat.SetFloat("_EmisPower", emisPower);
-        //emisPowerBase = emisPower;
-        //nodeMat.SetColor("_EmisColor", emisColorBase);
-
         SetChild();
     }
 
@@ -65,26 +60,40 @@ private void Start()
 
     private void OnEnable()
     {
+        uAction = null;
         /// 처음에 들어오면 이 것부터 한다.
         /// 타입의 기본은 항상 normal이다.
         SetType = nType.Normal;
         NodeType(SetType);
         isFirstMove = false;
+
+    }
+    void OnDisable()
+    {
+        uAction = null;
     }
 
     float strengthFxColor;
-    public void ActionCrashFX(float v)
+
+    public void ActionCrashFX(float v, ActionCrashFX_Del act = null,int cnt =0)
     {
         //touchFxCon().NodeMoving();
         strengthFx = (v+1.0f)* strengthFxBase;
 
         strengthFxColor = strengthFx / 4f;
-        uAction += CrashFX;
 
-        //RunDelayed(2f, () =>
-        //{
-        //    Debug.Log("Delayed!!");
-        //});
+
+        if (isMoveFx == false)
+        {
+            Debug.Log("무빙타입으로 변경: " + this.name);
+            isMoveFx = true;
+            NodeType(nType.Move);
+        }
+
+        uAction = CrashFX;
+
+
+        if (act != null) act(cnt);
     }
 
 
@@ -103,26 +112,20 @@ private void Start()
     void CrashFX()
     {
         isFirstMove = true;
-        //emisPower = Mathf.Lerp(emisPowerBase, emisPowerBase * emisPowerMax* strengthFx, ac.Evaluate(lerpTime));
-        //emisColor = Color.Lerp(emisColorBase, emisColorMax* strengthFxColor, ac.Evaluate(lerpTime));
-        //nodeMat.SetColor("_EmisColor",emisColor);
-        //nodeMat.SetFloat("_EmisPower", emisPower);
 
-        if (isMoveFx == false)
-        {
-            isMoveFx = true;
-            NodeType(nType.Move);
-        }
+        //if (isMoveFx == false)
+        //{
+        //    Debug.Log("무빙타입으로 변경: "+this.name);
+        //    isMoveFx = true;
+        //    NodeType(nType.Move);
+        //}
         if (lerpTime >= 1)
         {
-            //Debug.Log("Crash Clear!!");
+            Debug.Log("Crash Clear! === 1");
             lerpTime = 0.0f;
-            //nodeMat.SetFloat("_EmisPower", emisPowerBase);
-            //nodeMat.SetColor("_EmisColor", emisColorBase);
             isMoveFx = false;
-            uAction -= CrashFX;
-            
             //NodeType(nType.Normal);
+            uAction = null;
         }
         else
         {
@@ -143,14 +146,17 @@ private void Start()
 
     public void NodeType(nType nt)
     {
-
-        if (isFirstMove == false) return;
-        ntd= GameObject.FindObjectOfType<NodeTypeDefine>();
+        Debug.Log(this.name + " __ isFirstMove: " + isFirstMove+" nType: "+nt);
+        if (isFirstMove == false)
+        {
+            return;
+        }
+        ntd = GameObject.FindObjectOfType<NodeTypeDefine>();
 
         //Debug.Log("NT"+name+ "Number: "+ nt.ToString());
         getDefine = ntd.nDefine[(int)nt];
-        
-        
+
+
         ChangeNodeType(getDefine);
     }
 
@@ -172,24 +178,12 @@ private void Start()
     {
         // 여기서 노드 칼라의 형태를 변형해주는 작업을 한다.(베이스컬러, 라인컬러, 숫자컬러)
 
-        //Debug.Log("d.digitColor:: " + d.digitColor);
-        //Debug.Log("d.lineColor:: " + d.lineColor);
-        //Debug.Log("d.lineGlowColor:: " + d.lineGlowColor);
-        //Debug.Log("d.baseColor:: " + d.baseColor);
         if (digit == null) SetChild();
-
 
         digit.GetComponent<Image>().color = d.digitColor;
         line.GetComponent<Image>().color = d.lineColor;
         lineGlow.GetComponent<Image>().color = d.lineGlowColor;
         digitBase.GetComponent<Image>().color = d.baseColor;
-
-
-        //digit.GetComponent<Renderer>().material.SetColor("_TintColor", d.digitColor);
-        //line.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineColor);
-        //lineGlow.GetComponent<Renderer>().material.SetColor("_TintColor", d.lineGlowColor);
-        //digitBase.GetComponent<Renderer>().material.SetColor("_TintColor", d.baseColor);
-        
     }
 
     void SetChild()

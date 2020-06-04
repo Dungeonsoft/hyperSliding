@@ -7,7 +7,7 @@ public enum Kinds
     scoreAddPercent10,
     timeAdd60,
     scoreFinalIncrease10,
-    speedDownLimit5,
+    speedDownLimit10,
     speedAdd,
     itemFinder
 }

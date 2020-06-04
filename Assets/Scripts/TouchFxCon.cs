@@ -187,24 +187,20 @@ public class TouchFxCon : MonoBehaviour
     void PoseMovingDel()
     {
         thisTrans.position = new Vector3(h.position.x, 0.3f, h.position.z);
-        //Debug.Log("thisTrans    : " + thisTrans.position);
-        //Debug.Log("hitTransform : " + h.position);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (gb.isPause == true)
-        //{
-        //    gameObject.SetActive(false);
-        //    isNodeMoving = false;
-        //    uAction = null;
-        //}
-
         if (uAction != null)
         {
             uAction();
         }
+    }
+
+    public void Reset()
+    {
+        uAction = null;
+        gameObject.SetActive(false);
     }
 }

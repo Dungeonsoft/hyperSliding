@@ -17,6 +17,8 @@ public class Amondplugin : MonoBehaviour
     public TextMeshProUGUI goalScore;
 
 
+    public bool isService = false;
+
     private void Awake()
     {
         Init();
@@ -94,7 +96,10 @@ public class Amondplugin : MonoBehaviour
         // IsAvailable Callback
         AmondPlugin.GetInstance().CallbackAvailable = Amondplugin.CheckAvailable;
         // Init
-        AmondPlugin.GetInstance().Init(EnvironmentType.Prod, "game-hyper-sliding");
+        if(isService)
+            AmondPlugin.GetInstance().Init(EnvironmentType.Prod, "game-hyper-sliding");
+        else
+            AmondPlugin.GetInstance().Init(EnvironmentType.Stage, "game-hyper-sliding");
         //buttonInit.SetActive(false);
     }
 
@@ -120,6 +125,7 @@ public class Amondplugin : MonoBehaviour
     public GameManager gManager;
     public IntroManager iManager;
     public UnityAdsManager uaManager;
+    public AdMobManager amManager;
 
 
     public void StartWatchingAdNum(int atNum)
@@ -132,6 +138,8 @@ public class Amondplugin : MonoBehaviour
 
         StartWatchingAd(at);
     }
+
+    int selCM = 0;
     /// <summary>
     /// 3. StartWatchingAd
     /// 광고보기.
@@ -143,7 +151,26 @@ public class Amondplugin : MonoBehaviour
         {
             Debug.Log("3. result: " + result);
 
+
+            // 두개의 앱을 번갈아가며 광고를 보게하는 부분.
+            // 현재는 구글애드몹이 안되어 유니티애즈만 되도록 설정.
+
             uaManager.ShowRewardedAd(at);
+
+            /*
+            if (selCM % 2 == 1)
+            {
+                // UnityAds를 실행.
+                uaManager.ShowRewardedAd(at);
+            }
+            else
+            {
+                // GoogleAdmob를 실행.
+                amManager.ShowRewardedAd_Admob(at);
+            }
+            selCM++;
+            */
+
         }
         else
         {

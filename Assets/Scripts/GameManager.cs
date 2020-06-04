@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+public delegate void ActionCrashFX_Del(int cnt);
+
 public enum IngameItems
 {
     None,IncreaseTime10,IncreaseScore50
@@ -97,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     bool isMixed;
 
-    List<Vector2> clickedNode = new List<Vector2>();
+    public List<Vector2> clickedNode = new List<Vector2>();
 
     Action uAction = null;
     Action uActionTimer = null;
@@ -204,12 +206,16 @@ public class GameManager : MonoBehaviour
     public bool isShowContinueCm = false;
 
     public GameObject touchDefence;
+
+    public int rateCount = 1;
+    public int ingameItemShowCount = 0;
+
     #endregion
 
 
     private void Awake()
     {
-
+        rateCount = 1;
         touchCount = 0;
         isPause = false;
 
@@ -262,11 +268,6 @@ public class GameManager : MonoBehaviour
 
         speedLevelTime = speedList[step].decreaseTime;
 
-        // 스피드바 컬러세팅.
-        //Debug.Log("Speed2 : " + step);
-        //Debug.Log(speedLvColor[step]);
-        //Debug.Log("Speed3 : " + step);
-
         SpeedBar01.transform.GetChild(0).GetComponent<Image>().color = speedLvColor[step];
 
         SpeedBar01.fillAmount = 1.0f;
@@ -284,6 +285,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        dTouch.Clear();
         touchCount = 0;
         //Debug.Log("InGame OnDisable End!");
         uAction = null;
@@ -297,11 +299,18 @@ public class GameManager : MonoBehaviour
         speedLevel = 0;
 
         isShowContinueCm = false;
+
+        rateCount = 1;
+
     }
 
     public BG_Introdution bg_Introdution;
     private void OnEnable()
     {
+        rateCount = 1;
+
+        dTouch.Clear();
+
         touchCount = 0;
         correctCount = 0;
         // BGM을 새로 세팅해준다.
@@ -370,16 +379,6 @@ public class GameManager : MonoBehaviour
         //Debug.Log("Do Mix Count A");
         uAction = MixCount;
         
-        //if(uAction != null)
-        //{
-        //    Debug.Log("====uAction is not NULL");
-        //}
-        //else
-        //{
-        //    Debug.Log("=====uAction is NULL");
-        //}
-
-
         comboLevel = comboLevelBase;
 
         speedLevel = speedLevelLimit;
@@ -387,6 +386,14 @@ public class GameManager : MonoBehaviour
 
 
         isShowContinueCm = false;
+
+        foreach (var v in tFxKids02)
+        {
+            v.GetComponent<TouchFxCon>().Reset();
+        }
+
+        clickedNode.Clear();
+        //Debug.Log("clickedNode Count: "+ clickedNode.Count);
     }
 
     /// <summary>
@@ -407,9 +414,10 @@ public class GameManager : MonoBehaviour
         //Debug.Log("시간 계산 들어옴");
         if (isPause == false) speedLevelTime -= Time.deltaTime;
 
-        if(speedLevelTime<= 0 && speedLevel > speedLevelLimit)
-        {
-            isSpeedLvlDn = true;
+        //if (speedLevelTime <= 0 && speedLevel > speedLevelLimit) // 기존방식 하위 값을 지정하고 그 이하로 못 내려가게 세팅.
+        if (speedLevelTime <= 0 && speedLevel > 0)   // 애드오에스 요구 방법 최저 단계까지 떨어질수 있도록 수정.
+            {
+                isSpeedLvlDn = true;
              speedLevel --;
             SpeedSetting(speedLevel);
         }
@@ -495,7 +503,6 @@ public class GameManager : MonoBehaviour
 
 
         GamePause();
-        //ScoreSaveToLocal();
     }
 
 
@@ -517,7 +524,6 @@ public class GameManager : MonoBehaviour
             uAction = null;
 
             // CheckClick이 최초로 들어가는 부분 //  그러니 다른 함수가 델리게이트에 있으면 안되는 그냥 단독으로 넣어준다.
-            //uAction = CheckClick;
             uActionTimer = CheckTime;
 
             StartCoroutine(TouchDefenceOff());
@@ -751,18 +757,186 @@ public class GameManager : MonoBehaviour
                 if (isFX[i] == false && (lVal - (delaySpeed * (cnt-i) * Time.deltaTime)) >= 0.7088259f)
                 {
                     isFX[i] = true;
-                    mNodes[i].GetComponent<NodeFX>().ActionCrashFX(i);
+                    Debug.Log("mNodes["+i+"] name: " + mNodes[i].name+ " :: ActionCrashFX");
+
+
+                    ActionCrashFX_Del act = null;
+                    if ((i + 1) == cnt)
+                    {
+                        act = FixNode;
+                    }
+                    mNodes[i].GetComponent<NodeFX>().ActionCrashFX(i,act,cnt);
 
                     /// 정확한 위치로 들어간 노드에 왜곡이펙트가 만들어질수 있도록 불변수에 true 값을 입력한다.
-                    
-                    //mNodes[i].GetComponent<NodeFX>()
-                    //Debug.Log("Crash FX :: " + mNodes[i].name);
                 }
             }
         }
-        
-        if (lVal >= 1.0f + (delaySpeed * (cnt-1) * Time.deltaTime))
+        FixNode(cnt);
+
+        #region // 함수로(FixNode) 변환하여 따로 정리.
+        //if (lVal >= sTime)
+        //{
+        //    Debug.Log("L Val이("+lVal+") sTime("+ sTime+")보다 크거나 같음");
+        //    //if (isMixed) Debug.Log("Lerp 끝난후 노드 위치 정리 : mNodes.Count : " + mNodes.Count);
+        //    for (int i = 0; i < cnt; i++)
+        //    {
+        //        var movedNode = mNodes[i].GetComponent<NodeScript>();
+        //        //Debug.Log("노드 이름 : "+i+" : "+ mNodes[i].name);
+        //        movedNode.poxNowX = mNodes[i + 1].GetComponent<NodeScript>().poxNowX;
+        //        movedNode.poxNowY = mNodes[i + 1].GetComponent<NodeScript>().poxNowY;
+
+        //        mNodes[i].localPosition = mNodesPos[i + 1];
+
+        //        //if (isMixed) StartCoroutine(IeShowFxRefract(mNodes));
+        //    }
+
+
+        //    lVal = 0.0f;
+
+        //    hideNode.localPosition = selNodePosition;
+        //    hideNode.GetComponent<NodeScript>().poxNowX = hideX;
+        //    hideNode.GetComponent<NodeScript>().poxNowY = hideY;
+
+        //    // 최초 인게임 작동시 셔플이 다 되지 않았을때 오는 곳.
+        //    if (isMixed != true)
+        //    {
+        //        //Debug.Log("Do Mix Count B");
+        //        uAction = MixCount;
+        //    }
+
+        //    // 셔플이 다 되면 모든 블럭이 이동후 이곳으로 온다.
+        //    // 점수 계산도 이곳에서 이루어진다.
+        //    else
+        //    {
+        //        //Debug.Log("touchCount::::: "+ touchCount);
+        //        touchCount--;
+
+        //        //Debug.Log("점수 계산");
+        //        #region 점수계산
+        //        //노드 하나하나의 위치가 맞을 때 점수를 계산하기 위한 for문.
+        //        for (int i = 0; i < cnt; i++)
+        //        {
+        //            //Debug.Log("노드별 점수 계산");
+        //            var movedNode = mNodes[i].GetComponent<NodeScript>();
+        //            // 각각 노드 점수계산하는 메소드 호출//
+        //            CalScore(movedNode);
+
+        //        }
+
+        //        ////줄이 맞았을때 점수를 계산하는 메소드 호출.
+        //        //CalLineScore();
+        //        #endregion
+
+        //        // 크래쉬 이펙트가 끝났으니 다시 크래쉬 이펙트를 사용할 수 있게 초기화한다.
+        //        // 초기화 하는 방법은 NodeFX에 있는 isFX를 false로 바꾸는 것이다.
+        //        for (int i = 0; i < cnt; i++)
+        //        {
+        //            mNodes[i].GetComponent<NodeFX>().isFX = false;
+        //        }
+        //        bool isCorrect = CheckCorrect();
+
+        //        if (isCorrect == true)
+        //        {
+        //            Debug.Log("YOU WIN!!!");
+
+        //            // 퍼즐 완료 스코어.
+        //            AddScore(1000);
+        //            Debug.Log("!! 퍼즐 완료 스코어 !!");
+
+        //            uActionTimer = null;
+        //            timeDigit.color = Color.yellow;
+        //            timeUI.color = Color.yellow;
+
+        //            Debug.Log("Score: " + localScore);
+
+        //            ////////////////////////////////////////////////////////////////////////////////
+        //            ////////////////////////////////////////////////////////////////////////////////
+        //            ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+
+        //            // 기본 점수를 먼저 표시한다.
+        //            baseScore = 0;
+        //            baseScore = localScore;
+
+        //            // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
+        //            timeBonus = TimeBonus();
+        //            AddScore(timeBonus, true); //결과 화면에 표시.-타임보너스.
+
+        //            // 최종 스피드 레벨에 따른 보너스를 지급한다.
+        //            speedBonus = SpeedBonus();
+        //            AddScore(speedBonus, true);//결과 화면에 표시.-스피드 보너스.
+
+        //            // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
+        //            itemBonus = ItemBonus(); //결과 화면에 표시.-아이템보너스.
+        //            AddScore(itemBonus, true);
+
+
+        //            Debug.Log("base Score: " + baseScore);
+        //            Debug.Log("Time Bonus: " + timeBonus);
+        //            Debug.Log("Speed Bonus: " + speedBonus);
+        //            Debug.Log("Item Bonus: " + itemBonus);
+
+
+        //            ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
+        //            ////////////////////////////////////////////////////////////////////////////////
+        //            ////////////////////////////////////////////////////////////////////////////////
+
+
+        //            ShowGameEndWin(gameCompleWin);
+        //            bg_Introdution.GameComplete();
+        //        }
+        //        else
+        //        {
+        //            //Debug.Log("NOT YET!!!");
+        //        }
+
+        //        // 노드의 컬러(형태)를 지정하기 위한 부분이다.
+        //        checkNodeColor();
+
+        //        nodeSpeed = manualNodeSpeed;
+        //        //Debug.Log("터치후 블럭이동 완료");
+        //        //위치가 다 옮겨진 노드 정보는 삭제한다.
+        //        //if (clickedNode.Count > 0)
+        //        //    clickedNode.RemoveAt(0);
+
+        //        //Debug.Log("dTouch.RemoveAt(0)");
+        //        if (dTouch.Count > 0)
+        //            dTouch.RemoveAt(0);
+
+        //        //isMovingNode = false;
+        //        if (dTouch.Count == 0)
+        //        {
+        //            uAction -= CalcurateMovableNode;
+        //            uAction -= MovingNodes;
+        //        }
+        //        else
+        //        {
+
+        //            uAction -= CalcurateMovableNode;
+
+        //            TouchAction(dTouch[0].ht, dTouch[0].m);
+        //            uAction -= MovingNodes;
+        //        }
+
+        //        // 노드의 컬러(형태)를 지정하기 위한 부분이다.
+        //        //checkNodeColor();
+
+        //    }
+        //}
+        #endregion
+    }
+
+    /// <summary>
+    /// 노드정리.
+    /// </summary>
+    /// <param name="cnt"></param>
+    void FixNode(int cnt)
+    {
+        var sTime = 1.0f + (delaySpeed * (cnt - 1) * Time.deltaTime);
+        Debug.Log("L Val(" + lVal + ") 과 sTime(" + sTime + ")");
+
+        if (lVal >= sTime)
         {
+            Debug.Log("L Val이(" + lVal + ") sTime(" + sTime + ")보다 크거나 같음");
             //if (isMixed) Debug.Log("Lerp 끝난후 노드 위치 정리 : mNodes.Count : " + mNodes.Count);
             for (int i = 0; i < cnt; i++)
             {
@@ -773,7 +947,7 @@ public class GameManager : MonoBehaviour
 
                 mNodes[i].localPosition = mNodesPos[i + 1];
 
-                if (isMixed) StartCoroutine(IeShowFxRefract(mNodes));
+                //if (isMixed) StartCoroutine(IeShowFxRefract(mNodes));
             }
 
 
@@ -790,13 +964,11 @@ public class GameManager : MonoBehaviour
                 uAction = MixCount;
             }
 
-
-
             // 셔플이 다 되면 모든 블럭이 이동후 이곳으로 온다.
             // 점수 계산도 이곳에서 이루어진다.
             else
             {
-                Debug.Log("touchCount::::: "+ touchCount);
+                //Debug.Log("touchCount::::: "+ touchCount);
                 touchCount--;
 
                 //Debug.Log("점수 계산");
@@ -830,7 +1002,7 @@ public class GameManager : MonoBehaviour
                     // 퍼즐 완료 스코어.
                     AddScore(1000);
                     Debug.Log("!! 퍼즐 완료 스코어 !!");
-                    
+
                     uActionTimer = null;
                     timeDigit.color = Color.yellow;
                     timeUI.color = Color.yellow;
@@ -844,24 +1016,24 @@ public class GameManager : MonoBehaviour
                     // 기본 점수를 먼저 표시한다.
                     baseScore = 0;
                     baseScore = localScore;
-                    // 최종 스피드 레벨에 따른 보너스를 지급한다.
-                    speedBonus = SpeedBonus();
-                    AddScore(speedBonus,true);//결과 화면에 표시.-스피드 보너스.
-
-                    // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
-                    itemBonus =  ItemBonus(); //결과 화면에 표시.-아이템보너스.
-                    AddScore(itemBonus, true);
-
 
                     // 남은 시간을 기준으로 추가 점수(초당00점)를 지급한다.
                     timeBonus = TimeBonus();
                     AddScore(timeBonus, true); //결과 화면에 표시.-타임보너스.
 
+                    // 최종 스피드 레벨에 따른 보너스를 지급한다.
+                    speedBonus = SpeedBonus();
+                    AddScore(speedBonus, true);//결과 화면에 표시.-스피드 보너스.
+
+                    // 인트로에서 적용된 광고 아이템이 있을 경우 그 내용을 적용한다.
+                    itemBonus = ItemBonus(); //결과 화면에 표시.-아이템보너스.
+                    AddScore(itemBonus, true);
+
 
                     Debug.Log("base Score: " + baseScore);
+                    Debug.Log("Time Bonus: " + timeBonus);
                     Debug.Log("Speed Bonus: " + speedBonus);
                     Debug.Log("Item Bonus: " + itemBonus);
-                    Debug.Log("Time Bonus: " + timeBonus);
 
 
                     ////// 추가 점수(보너스) 최종 결과에 계산하는 부분 ///////////////////////////////////
@@ -876,6 +1048,9 @@ public class GameManager : MonoBehaviour
                 {
                     //Debug.Log("NOT YET!!!");
                 }
+
+                // 노드의 컬러(형태)를 지정하기 위한 부분이다.
+                checkNodeColor();
 
                 nodeSpeed = manualNodeSpeed;
                 //Debug.Log("터치후 블럭이동 완료");
@@ -903,7 +1078,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 // 노드의 컬러(형태)를 지정하기 위한 부분이다.
-                checkNodeColor();
+                //checkNodeColor();
 
             }
         }
@@ -953,6 +1128,7 @@ public class GameManager : MonoBehaviour
         //Debug.Log("선택된 노드 이름: "+ns.name+" :: "+ ns.oriPosX+"="+ ns.poxNowX+"==="+ ns.oriPosY+"="+ns.oriPosY);
         if (ns.oriPosX == ns.poxNowX && ns.oriPosY == ns.poxNowY && ns.alreadyScoreCount == false)
         {
+            Debug.Log("정위치!");
             IngameItems getItem =  ns.AddIngameItem();
 
             //Debug.Log("getItem :: "+ getItem);
@@ -1017,7 +1193,7 @@ public class GameManager : MonoBehaviour
     /// <param name="s"></param>
     void AddScore(int s, bool isGameEnd = false)
     {
-        Debug.Log("Add Score:" + s + " === 게임완료상태: " + isGameEnd);
+        //Debug.Log("Add Score:" + s + " === 게임완료상태: " + isGameEnd);
         localScore += s;
         if (isGameEnd == false)
             scoreUI.text = localScore.ToString("000000000");
@@ -1081,6 +1257,7 @@ public class GameManager : MonoBehaviour
 
     void checkNodeColor()
     {
+        Debug.Log("Crash Clear! === 2");
         NodeScript ns;
         for (int i = 0; i < 25; i++)
         {
@@ -1231,9 +1408,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CheckClick(Transform thisT)
     {
+        Debug.Log("CheckClick1: "+ thisT.name);
         if (touchCount >= 5) return;
         if (isPause == true || isMixed == false) return;
 
+        Debug.Log("CheckClick2");
         touchCount++;
 
         hitTransform = thisT;
@@ -1247,7 +1426,8 @@ public class GameManager : MonoBehaviour
             if (ComboMovingCount >= comboMaxMoving)
             {
                 //Debug.Log("콤보 초기화!");
-                comboLevel = 1;
+                comboLevel = comboLevel-3;
+                if (comboLevel < 1) comboLevel = 1;
                 ComboMovingCount = 0;
             }
 
@@ -1464,11 +1644,11 @@ public class GameManager : MonoBehaviour
                 speedLevelLimit = 0;
                 break;
 
-            case Kinds.speedDownLimit5:
-                Debug.Log("speedLevelLimit 4");
+            case Kinds.speedDownLimit10:
+                Debug.Log("speedLevelLimit 5");
                 scoreIncreasePercent = 0;
                 timeAddSec = 0;
-                speedLevelLimit = 4; // 스피드 레벨을 실제 계산할때는 0부터 시작(실제값 0이 화면에 표시되는 1과 같음)
+                speedLevelLimit = 9; // 스피드 레벨을 실제 계산할때는 0부터 시작(실제값 0이 화면에 표시되는 1과 같음)
                 break;
         }
     }

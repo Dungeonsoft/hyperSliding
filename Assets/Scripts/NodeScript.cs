@@ -21,6 +21,10 @@ public class NodeScript : MonoBehaviour
 
     public NodeFX nf;
 
+    public GameManager gm;
+    public AudioSource aSource;
+
+
     private void Awake()
     {
         nf = GetComponent<NodeFX>();
@@ -29,16 +33,10 @@ public class NodeScript : MonoBehaviour
 
     public void CheckPosition()
     {
+        //Debug.Log("Crash Clear! === 2: "+ this.name);
         if (oriPosX == poxNowX && oriPosY == poxNowY)
         {
             nf.NodeType(nType.CorrectPos);
-
-            //if (isWaitingRefractFx == true)
-            //{
-            //    GameManager gm = Transform.FindObjectOfType<GameManager>();
-            //    gm.ShowFxRefract(this.transform);
-            //    isWaitingRefractFx = false;
-            //}
         }
         else
         {
@@ -48,7 +46,7 @@ public class NodeScript : MonoBehaviour
 
     public void ChangeNodeType(nType t)
     {
-        //Debug.Log(name+" :: "+t.ToString());
+        Debug.Log(name+" :: "+t);
         nf.NodeType(t);
     }
 
@@ -63,19 +61,33 @@ public class NodeScript : MonoBehaviour
         nf.NodeToNormal(t);
     }
 
-    public IngameItems AddIngameItem(int randomRate = 15)
+    public IngameItems AddIngameItem(/*int randomRate = 15*/)
     {
+
+        if(gm.ingameItemShowCount >= 4) return IngameItems.None;
+
+        int randomRate = Mathf.RoundToInt((gm.rateCount / 6f) * 10000f);
+
         int r = RandomRange.Range(0, 10000);
-        randomRate *= 100;
+        
         //Debug.Log("r value: "+r);
         if (r < randomRate)
         {
+            Debug.Log("인게임 아이템 생성");
             IngameItems igItem = RandomEnum<IngameItems>();
 
+            gm.ingameItemShowCount++;
+            if(gm.ingameItemShowCount>= 4)
+            {
+                gm.rateCount = 0;
+            }
+            gm.rateCount = 1;
             return igItem;
         }
         else
         {
+            Debug.Log("인게임 아이템 없음");
+            gm.rateCount++;
             return IngameItems.None;
         }
     }
@@ -87,8 +99,6 @@ public class NodeScript : MonoBehaviour
         return (T)values.GetValue(new System.Random().Next(1, values.Length));
     }
 
-    public GameManager gm;
-    public AudioSource aSource;
 
 
 }

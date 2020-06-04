@@ -7,6 +7,8 @@ public class MasterManager : MonoBehaviour
     public GameObject[] firstShowObjs;
 
     public GameObject[] normalShowObjs;
+    
+    public bool isAlwaysShowTut = false;
 
     void Awake()
     {
@@ -24,7 +26,12 @@ public class MasterManager : MonoBehaviour
 
     void Show(bool isPlay = false)
     {
-        foreach(var v in firstShowObjs)
+        if(isAlwaysShowTut == true)
+        {
+            isPlay = false;
+        }
+
+        foreach (var v in firstShowObjs)
         {
             v.SetActive(!isPlay);
         }

@@ -5,9 +5,25 @@ using static Amond.Plugins.AmondSdkPlugin;
 
 public class UnityAdsManager : MonoBehaviour
 {
+    private string placementId;
+
     void Awake()
     {
-        Advertisement.Initialize("3565741", false);
+        UnityAdsInitialize();
+    }
+
+    public void UnityAdsInitialize()                                                // Unity Ads 초기화 메소드
+    {
+#if UNITY_ANDROID
+        placementId = "3565741";                                                     // 안드로이드 ID값 입력 
+        Debug.Log("Android");                                                       // iOS ID값 입력
+#elif UNITY_IPHONE
+        placemenId = "xxxxxxx";
+        Debug.Log("Iphone");
+#else
+#endif
+
+        Advertisement.Initialize(placementId, false);                                // true값일 경우 Test mode, false 시 실제 광고 재생
     }
 
 
@@ -48,7 +64,7 @@ public class UnityAdsManager : MonoBehaviour
         {
             case ShowResult.Finished:
                 // 광고를 성공적으로 시청한 경우 보상 지급 
-                Debug.Log("광고보기==완료!");
+                Debug.Log("유니티애즈광고보기==완료!");
                 amdPlugin.EndWatchingAd(atManager);
                 break;
 
