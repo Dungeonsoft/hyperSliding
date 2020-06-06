@@ -66,7 +66,7 @@ public class NodeScript : MonoBehaviour
 
         if(gm.ingameItemShowCount >= 4) return IngameItems.None;
 
-        int randomRate = Mathf.RoundToInt((gm.rateCount / 6f) * 10000f);
+        int randomRate = Mathf.RoundToInt((gm.rateCount / 8f) * 10000f);
 
         int r = RandomRange.Range(0, 10000);
         
@@ -77,11 +77,15 @@ public class NodeScript : MonoBehaviour
             IngameItems igItem = RandomEnum<IngameItems>();
 
             gm.ingameItemShowCount++;
-            if(gm.ingameItemShowCount>= 4)
+            if (gm.ingameItemShowCount >= 4)
             {
+                // 아예 나오면 안되니 0으로 처리
                 gm.rateCount = 0;
             }
-            gm.rateCount = 1;
+            else
+            {
+                gm.rateCount = 1;
+            }
             return igItem;
         }
         else

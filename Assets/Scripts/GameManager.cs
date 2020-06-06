@@ -250,6 +250,8 @@ public class GameManager : MonoBehaviour
             tFxKids02.Add(tFX02.GetChild(i));
             tFX02.GetChild(i).gameObject.SetActive(false);
         }
+
+        ingameItemShowCount = 0;
     }
 
 
@@ -301,6 +303,8 @@ public class GameManager : MonoBehaviour
         isShowContinueCm = false;
 
         rateCount = 1;
+
+        ingameItemShowCount = 0;
 
     }
 
@@ -394,6 +398,8 @@ public class GameManager : MonoBehaviour
 
         clickedNode.Clear();
         //Debug.Log("clickedNode Count: "+ clickedNode.Count);
+
+        ingameItemShowCount = 0;
     }
 
     /// <summary>
@@ -423,7 +429,8 @@ public class GameManager : MonoBehaviour
         }
 
         // 스피드 레벨바의 유지시간을 표현하기 위한 바의 위치를 표시.
-        if (speedLevel > speedLevelLimit)
+        if (speedLevel > 0)
+        //if (speedLevel > speedLevelLimit)
         {
             float fAmount = speedLevelTime / (speedList[speedLevel].decreaseTime);
             SpeedBar01.fillAmount = fAmount;
@@ -932,11 +939,11 @@ public class GameManager : MonoBehaviour
     void FixNode(int cnt)
     {
         var sTime = 1.0f + (delaySpeed * (cnt - 1) * Time.deltaTime);
-        Debug.Log("L Val(" + lVal + ") 과 sTime(" + sTime + ")");
+        //Debug.Log("L Val(" + lVal + ") 과 sTime(" + sTime + ")");
 
         if (lVal >= sTime)
         {
-            Debug.Log("L Val이(" + lVal + ") sTime(" + sTime + ")보다 크거나 같음");
+            //Debug.Log("L Val이(" + lVal + ") sTime(" + sTime + ")보다 크거나 같음");
             //if (isMixed) Debug.Log("Lerp 끝난후 노드 위치 정리 : mNodes.Count : " + mNodes.Count);
             for (int i = 0; i < cnt; i++)
             {

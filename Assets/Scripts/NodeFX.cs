@@ -146,7 +146,7 @@ private void Start()
 
     public void NodeType(nType nt)
     {
-        Debug.Log(this.name + " __ isFirstMove: " + isFirstMove+" nType: "+nt);
+        //Debug.Log(this.name + " __ isFirstMove: " + isFirstMove+" nType: "+nt);
         if (isFirstMove == false)
         {
             return;

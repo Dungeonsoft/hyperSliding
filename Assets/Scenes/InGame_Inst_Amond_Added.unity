@@ -17659,6 +17659,7 @@ MonoBehaviour:
   uRank: {fileID: 1434240348}
   bestScore: {fileID: 1212066200}
   goalScore: {fileID: 1990394576}
+  isService: 1
   gManager: {fileID: 1617136602}
   iManager: {fileID: 526890355}
   uaManager: {fileID: 875129939}
